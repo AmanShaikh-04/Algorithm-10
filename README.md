@@ -32,7 +32,7 @@ npm run dev
 
 3. Execute `npm i .` if any dependency error occurs.
 
-## Contributing
+## Precaution
 
 Prepare (Always do this)
 
@@ -42,7 +42,7 @@ git checkout main
 git pull origin main
 ```
 
-### Now inorder to contribute follow these steps
+## Contributing
 
 1. Create a new branch:
 
