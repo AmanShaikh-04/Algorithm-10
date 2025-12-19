@@ -1,14 +1,15 @@
 # Algorithm 10
 
-<p>This is official repo of Algorithm 10 a 32-hour long hackathon hosted by Anjuman-I-Islam Kalsekar Technical Campus Panvel.</p>
+This is the official repository of **Algorithm 10**, a 32-hour long hackathon hosted by  
+**Anjuman-I-Islam Kalsekar Technical Campus, Panvel**.
 
-Design and Develop by Technical Team of Algorithm 10.
+Designed and developed by the **Technical Team of Algorithm 10**.
 
 ## Setup
 
 1. Clone the repository
 
-```js
+```bash
 git clone https://github.com/AmanShaikh-04/Algorithm-10.git
 ```
 
@@ -20,13 +21,13 @@ cd Algorithm-10
 
 3. Install the dependencies
 
-```js
+```bash
 npm install
 ```
 
 4. Run the server
 
-```js
+```bash
 npm run dev
 ```
 
@@ -51,25 +52,25 @@ git pull origin main
 1. Create a new branch:
 
 Create your name branch once
-```js
+```bash
 git checkout -b <your-name>
 ```
 Use this if you already created the branch once and want to contribute to the project.
-```js
+```bash
 git checkout <your-name>
 ```
 
 2. Stage the changes
-```js
+```bash
 git add .
 ```
 
 3. Commit the changes
-```js
+```bash
 git commit -m "your message"
 ```
 4. Push the changes
-```js
+```bash
 git push origin <your-name>
 ```
 
