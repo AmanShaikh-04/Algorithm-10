@@ -33,7 +33,7 @@ npm run dev
 
 ## Guidelines
 
-1. Always follow the Precaution steps below to pull the latest changes from main before you start working.
+1. Always follow the Precaution steps below to pull the latest changes from `main` before you start working.
 
 2. Also, kindly run `npm run format` before pushing the code.
 
