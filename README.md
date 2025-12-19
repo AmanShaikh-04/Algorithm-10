@@ -14,7 +14,7 @@ git clone https://github.com/AmanShaikh-04/Algorithm-10.git
 
 2. Move to project directory
 
-```js
+```bash
 cd Algorithm-10
 ```
 
@@ -75,10 +75,10 @@ git push origin <your-name>
 
 5. Create a Pull Request (PR)
 
-*Go to the GitHub repository page.
+* Go to the GitHub repository page.
 
-*You will see a "Compare & pull request" button.
+* You will see a "Compare & pull request" button.
 
-*Click it and submit your PR to the main branch.
+* Click it and submit your PR to the main branch.
 
-*Wait for the PR to be reviewed and merged.
+* Wait for the PR to be reviewed and merged.
