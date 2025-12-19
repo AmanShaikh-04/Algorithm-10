@@ -11,9 +11,9 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  --font-inter: var(--font-inter);       /* Usage: class="font-inter" */
-  --font-terminal: var(--font-vt323);    /* Usage: class="font-terminal" */
-  --font-cyber: var(--font-orbitron);    /* Usage: class="font-cyber" */
+  --font-inter: var(--font-inter); /* Usage: class="font-inter" */
+  --font-terminal: var(--font-vt323); /* Usage: class="font-terminal" */
+  --font-cyber: var(--font-orbitron); /* Usage: class="font-cyber" */
 }
 
 @media (prefers-color-scheme: dark) {
