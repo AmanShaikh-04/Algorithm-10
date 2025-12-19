@@ -9,7 +9,7 @@ Design and Develop by Technical Team of Algorithm 10.
 1. Clone the repository
 
 ```js
-https://github.com/AmanShaikh-04/Algorithm-10.git
+git clone https://github.com/AmanShaikh-04/Algorithm-10.git
 ```
 
 2. Install the dependencies
