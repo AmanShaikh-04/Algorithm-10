@@ -34,9 +34,21 @@ npm run dev
 
 ## Contributing
 
-1. Create a new branch
+Prepare (Always do this)
+Before doing anything, make sure you have the latest code from the team:
+```js
+git checkout main
+git pull origin main
+```
+
+1. Create a new branch:
+Create your name branch once
 ```js
 git checkout -b <your-name>
+```
+Use this if you already created the branch once and want to contribute to the project.
+```js
+git checkout <your-name>
 ```
 
 2. Stage the changes
