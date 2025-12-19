@@ -42,6 +42,8 @@ git checkout main
 git pull origin main
 ```
 
+### Now inorder to contribute follow these steps
+
 1. Create a new branch:
 
 Create your name branch once
