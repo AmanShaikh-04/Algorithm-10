@@ -12,13 +12,19 @@ Design and Develop by Technical Team of Algorithm 10.
 git clone https://github.com/AmanShaikh-04/Algorithm-10.git
 ```
 
-2. Install the dependencies
+2. Move to project directory
+
+```js
+cd Algorithm-10
+```
+
+3. Install the dependencies
 
 ```js
 npm install
 ```
 
-3. Run the server
+4. Run the server
 
 ```js
 npm run dev
@@ -34,9 +40,7 @@ npm run dev
 
 ## Precaution
 
-Prepare (Always do this)
-
-Before doing anything, make sure you have the latest code from the team:
+Before you start coding (Always do this): To avoid conflicts, always ensure you have the latest code from the team before making changes:
 ```js
 git checkout main
 git pull origin main
@@ -69,6 +73,12 @@ git commit -m "your message"
 git push origin <your-name>
 ```
 
-5. Create a pull request
+5. Create a Pull Request (PR)
 
-6. Wait for the pull request to be reviewed and merged with the production branch
+*Go to the GitHub repository page.
+
+*You will see a "Compare & pull request" button.
+
+*Click it and submit your PR to the main branch.
+
+*Wait for the PR to be reviewed and merged.
