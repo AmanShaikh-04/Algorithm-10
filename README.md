@@ -33,7 +33,7 @@ npm run dev
 
 ## Guidelines
 
-1. Pull any latest changes from `main` branch before pushing the code by running `git pull origin main` to avoid any conflicts.
+1. Pull any latest changes from `main` branch before pushing follow the Precaution steps.
 
 2. Also, kindly run `npm run format` before pushing the code.
 
