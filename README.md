@@ -37,7 +37,7 @@ npm run dev
 
 2. Also, kindly run `npm run format` before pushing the code.
 
-3. Execute `npm i .` if any dependency error occurs.
+3. Execute `npm i` if any dependency error occurs.
 
 ## Precaution
 
