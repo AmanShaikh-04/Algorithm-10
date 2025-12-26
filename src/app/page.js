@@ -7,7 +7,7 @@ import Hero from "@/components/hero";
 import About from "@/components/about";
 import Tracks from "@/components/tracks";
 import Timeline from "@/components/timeline";
-import Gallery from "@/components/gallery";
+import DomeGallery from "@/components/gallery";
 import Sponsors from "@/components/sponsors";
 import Faq from "@/components/faq";
 import Footer from "@/components/footer";
@@ -34,7 +34,9 @@ export default function Page() {
           <About />
           <Tracks />
           <Timeline />
-          <Gallery />
+          <div className="h-[60vh] w-full overflow-hidden sm:h-[70vh] md:h-screen">
+            <DomeGallery autoRotateSpeed={0.2} />
+          </div>
           <Sponsors />
           <Faq />
           <Footer />
