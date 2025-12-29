@@ -43,7 +43,6 @@ npm run dev
 
 Before you start coding (Always do this): To avoid conflicts, always ensure you have the latest code from the team before making changes:
 ```js
-git checkout main
 git pull origin main
 ```
 
