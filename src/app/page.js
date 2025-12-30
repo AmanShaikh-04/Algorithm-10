@@ -13,6 +13,8 @@ import Faq from "@/components/faq";
 import Footer from "@/components/footer";
 
 export default function Page() {
+ 
+
   const [showHome, setShowHome] = useState(false);
   const [username, setUsername] = useState(null);
 
@@ -30,13 +32,15 @@ export default function Page() {
       {showHome && (
         <main className="relative overflow-x-hidden">
           <Navbar />
+         
           <Hero />
           <About />
           <Tracks />
-          <Timeline />
-          <div className="h-[60vh] w-full overflow-hidden sm:h-[70vh] md:h-screen">
-            <DomeGallery autoRotateSpeed={0.2} />
+          <Timeline /> 
+          <div className="border-border relative h-[60vh] max-h-[800px] w-full overflow-hidden rounded border shadow-2xl md:h-[80vh]">
+            <DomeGallery autoRotateSpeed={0.2} overlayBlurColor="#000000" />
           </div>
+
           <Sponsors />
           <Faq />
           <Footer />
