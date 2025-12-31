@@ -13,13 +13,13 @@ export default function Home() {
     <main>
       <Navbar />
       <Hero />
-      <About />
+      {/* <About />
       <Tracks />
       <Timeline />
       <Gallery />
       <Sponsors />
       <Faq />
-      <Footer />
+      <Footer /> */}
     </main>
   );
 }
