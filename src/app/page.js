@@ -30,9 +30,13 @@ export default function Page() {
       )}
 
       {showHome && (
-        <main className="relative overflow-x-hidden">
+        <>
+        <header className="sticky top-4 z-50">
           <Navbar />
-         
+       </header>
+
+        <main className="relative overflow-x-hidden">
+
           <Hero />
           <About />
           <Tracks />
@@ -45,6 +49,7 @@ export default function Page() {
           <Faq />
           <Footer />
         </main>
+        </>
       )}
     </>
   );
