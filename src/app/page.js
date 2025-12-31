@@ -6,11 +6,11 @@ import Navbar from "@/components/navbar";
 import Hero from "@/components/hero";
 import About from "@/components/about";
 import Tracks from "@/components/tracks";
-import Timeline from "@/components/timeline";
 import DomeGallery from "@/components/gallery";
 import Sponsors from "@/components/sponsors";
 import Faq from "@/components/faq";
 import Footer from "@/components/footer";
+import Timeline from '@/components/timeline';
 
 export default function Page() {
  
@@ -40,7 +40,9 @@ export default function Page() {
           <Hero />
           <About />
           <Tracks />
-          <Timeline /> 
+          <div className="min-h-screen bg-[#0E0E10]">
+      <Timeline />
+    </div>
           <div className="border-border relative h-[60vh] max-h-[800px] w-full overflow-hidden rounded border shadow-2xl md:h-[80vh]">
             <DomeGallery autoRotateSpeed={0.2} overlayBlurColor="#000000" />
           </div>
