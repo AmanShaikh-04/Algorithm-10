@@ -10,11 +10,9 @@ import DomeGallery from "@/components/gallery";
 import Sponsors from "@/components/sponsors";
 import Faq from "@/components/faq";
 import Footer from "@/components/footer";
-import Timeline from '@/components/timeline';
+import Timeline from "@/components/timeline";
 
 export default function Page() {
- 
-
   const [showHome, setShowHome] = useState(false);
   const [username, setUsername] = useState(null);
 
@@ -31,26 +29,47 @@ export default function Page() {
 
       {showHome && (
         <>
-        <header className="sticky top-4 z-50">
-          <Navbar />
-       </header>
+          <header className="sticky top-4 z-50">
+            <Navbar />
+          </header>
 
-        <main className="relative overflow-x-hidden">
+          <main className="relative overflow-x-hidden">
+            <section id="home">
+              <Hero />
+            </section>
 
-          <Hero />
-          <About />
-          <Tracks />
-          <div className="min-h-screen bg-[#0E0E10]">
-      <Timeline />
-    </div>
-          <div className="border-border relative h-[60vh] max-h-[800px] w-full overflow-hidden rounded border shadow-2xl md:h-[80vh]">
-            <DomeGallery autoRotateSpeed={0.2} overlayBlurColor="#000000" />
-          </div>
+            <section id="about">
+              <About />
+            </section>
 
-          <Sponsors />
-          <Faq />
-          <Footer />
-        </main>
+            <section id="tracks">
+              <Tracks />
+            </section>
+
+            <section id="timeline">
+              <div className="min-h-screen bg-[#0E0E10]">
+                <Timeline />
+              </div>
+            </section>
+
+            <section id="gallery">
+              <div className="relative h-[60vh] max-h-[800px] w-full overflow-hidden md:h-[80vh]">
+                <DomeGallery autoRotateSpeed={0.2} overlayBlurColor="#000000" />
+              </div>
+            </section>
+
+            <section id="sponsors">
+              <Sponsors />
+            </section>
+
+            <section id="faq">
+              <Faq />
+            </section>
+
+            <section id="footer">
+              <Footer />
+            </section>
+          </main>
         </>
       )}
     </>

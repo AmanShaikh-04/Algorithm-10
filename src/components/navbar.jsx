@@ -2,16 +2,14 @@
 
 import { useState, useEffect, useRef } from "react";
 
-const NAV_ITEMS = ["Home", "About", "Tracks", "Timeline", "Sponsors", "FAQ"];
-
 export default function NavbarBanner() {
   const [expanded, setExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const collapseTimer = useRef(null);
 
-  /* ---------------------------------------
-     Detect mobile (NO hover on touch)
-  --------------------------------------- */
+  /* ----------------------------
+     Detect mobile screen
+  ---------------------------- */
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
@@ -19,9 +17,9 @@ export default function NavbarBanner() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  /* ---------------------------------------
-     Desktop hover handlers
-  --------------------------------------- */
+  /* ----------------------------
+     Desktop hover
+  ---------------------------- */
   const handleMouseEnter = () => {
     if (isMobile) return;
     if (collapseTimer.current) clearTimeout(collapseTimer.current);
@@ -35,17 +33,14 @@ export default function NavbarBanner() {
     }, 800);
   };
 
-  /* ---------------------------------------
-     Mobile tap toggle
-  --------------------------------------- */
+  /* ----------------------------
+     Mobile tap
+  ---------------------------- */
   const handleTap = () => {
     if (!isMobile) return;
     setExpanded((prev) => !prev);
   };
 
-  /* ---------------------------------------
-     Cleanup timer
-  --------------------------------------- */
   useEffect(() => {
     return () => collapseTimer.current && clearTimeout(collapseTimer.current);
   }, []);
@@ -61,7 +56,7 @@ export default function NavbarBanner() {
           transition-all duration-700 ease-in-out
           ${expanded
             ? "w-full max-w-7xl h-auto"
-  : "w-full max-w-md h-14 md:h-16"}
+            : "w-full max-w-md h-14 md:h-16"}
           rounded-3xl
           bg-gradient-to-l from-black/20 to-yellow-950/10
           border border-white/30 backdrop-blur-xl
@@ -84,18 +79,32 @@ export default function NavbarBanner() {
               className="w-12 md:w-14"
             />
 
-            {/* Desktop links */}
+            {/* Desktop nav */}
             <nav className="hidden md:flex gap-8 text-white">
-              {NAV_ITEMS.map((item) => (
-                <a
-                  key={item}
-                  href="#"
-                  className="relative group"
-                >
-                  {item}
-                  <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-orange-400 transition-all group-hover:w-full" />
-                </a>
-              ))}
+              <a href="#home" className="relative group">
+                Home
+                <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-orange-400 transition-all group-hover:w-full" />
+              </a>
+              <a href="#about" className="relative group">
+                About
+                <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-orange-400 transition-all group-hover:w-full" />
+              </a>
+              <a href="#tracks" className="relative group">
+                Tracks
+                <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-orange-400 transition-all group-hover:w-full" />
+              </a>
+              <a href="#timeline" className="relative group">
+                Timeline
+                <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-orange-400 transition-all group-hover:w-full" />
+              </a>
+              <a href="#sponsors" className="relative group">
+                Sponsors
+                <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-orange-400 transition-all group-hover:w-full" />
+              </a>
+              <a href="#faq" className="relative group">
+                FAQ
+                <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-orange-400 transition-all group-hover:w-full" />
+              </a>
             </nav>
 
             {/* Desktop CTA */}
@@ -104,23 +113,30 @@ export default function NavbarBanner() {
             </button>
 
             {/* Mobile icon */}
-            <span className="md:hidden text-white text-xl">
-              ☰
-            </span>
+            <span className="md:hidden text-white text-xl ">☰</span>
           </div>
 
           {/* Mobile menu */}
           {isMobile && (
-            <div className="md:hidden px-6 pb-4 space-y-4 text-white">
-              {NAV_ITEMS.map((item) => (
-                <a
-                  key={item}
-                  href="#"
-                  className="block border-b border-white/20 pb-2"
-                >
-                  {item}
-                </a>
-              ))}
+            <div className="md:hidden px-6 pb-4 space-y-4 text-white text-center">
+              <a href="#home" className="block border-b border-white/20 pb-2">
+                Home
+              </a>
+              <a href="#about" className="block border-b border-white/20 pb-2">
+                About
+              </a>
+              <a href="#tracks" className="block border-b border-white/20 pb-2">
+                Tracks
+              </a>
+              <a href="#timeline" className="block border-b border-white/20 pb-2">
+                Timeline
+              </a>
+              <a href="#sponsors" className="block border-b border-white/20 pb-2">
+                Sponsors
+              </a>
+              <a href="#faq" className="block border-b border-white/20 pb-2">
+                FAQ
+              </a>
 
               <button className="w-full py-2 rounded-full bg-gradient-to-l from-orange-400 to-red-500">
                 Register
