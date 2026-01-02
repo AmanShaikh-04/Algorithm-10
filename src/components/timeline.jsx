@@ -2,16 +2,24 @@
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 
-// ==================== Background Animation Component ====================
+
 const BackgroundAnimation = ({ progress, totalSections }) => {
   const pathRef = useRef(null);
   const [pathLength, setPathLength] = useState(0);
   const [pathD, setPathD] = useState('');
   const [logoTransform, setLogoTransform] = useState('translate(0, 0)');
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const sectionHeight = 100;
   const startY = 50;
-  const xPositions = [65, 35];
+  const xPositions = isMobile ? [55, 45] : [65, 35];
 
   const totalPathHeight = (totalSections - 1) * sectionHeight;
   const viewBoxHeight = startY + totalPathHeight + startY;
@@ -132,7 +140,7 @@ const BackgroundAnimation = ({ progress, totalSections }) => {
   );
 };
 
-// ==================== Corner Bracket Component ====================
+//corner bracket
 const CornerBracket = ({ isCurrent, position, delay }) => {
   const baseClasses = "absolute w-10 h-10 border-[#F36A1D]/60";
   const positionClasses = {
@@ -151,29 +159,28 @@ const CornerBracket = ({ isCurrent, position, delay }) => {
   );
 };
 
-// ==================== Section Content Component ====================
+// section content
 const SectionContent = ({ section, isCurrent, index }) => {
   const descriptionWordCount = section.description.split(' ').length;
   const dateAnimationStartDelay = 200 + descriptionWordCount * 35;
   const dateParts = ['// [', section.date, ']'];
 
   const isLeft = index % 2 === 0;
-  const containerJustifyClass = isLeft ? 'justify-start' : 'justify-end';
+  const containerJustifyClass = `justify-start md:${isLeft ? 'justify-start' : 'justify-end'}`;
   const contentContainerClasses = isLeft
-    ? 'items-start text-left ml-[25%] md:ml-[30%] lg:ml-[35%]'
-    : 'items-end text-right mr-[25%] md:mr-[30%] lg:mr-[35%]';
+    ? 'items-start text-left ml-[15%] md:ml-[30%] lg:ml-[35%]' 
+    : 'items-start text-left ml-[15%] md:items-end md:text-right md:ml-0 md:mr-[30%] lg:mr-[35%]';
 
   return (
     <div className={`absolute inset-0 flex items-center ${containerJustifyClass}`}>
-      <div className={`relative flex flex-col max-w-md p-6 ${contentContainerClasses}`}>
+     <div className={`relative flex flex-col max-w-[80%] md:max-w-md p-4 md:p-6 ${contentContainerClasses}`}>
+      <div className="hidden md:block">
         <CornerBracket isCurrent={isCurrent} position={isLeft ? "top-left" : "top-right"} delay="500ms" />
         <CornerBracket isCurrent={isCurrent} position={isLeft ? "bottom-right" : "bottom-left"} delay="500ms" />
-        
+       </div> 
         <div className={`transition-all duration-500 ease-in-out ${isCurrent ? 'blur-0 scale-100 opacity-100' : 'blur-sm scale-95 opacity-50'}`}>
           <div className="overflow-hidden">
-            <div
-              className={`font-orbitron text-7xl md:text-8xl font-bold text-[#F36A1D] transition-all duration-500 ease-out delay-100 leading-none ${isCurrent ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}`}
-            >
+            <div className={`font-orbitron text-5xl md:text-8xl font-bold text-[#F36A1D] transition-all duration-500 ease-out delay-100 leading-tight ${isCurrent ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}`}>
               <span>{section.number.line1}</span>
               {section.number.line2 && <span className="block">{section.number.line2}</span>}
             </div>
@@ -338,7 +345,7 @@ const Timeline = () => {
             <div
               key={index}
               ref={el => { sectionRefs.current[index] = el; }}
-              className="relative flex-shrink-0 w-full h-screen"
+              className="relative flex-shrink-0 w-full h-[50vh] md:h-screen"
             >
               <SectionContent
                 section={section}
