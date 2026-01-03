@@ -9,7 +9,7 @@ import Tracks from "@/components/tracks";
 import Timeline from "@/components/timeline";
 import Gallery from "@/components/gallery";
 import Sponsors from "@/components/sponsors";
-import Faq from "@/components/faq";
+import Faq from "@/components/Faq/faq";
 import Footer from "@/components/footer";
 
 export default function Page() {
