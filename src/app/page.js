@@ -29,7 +29,7 @@ export default function Page() {
 
       {showHome && (
         <>
-          <header className="sticky top-4 z-50">
+          <header className="fixed top-0 left-0 right-0 z-50 pt-4">
             <Navbar />
           </header>
 
