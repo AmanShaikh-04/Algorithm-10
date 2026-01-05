@@ -18,11 +18,21 @@ const FAQ_ITEMS = [
 export default function Faq() {
   const [openIndex, setOpenIndex] = useState(null);
   const [exitFooter, setExitFooter] = useState(false);
+
   const listRef = useRef(null);
   const exitTimeout = useRef(null);
+  const openIndexRef = useRef(null);
 
   const scrollProgress = useMotionValue(0);
-  const gradientPosition = useTransform(scrollProgress, [0, 1], ["0% 50%", "100% 50%"]);
+  const gradientPosition = useTransform(
+    scrollProgress,
+    [0, 1],
+    ["0% 50%", "100% 50%"]
+  );
+
+  useEffect(() => {
+    openIndexRef.current = openIndex;
+  }, [openIndex]);
 
   useEffect(() => {
     const list = listRef.current;
@@ -31,12 +41,12 @@ export default function Faq() {
     const handleScroll = () => {
       const scrollTop = list.scrollTop;
       const scrollHeight = list.scrollHeight - list.clientHeight;
-      const progress = scrollTop / scrollHeight;
+      if (scrollHeight <= 0) return;
 
-      scrollProgress.set(progress);
+      scrollProgress.set(scrollTop / scrollHeight);
 
       const atEnd = scrollTop >= scrollHeight - 8;
-      if (atEnd && openIndex === null) {
+      if (atEnd && openIndexRef.current === null) {
         clearTimeout(exitTimeout.current);
         exitTimeout.current = setTimeout(() => setExitFooter(true), 600);
       } else {
@@ -47,7 +57,7 @@ export default function Faq() {
 
     list.addEventListener("scroll", handleScroll);
     return () => list.removeEventListener("scroll", handleScroll);
-  }, [openIndex, scrollProgress]);
+  }, [scrollProgress]);
 
   const leftVariants = {
     visible: { y: 0, opacity: 1 },
@@ -63,7 +73,8 @@ export default function Faq() {
     })
   };
 
-  const gradientColors = "linear-gradient(90deg, #8B0000, #FF4500, #FF7E00, #FFA500, #FFD580, #FF7E00, #5C1A00)";
+  const gradientColors =
+    "linear-gradient(90deg, #8B0000, #FF4500, #FF7E00, #FFA500, #FFD580, #FF7E00, #5C1A00)";
 
   return (
     <section className="relative bg-black text-white py-16 md:py-24 overflow-hidden">
@@ -95,7 +106,9 @@ export default function Faq() {
             </motion.h2>
           </div>
 
-          <p className="mt-4 text-lg md:text-xl opacity-70">Everything you need to know about Algorithm 10.0</p>
+          <p className="mt-4 text-lg md:text-xl opacity-70">
+            Everything you need to know about Algorithm 10.0
+          </p>
         </motion.div>
 
         {/* FAQ LIST */}
@@ -116,7 +129,6 @@ export default function Faq() {
                   animate={exitFooter ? "exit" : "visible"}
                   className="group relative rounded-3xl bg-white/5 backdrop-blur border border-white/10 mb-6 overflow-hidden"
                 >
-                  {/* Gradient Border */}
                   <div
                     className={`absolute inset-0 rounded-3xl pointer-events-none transition-opacity duration-300
                       ${isOpen ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
@@ -137,7 +149,7 @@ export default function Faq() {
                     <span>{item.q}</span>
                     <motion.span
                       animate={{ rotate: isOpen ? 180 : 0 }}
-                      transition={{ duration: 0.3 }}
+                      transition={{ duration: 0.2 }}
                     >
                       ⌄
                     </motion.span>
@@ -149,7 +161,7 @@ export default function Faq() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.4, ease: "easeInOut" }}
+                        transition={{ duration: 0.22, ease: "easeOut" }}
                         className="relative z-10 px-6 md:px-8 pb-6 overflow-hidden"
                       >
                         <p className="text-gray-300">{item.a}</p>
