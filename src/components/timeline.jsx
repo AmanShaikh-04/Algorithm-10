@@ -9,6 +9,7 @@ const BackgroundAnimation = ({ progress, totalSections }) => {
   const [pathD, setPathD] = useState("");
   const [logoTransform, setLogoTransform] = useState("translate(0, 0)");
 
+  // SVG Constants
   const sectionHeight = 100;
   const startY = 50;
   const xPositions = [65, 35];
@@ -71,6 +72,9 @@ const BackgroundAnimation = ({ progress, totalSections }) => {
     }
   }, [progress, pathLength]);
 
+  // REMOVED: Independent circleOpacity logic.
+  // The circle will now stay visible and fade out only when the parent component fades.
+
   return (
     <div className="pointer-events-none absolute inset-0 z-0">
       <svg
@@ -109,7 +113,7 @@ const BackgroundAnimation = ({ progress, totalSections }) => {
             d={pathD}
             fill="none"
             stroke="#F36A1D"
-            strokeOpacity="0.3"
+            strokeOpacity="0.2"
             strokeWidth="0.3"
             strokeDasharray="3 3"
           />
@@ -136,9 +140,10 @@ const BackgroundAnimation = ({ progress, totalSections }) => {
               cx="0"
               cy="0"
               r="1.5"
-              fill="#F36A1D"
+              fill="#F5A623"
               filter="url(#node-glow)"
             />
+            <circle cx="0" cy="0" r="0.5" fill="#FFF" />
           </g>
         )}
       </svg>
@@ -146,130 +151,60 @@ const BackgroundAnimation = ({ progress, totalSections }) => {
   );
 };
 
-// ==================== Corner Bracket Component ====================
-const CornerBracket = ({ isCurrent, position, delay }) => {
-  const baseClasses = "absolute w-10 h-10 border-[#F36A1D]/60";
-  const positionClasses = {
-    "top-left": "top-0 left-0 border-t border-l",
-    "top-right": "top-0 right-0 border-t border-r",
-    "bottom-left": "bottom-0 left-0 border-b border-l",
-    "bottom-right": "bottom-0 right-0 border-b border-r",
-  };
-  const transitionClasses = `transition-all duration-700 ease-out ${isCurrent ? "opacity-100 w-10 h-10" : "opacity-0 w-5 h-5"}`;
-
-  return (
-    <div
-      className={`${baseClasses} ${positionClasses[position]} ${transitionClasses}`}
-      style={{ transitionDelay: delay }}
-    />
-  );
-};
-
 // ==================== Section Content Component ====================
 const SectionContent = ({ section, isCurrent, index }) => {
-  const descriptionWordCount = section.description.split(" ").length;
-  const dateAnimationStartDelay = 200 + descriptionWordCount * 35;
-  const dateParts = ["// [", section.date, "]"];
-
   const isLeft = index % 2 === 0;
-  const containerJustifyClass = isLeft ? "justify-start" : "justify-end";
-  const contentContainerClasses = isLeft
-    ? "items-start text-left ml-[25%] md:ml-[30%] lg:ml-[35%]"
-    : "items-end text-right mr-[25%] md:mr-[30%] lg:mr-[35%]";
+
+  const justifyClass = isLeft
+    ? "justify-center md:justify-start"
+    : "justify-center md:justify-end";
+
+  const containerClasses = isLeft
+    ? "md:ml-[15%] lg:ml-[20%] text-left items-start"
+    : "md:mr-[15%] lg:mr-[20%] text-right items-end";
+
+  const borderClass = isLeft
+    ? "border-l-4 border-[#F36A1D] pl-6"
+    : "border-r-4 border-[#F36A1D] pr-6";
+
+  const gradientClass = isLeft
+    ? "bg-gradient-to-r from-[#F36A1D]/10 to-transparent"
+    : "bg-gradient-to-l from-[#F36A1D]/10 to-transparent";
 
   return (
-    <div
-      className={`absolute inset-0 flex items-center ${containerJustifyClass}`}
-    >
+    <div className={`absolute inset-0 flex items-center px-6 ${justifyClass}`}>
       <div
-        className={`relative flex max-w-md flex-col p-6 ${contentContainerClasses}`}
+        className={`relative flex max-w-lg flex-col py-6 transition-all duration-700 ease-out ${containerClasses} ${
+          isCurrent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-30"
+        }`}
       >
-        <CornerBracket
-          isCurrent={isCurrent}
-          position={isLeft ? "top-left" : "top-right"}
-          delay="500ms"
-        />
-        <CornerBracket
-          isCurrent={isCurrent}
-          position={isLeft ? "bottom-right" : "bottom-left"}
-          delay="500ms"
-        />
-
         <div
-          className={`transition-all duration-500 ease-in-out ${isCurrent ? "blur-0 scale-100 opacity-100" : "scale-95 opacity-50 blur-sm"}`}
-        >
-          <div className="overflow-hidden">
-            <div
-              className={`font-orbitron text-7xl leading-none font-bold text-[#F36A1D] transition-all delay-100 duration-500 ease-out md:text-8xl ${isCurrent ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}`}
+          className={`absolute inset-0 -z-10 rounded-lg ${gradientClass} transition-opacity duration-700 ${
+            isCurrent ? "opacity-100" : "opacity-0"
+          }`}
+        />
+
+        <div className={`${borderClass} flex flex-col gap-2`}>
+          <div className="font-orbitron leading-none font-bold">
+            <span className="block text-2xl text-[#F5A623]/80 md:text-3xl">
+              {section.number.line1}
+            </span>
+            <span
+              className={`block text-6xl text-[#F36A1D] transition-all duration-500 md:text-7xl lg:text-8xl ${
+                isCurrent ? "blur-0 scale-100" : "scale-90 blur-sm"
+              }`}
             >
-              <span>{section.number.line1}</span>
-              {section.number.line2 && (
-                <span className="block">{section.number.line2}</span>
-              )}
-            </div>
+              {section.number.line2}
+            </span>
           </div>
 
-          <div className="mt-1">
-            <h2
-              className="font-orbitron text-lg font-semibold tracking-wider text-[#E1E1E3] uppercase md:text-xl"
-              aria-label={section.title}
-            >
-              {section.title.split("").map((char, charIndex) => (
-                <span key={charIndex} className="inline-block overflow-hidden">
-                  <span
-                    className={`inline-block transition-all duration-300 ease-out ${isCurrent ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}`}
-                    style={{ transitionDelay: `${150 + charIndex * 25}ms` }}
-                  >
-                    {char === " " ? "\u00A0" : char}
-                  </span>
-                </span>
-              ))}
-            </h2>
-          </div>
+          <h2 className="font-orbitron mt-2 text-xl font-bold tracking-wider text-white uppercase md:text-2xl">
+            {section.title}
+          </h2>
 
-          <div className="mt-1 max-w-sm">
-            <p
-              className="text-base text-[#E1E1E3]/70"
-              aria-label={section.description}
-            >
-              {section.description.split(" ").map((word, wordIndex) => (
-                <span
-                  key={wordIndex}
-                  className="mr-1.5 inline-block overflow-hidden align-bottom"
-                >
-                  <span
-                    className={`inline-block transition-all duration-400 ease-out ${isCurrent ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}`}
-                    style={{ transitionDelay: `${200 + wordIndex * 35}ms` }}
-                  >
-                    {word}
-                  </span>
-                </span>
-              ))}
-            </p>
-          </div>
-
-          <div className="mt-4">
-            <p
-              className="font-orbitron text-sm font-semibold tracking-widest text-[#F36A1D]/80 uppercase"
-              aria-label={`Date: ${section.date}`}
-            >
-              {dateParts.map((part, partIndex) => (
-                <span
-                  key={partIndex}
-                  className="mr-2 inline-block overflow-hidden"
-                >
-                  <span
-                    className={`inline-block transition-all duration-400 ease-out ${isCurrent ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}
-                    style={{
-                      transitionDelay: `${dateAnimationStartDelay + partIndex * 50}ms`,
-                    }}
-                  >
-                    {part}
-                  </span>
-                </span>
-              ))}
-            </p>
-          </div>
+          <p className="max-w-xs font-sans text-sm leading-relaxed font-medium text-neutral-300 md:text-base">
+            {section.description}
+          </p>
         </div>
       </div>
     </div>
@@ -280,51 +215,51 @@ const SectionContent = ({ section, isCurrent, index }) => {
 const Timeline = () => {
   const sections = [
     {
-      number: { line1: "Launch" },
-      title: "Registration Open",
-      description:
-        "Assemble your squad, register your team, and prepare for liftoff. The countdown has begun.",
-      date: "OCT 28, 2024",
+      number: { line1: "JAN", line2: "12" },
+      title: "Registrations Start",
+      description: "Registration opens. Gather your team and sign up.",
     },
     {
-      number: { line1: "Day", line2: "01" },
-      title: "Ideation & Build",
-      description:
-        "The clock is ticking. Brainstorm, design, and start coding. Let the innovation marathon commence.",
-      date: "OCT 29, 2024",
+      number: { line1: "JAN", line2: "24" },
+      title: "Registrations Close",
+      description: "Deadline day. Ensure your team is registered.",
     },
     {
-      number: { line1: "Day", line2: "02" },
-      title: "Midpoint Check-in",
-      description:
-        "Refine your prototypes. Mentors are on standby to help you debug, pivot, and push the boundaries.",
-      date: "OCT 30, 2024",
+      number: { line1: "JAN", line2: "26" },
+      title: "Round 1: Quiz",
+      description: "Quiz round. Only team lead allowed. Timing TBA.",
     },
     {
-      number: { line1: "Day", line2: "03" },
-      title: "Final Touches",
+      number: { line1: "JAN", line2: "27" },
+      title: "Shortlist Announced",
       description:
-        "Polish your presentation, squash the last bugs, and prepare to showcase your creation to the world.",
-      date: "OCT 31, 2024",
+        "By 9 AM. Selected teams listed on website & WhatsApp groups.",
     },
     {
-      number: { line1: "Judging" },
-      title: "Demo Day",
-      description:
-        "Present your project to our panel of judges. It's time to see if your code has what it takes to win.",
-      date: "NOV 01, 2024",
+      number: { line1: "JAN", line2: "30" },
+      title: "Hackathon Starts",
+      description: "The 32-hour offline hackathon begins.",
+    },
+    {
+      number: { line1: "JAN", line2: "31" },
+      title: "Hackathon Ends",
+      description: "Competition concludes and winners declared.",
     },
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [progress, setProgress] = useState(0);
 
+  // Animation states
+  const [headerOpacity, setHeaderOpacity] = useState(1);
+  const [componentOpacity, setComponentOpacity] = useState(1);
+
   const scrollContainerRef = useRef(null);
   const sectionRefs = useRef([]);
 
   useEffect(() => {
     sectionRefs.current = sectionRefs.current.slice(0, sections.length);
-  }, []);
+  }, [sections.length]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -333,17 +268,76 @@ const Timeline = () => {
 
       const containerRect = container.getBoundingClientRect();
       const containerTop = containerRect.top;
-      const containerBottom = containerRect.bottom;
       const containerHeight = containerRect.height;
-
-      // Calculate progress based on how much of the timeline is visible/scrolled
       const windowHeight = window.innerHeight;
-      const scrolledPast = Math.max(0, -containerTop);
-      const totalScrollable = containerHeight - windowHeight;
-      const currentProgress =
-        totalScrollable > 0 ? Math.min(1, scrolledPast / totalScrollable) : 0;
-      setProgress(currentProgress);
 
+      // --- 1. Progress Calculation ---
+      const totalSections = sections.length;
+      const sectionHeight = 100;
+      const startY = 50;
+      const totalPathHeight = (totalSections - 1) * sectionHeight;
+      const viewBoxHeight = startY + totalPathHeight + startY;
+
+      const startFraction = startY / viewBoxHeight;
+      const endFraction = (startY + totalPathHeight) / viewBoxHeight;
+      const effectivePathFraction = endFraction - startFraction;
+
+      const scrollCenterPosition = -containerTop + windowHeight * 0.5;
+      const rawProgress =
+        containerHeight > 0 ? scrollCenterPosition / containerHeight : 0;
+
+      let adjustedProgress =
+        (rawProgress - startFraction) / effectivePathFraction;
+      if (adjustedProgress > 0.99) adjustedProgress = 1;
+      adjustedProgress = Math.min(1, Math.max(0, adjustedProgress));
+
+      setProgress(adjustedProgress);
+
+      // --- 2. Header Fade In/Out ---
+      const headerFadeStart = windowHeight * 0.2;
+      const headerFadeEnd = -100;
+      let newHeaderOpacity = 1;
+      if (containerTop < headerFadeStart) {
+        const distance = containerTop - headerFadeEnd;
+        const range = headerFadeStart - headerFadeEnd;
+        newHeaderOpacity = Math.min(1, Math.max(0, distance / range));
+      }
+      setHeaderOpacity(newHeaderOpacity);
+
+      // --- 3. Component Exit Fade (Anchor to Last Section) ---
+      // We check the position of the LAST section specifically.
+      // We want opacity to remain 1 until the last section reaches the top area.
+
+      let newComponentOpacity = 1;
+      const lastSection = sectionRefs.current[sections.length - 1];
+
+      if (lastSection) {
+        const lastRect = lastSection.getBoundingClientRect();
+        const elementCenter = lastRect.top + lastRect.height / 2;
+
+        // Start fading when the center of the last element hits the top 20% of the viewport
+        const fadeStartPos = windowHeight * 0.2;
+        // Finish fading when it has moved up another 20% (fully off or near off screen)
+        const fadeEndPos = -windowHeight * 0.1;
+
+        if (elementCenter < fadeStartPos) {
+          const range = fadeStartPos - fadeEndPos;
+          const distance = elementCenter - fadeEndPos;
+          newComponentOpacity = Math.min(1, Math.max(0, distance / range));
+        }
+      } else {
+        // Fallback if ref not found (rare)
+        if (containerRect.bottom < windowHeight * 0.5) {
+          newComponentOpacity = Math.max(
+            0,
+            containerRect.bottom / (windowHeight * 0.5)
+          );
+        }
+      }
+
+      setComponentOpacity(newComponentOpacity);
+
+      // --- 4. Active Section Logic ---
       const viewportCenter = windowHeight / 2;
       let newCurrentIndex = 0;
       let minDistance = Infinity;
@@ -371,38 +365,59 @@ const Timeline = () => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [currentIndex]);
+  }, [currentIndex, sections.length]);
 
   return (
-    <div ref={scrollContainerRef} className="relative w-full">
+    <div ref={scrollContainerRef} className="relative w-full bg-black">
       <style jsx global>{`
         .font-orbitron {
           font-family: "Orbitron", sans-serif;
         }
       `}</style>
 
-      <div className="relative">
-        <BackgroundAnimation
-          progress={progress}
-          totalSections={sections.length}
-        />
-        <main>
-          {sections.map((section, index) => (
-            <div
-              key={index}
-              ref={(el) => {
-                sectionRefs.current[index] = el;
-              }}
-              className="relative h-screen w-full flex-shrink-0"
-            >
-              <SectionContent
-                section={section}
-                isCurrent={index === currentIndex}
-                index={index}
-              />
-            </div>
-          ))}
-        </main>
+      {/* Main Wrapper with Scroll-Driven Opacity */}
+      <div style={{ opacity: componentOpacity }}>
+        {/* Header Section */}
+        <div
+          className="relative z-10 flex flex-col items-center justify-center pt-24 pb-12 text-center md:pt-32"
+          style={{ opacity: headerOpacity }}
+        >
+          <h2 className="font-orbitron text-4xl font-bold tracking-widest text-[#F5A623] uppercase drop-shadow-[0_0_15px_rgba(243,106,29,0.4)] md:text-6xl">
+            Timeline
+          </h2>
+          <p className="mt-4 max-w-xl px-4 text-base font-light text-neutral-400 md:text-lg">
+            Follow the journey from registration to the final showdown.
+          </p>
+        </div>
+
+        <div className="relative">
+          <BackgroundAnimation
+            progress={progress}
+            totalSections={sections.length}
+          />
+
+          {/* Small padding to keep content neat, but not create a huge gap */}
+          <main className="relative z-10 pb-20">
+            {sections.map((section, index) => (
+              <div
+                key={index}
+                ref={(el) => {
+                  sectionRefs.current[index] = el;
+                }}
+                className="relative flex min-h-[50vh] w-full flex-shrink-0 items-center justify-center md:min-h-[60vh]"
+              >
+                <SectionContent
+                  section={section}
+                  isCurrent={index === currentIndex}
+                  index={index}
+                />
+              </div>
+            ))}
+          </main>
+
+          {/* Decorative Gradient at Bottom */}
+          <div className="pointer-events-none absolute bottom-0 left-0 z-20 h-64 w-full bg-gradient-to-t from-black via-black/90 to-transparent" />
+        </div>
       </div>
     </div>
   );
