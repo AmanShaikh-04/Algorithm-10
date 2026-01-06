@@ -1,0 +1,191 @@
+/* =======================
+   FUTURISTIC FOOTER
+======================= */
+
+.futuristic-footer {
+  background: radial-gradient(circle at top, #151518, #0E0E10);
+  color: #E1E1E3;
+  padding: 4rem 2rem 2rem;
+  font-family: "Inter", sans-serif;
+}
+
+/* =======================
+   GRID LAYOUT
+======================= */
+
+.footer-container {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1.2fr 1.4fr;
+  gap: 3rem;
+}
+
+/* =======================
+   BRAND
+======================= */
+
+.footer-brand h2 {
+  font-size: 1.7rem;
+  margin-bottom: 1rem;
+}
+
+.footer-brand p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  opacity: 0.8;
+}
+
+/* =======================
+   HEADINGS
+======================= */
+
+.footer-links h3,
+.footer-contact h3,
+.footer-map h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.footer-links h3::after,
+.footer-contact h3::after,
+.footer-map h3::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 36px;
+  height: 2px;
+  background: linear-gradient(90deg, #F36A1D, #F5A623);
+}
+
+/* =======================
+   QUICK LINKS
+======================= */
+
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 1.2rem;
+}
+
+.footer-links li {
+  font-size: 0.9rem;
+  margin-bottom: 0.7rem;
+  opacity: 0.85;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.footer-links li:hover {
+  color: #F36A1D;
+  transform: translateX(4px);
+}
+
+/* =======================
+   CONTACT
+======================= */
+
+.footer-contact p {
+  font-size: 0.9rem;
+  margin-bottom: 0.6rem;
+  opacity: 0.85;
+}
+
+/* =======================
+   SOCIAL ICONS
+======================= */
+
+.social-icons {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.social-icons a {
+  all: unset;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(245,166,35,0.35);
+  color: #F5A623;
+  font-size: 1.2rem;
+  line-height: 1;
+
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.social-icons a:hover {
+  background: #F36A1D;
+  color: #0E0E10;
+  box-shadow: 0 0 18px rgba(243,106,29,0.9);
+  transform: translateY(-4px);
+}
+
+/* =======================
+   MAP
+======================= */
+
+.footer-map {
+  display: flex;
+  flex-direction: column;
+}
+
+.map-box {
+  margin-top: 1.2rem;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 0 25px rgba(243,106,29,0.18);
+}
+
+.map-box iframe {
+  width: 100%;
+  height: 180px;
+  border: none;
+  filter: grayscale(0.9) contrast(1.1) brightness(0.9);
+}
+
+.map-caption {
+  margin-top: 0.6rem;
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+/* =======================
+   FOOTER BOTTOM
+======================= */
+
+.footer-bottom {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  text-align: center;
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+/* =======================
+   RESPONSIVE
+======================= */
+
+@media (max-width: 900px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+.social-icons a:nth-child(1):hover { background: #E1306C; } /* Instagram */
+.social-icons a:nth-child(2):hover { background: #25D366; } /* WhatsApp */
+.social-icons a:nth-child(3):hover { background: #0A66C2; } /* LinkedIn */
+.social-icons a:nth-child(4):hover { background: #FF0000; } /* YouTube */
