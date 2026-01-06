@@ -42,6 +42,7 @@ npm run dev
 ## Precaution
 
 Before you start coding (Always do this): To avoid conflicts, always ensure you have the latest code from the team before making changes:
+
 ```js
 git checkout main
 git pull origin main
@@ -52,34 +53,41 @@ git pull origin main
 1. Create a new branch:
 
 Create your name branch once
+
 ```bash
 git checkout -b <your-name>
 ```
+
 Use this if you already created the branch once and want to contribute to the project.
+
 ```bash
 git checkout <your-name>
 ```
 
 2. Stage the changes
+
 ```bash
 git add .
 ```
 
 3. Commit the changes
+
 ```bash
 git commit -m "your message"
 ```
+
 4. Push the changes
+
 ```bash
 git push origin <your-name>
 ```
 
 5. Create a Pull Request (PR)
 
-* Go to the GitHub repository page.
+- Go to the GitHub repository page.
 
-* You will see a "Compare & pull request" button.
+- You will see a "Compare & pull request" button.
 
-* Click it and submit your PR to the main branch.
+- Click it and submit your PR to the main branch.
 
-* Wait for the PR to be reviewed and merged.
+- Wait for the PR to be reviewed and merged.
