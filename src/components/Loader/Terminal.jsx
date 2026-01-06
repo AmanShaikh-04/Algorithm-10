@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 const TerminalLine = ({ children, delay, className = "" }) => {
   const [visible, setVisible] = useState(false);
@@ -23,24 +23,31 @@ const TerminalLine = ({ children, delay, className = "" }) => {
   );
 };
 
-const Terminal = ({ username, showInput, inputValue, setInputValue, handleSave }) => {
+const Terminal = ({
+  username,
+  showInput,
+  inputValue,
+  setInputValue,
+  handleSave,
+}) => {
   return (
     <motion.div
-      className="absolute inset-0 flex items-center justify-center p-4 z-30"
+      className="absolute inset-0 z-30 flex items-center justify-center p-4"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
     >
       <div className="w-full max-w-2xl">
         {/* Main Terminal Window - Style Kept As Requested */}
-        <div className="bg-black/60 backdrop-blur-sm border border-white/10 rounded-lg p-4 sm:p-6 shadow-2xl relative overflow-hidden">
-          
+        <div className="relative overflow-hidden rounded-lg border border-white/10 bg-black/60 p-4 shadow-2xl backdrop-blur-sm sm:p-6">
           {/* Header (Dots) - Kept As Requested */}
-          <div className="flex items-center gap-2 mb-4 pb-3 border-b border-white/10">
-            <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-red-500/80" />
-            <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-yellow-500/80" />
-            <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-green-500/80" />
-            <span className="ml-2 text-white/40 text-[10px] sm:text-xs font-mono">Algorithm-X-Terminal</span>
+          <div className="mb-4 flex items-center gap-2 border-b border-white/10 pb-3">
+            <div className="h-2 w-2 rounded-full bg-red-500/80 sm:h-3 sm:w-3" />
+            <div className="h-2 w-2 rounded-full bg-yellow-500/80 sm:h-3 sm:w-3" />
+            <div className="h-2 w-2 rounded-full bg-green-500/80 sm:h-3 sm:w-3" />
+            <span className="ml-2 font-mono text-[10px] text-white/40 sm:text-xs">
+              Algorithm-X-Terminal
+            </span>
           </div>
 
           <div className="space-y-3 text-white">
@@ -49,33 +56,33 @@ const Terminal = ({ username, showInput, inputValue, setInputValue, handleSave }
               $ system_init --verbose
             </TerminalLine>
 
-            <TerminalLine delay={200}>
-               &gt; Core modules loaded.
-            </TerminalLine>
+            <TerminalLine delay={200}>&gt; Core modules loaded.</TerminalLine>
 
             {/* NEW HIGHLIGHTED INPUT SECTION */}
             {!username && showInput && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="mt-6 p-4 rounded bg-white/5 border border-green-500/40 shadow-[0_0_15px_rgba(34,197,94,0.1)]"
+                className="mt-6 rounded border border-green-500/40 bg-white/5 p-4 shadow-[0_0_15px_rgba(34,197,94,0.1)]"
               >
-                <div className="text-green-400 mb-2 text-[10px] sm:text-xs uppercase tracking-wider font-bold">
+                <div className="mb-2 text-[10px] font-bold tracking-wider text-green-400 uppercase sm:text-xs">
                   User Identification Required
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-green-500 font-bold text-lg animate-pulse">&gt;</span>
+                  <span className="animate-pulse text-lg font-bold text-green-500">
+                    &gt;
+                  </span>
                   <input
                     autoFocus
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleSave()}
-                    className="bg-transparent outline-none border-none text-white text-base sm:text-lg font-mono flex-1 placeholder-white/20"
+                    className="flex-1 border-none bg-transparent font-mono text-base text-white placeholder-white/20 outline-none sm:text-lg"
                     placeholder="Enter Username..."
                   />
-                  <button 
+                  <button
                     onClick={handleSave}
-                    className="text-[10px] uppercase px-2 py-1 rounded border border-green-500/30 text-green-400 hover:bg-green-500/10 transition-colors"
+                    className="rounded border border-green-500/30 px-2 py-1 text-[10px] text-green-400 uppercase transition-colors hover:bg-green-500/10"
                   >
                     Enter
                   </button>
@@ -85,29 +92,34 @@ const Terminal = ({ username, showInput, inputValue, setInputValue, handleSave }
 
             {username && (
               <>
-                <TerminalLine delay={600} className="mt-4 pt-2 border-t border-white/5 text-green-400">
+                <TerminalLine
+                  delay={600}
+                  className="mt-4 border-t border-white/5 pt-2 text-green-400"
+                >
                   Access Granted: {username}
                 </TerminalLine>
 
-                <TerminalLine delay={username ? 800: 1000} className="text-white/80">
+                <TerminalLine
+                  delay={username ? 800 : 1000}
+                  className="text-white/80"
+                >
                   Initializing Challenge Environment...
                 </TerminalLine>
               </>
             )}
 
             <TerminalLine delay={username ? 1200 : 1800}>
-              <span className="text-green-500 animate-pulse">_</span>
+              <span className="animate-pulse text-green-500">_</span>
             </TerminalLine>
           </div>
         </div>
 
         <motion.div
-          className="mt-4 text-center text-white/30 text-[10px] sm:text-xs font-mono tracking-wider"
+          className="mt-4 text-center font-mono text-[10px] tracking-wider text-white/30 sm:text-xs"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2 }}
-        >
-        </motion.div>
+        ></motion.div>
       </div>
     </motion.div>
   );
