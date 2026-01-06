@@ -5,7 +5,7 @@ import Loader from "@/components/Loader/Loader";
 import Navbar from "@/components/navbar";
 import Hero from "@/components/hero";
 import About from "@/components/about";
-import Tracks from "@/components/tracks";
+import TracksSection from "@/components/tracks";
 import DomeGallery from "@/components/gallery";
 import Sponsors from "@/components/sponsors";
 import Faq from "@/components/faq";
@@ -35,10 +35,10 @@ export default function Page() {
          
           <Hero />
           <About />
-          <Tracks />
-          <div className="min-h-screen bg-[#0E0E10]">
-      <Timeline />
-    </div>
+          <TracksSection/>
+          <div>
+            <Timeline />
+          </div>
           <div className="border-border relative h-[60vh] max-h-[800px] w-full overflow-hidden rounded border shadow-2xl md:h-[80vh]">
             <DomeGallery autoRotateSpeed={0.2} overlayBlurColor="#000000" />
           </div>
