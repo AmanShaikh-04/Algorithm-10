@@ -33,7 +33,7 @@ export default function Page() {
             <Navbar />
           </header>
 
-          <main className="relative overflow-x-hidden">
+          <main className="relative">
             <section id="home">
               <Hero />
             </section>
