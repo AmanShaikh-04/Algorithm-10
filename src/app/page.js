@@ -6,7 +6,7 @@ import Navbar from "@/components/navbar";
 import Hero from "@/components/hero";
 import About from "@/components/about";
 import Tracks from "@/components/tracks";
-import DomeGallery from "@/components/gallery";
+import Gallery from "@/components/gallery";
 import Sponsors from "@/components/sponsors";
 import Faq from "@/components/faq";
 import Footer from "@/components/footer";
@@ -33,7 +33,7 @@ export default function Page() {
             <Navbar />
           </header>
 
-          <main className="relative overflow-x-hidden">
+          <main className="relative">
             <section id="home">
               <Hero />
             </section>
@@ -52,11 +52,9 @@ export default function Page() {
               </div>
             </section>
 
-            <section id="gallery">
-              <div className="relative h-[60vh] max-h-[800px] w-full overflow-hidden md:h-[80vh]">
-                <DomeGallery autoRotateSpeed={0.2} overlayBlurColor="#000000" />
-              </div>
-            </section>
+<section id="gallery" className="relative py-20 bg-neutral-950 overflow-hidden">
+<Gallery/>
+</section>
 
             <section id="sponsors">
               <Sponsors />
