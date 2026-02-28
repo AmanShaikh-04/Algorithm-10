@@ -338,7 +338,7 @@ const CountdownTimer = ({ targetDate }) => {
   );
 
   return (
-    <div className="flex flex-wrap justify-center gap-2 sm:gap-4 md:gap-6">
+    <div className="flex flex-wrap justify-center gap-2 sm:gap-4 md:gap-6 font-inter">
       <TimeBox value={timeLeft.days} label="Days" index={0} />
       <TimeBox value={timeLeft.hours} label="Hours" index={1} />
       <TimeBox value={timeLeft.minutes} label="Minutes" index={2} />
@@ -408,8 +408,8 @@ export default function Hero() {
                   transition={{ duration: 0.8, delay: 0.3 }}
                   className="mb-3 text-4xl font-black tracking-tight sm:mb-4 sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
                 >
-                  <span className="block text-white">Algorithm</span>
-                  <span className="block bg-linear-to-r from-orange-400 via-orange-500 to-orange-400 bg-clip-text text-transparent">
+                  <span className="block text-white font-orbitron">Algorithm</span>
+                  <span className="block bg-linear-to-r from-orange-400 font-orbitron via-orange-500 to-orange-400 bg-clip-text text-transparent">
                     X
                   </span>
                 </motion.h1>
@@ -425,7 +425,7 @@ export default function Hero() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.6 }}
-                  className="max-w-md px-4 text-sm font-light text-white/60 sm:px-0 sm:text-base md:text-lg lg:text-xl"
+                  className="max-w-md px-4 font-inter text-sm font-light text-white/60 sm:px-0 sm:text-base md:text-lg lg:text-xl"
                 >
                   Where <span className="text-orange-400">Innovation</span>{" "}
                   Meets <span className="text-orange-400">Excellence</span>
@@ -519,7 +519,7 @@ export default function Hero() {
                   transition={{ duration: 0.6, delay: 0.6 }}
                   className="mb-6 text-center sm:mb-8"
                 >
-                  <h2 className="mb-2 text-xl font-bold text-white sm:mb-3 sm:text-2xl md:text-3xl">
+                  <h2 className="mb-2 text-xl font-bold font-inter text-white sm:mb-3 sm:text-2xl md:text-3xl">
                     Event Starts In
                   </h2>
                   <div className="mx-auto h-0.5 w-20 bg-orange-500 sm:w-24" />

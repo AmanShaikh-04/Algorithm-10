@@ -183,10 +183,10 @@ export default function Sponsors() {
       <div className="relative z-10 mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-20 text-center">
-          <h2 className="mb-6 text-4xl font-bold tracking-tight text-white md:text-5xl">
+          <h2 className="mb-6 text-4xl font-bold font-orbitron tracking-tight text-white md:text-5xl">
             Our Partners
           </h2>
-          <div className="mx-auto mb-6 h-1 w-20 rounded-full bg-gradient-to-r from-orange-600 to-amber-500" />
+          <div className="mx-auto mb-6 h-1 w-20 font-inter rounded-full bg-gradient-to-r from-orange-600 to-amber-500" />
           <p className="mx-auto max-w-2xl text-lg text-neutral-400">
             Fueling innovation through collaboration.
           </p>

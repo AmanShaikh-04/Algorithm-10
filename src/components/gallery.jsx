@@ -22,13 +22,13 @@ const Gallery = () => {
       </div>
 
       {/* Main Heading with Gradient and Glow */}
-      <h2 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 bg-clip-text text-transparent animate-gradient relative inline-block">
+      <h2 className="mb-4 text-4xl font-bold font-orbitron tracking-tight md:text-5xl lg:text-6xl bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 bg-clip-text text-transparent animate-gradient relative inline-block">
         Gallery
         <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 blur-2xl opacity-30 -z-10" />
       </h2>
       
       {/* Subtitle with Enhanced Styling */}
-      <p className="mx-auto max-w-2xl text-lg text-gray-400 leading-relaxed">
+      <p className="mx-auto max-w-2xl text-lg text-gray-400 leading-relaxed font-inter">
         Explore our immersive visual journey through innovation and creativity
       </p>
 

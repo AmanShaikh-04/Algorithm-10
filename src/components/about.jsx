@@ -1,891 +1,477 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
-function Card3D({ position, prize, prizeAmount, subtitle, icon, delay }) {
-  const [transform, setTransform] = useState({ rotateX: 0, rotateY: 0 });
-  const [isHovered, setIsHovered] = useState(false);
+function PrizeCard({ rank, amount, subtitle, delay, size = "md" }) {
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [hovered, setHovered] = useState(false);
+  const cardRef = useRef(null);
 
   const handleMouseMove = (e) => {
-    const card = e.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -15;
-    const rotateY = ((x - centerX) / centerX) * 15;
-
-    setTransform({ rotateX, rotateY });
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 24;
+    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -24;
+    setTilt({ x, y });
   };
 
-  const handleMouseLeave = () => {
-    setTransform({ rotateX: 0, rotateY: 0 });
-    setIsHovered(false);
+  const medals = { 1: "🥇", 2: "🥈", 3: "🥉" };
+  const rankLabels = { 1: "FIRST", 2: "SECOND", 3: "THIRD" };
+
+  const accentColors = {
+    1: {
+      glow: "rgba(255, 200, 60, 0.5)",
+      border: "rgba(255, 200, 60, 0.4)",
+      text: "#FFD700",
+      shine: "rgba(255, 215, 0, 0.15)",
+    },
+    2: {
+      glow: "rgba(200, 210, 230, 0.45)",
+      border: "rgba(200, 210, 230, 0.35)",
+      text: "#C8D2E6",
+      shine: "rgba(200, 210, 230, 0.1)",
+    },
+    3: {
+      glow: "rgba(205, 130, 70, 0.45)",
+      border: "rgba(205, 130, 70, 0.35)",
+      text: "#CD8246",
+      shine: "rgba(205, 130, 70, 0.1)",
+    },
   };
 
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const scaleMap = {
-    center: "lg:scale-100",
-    left: "lg:scale-90",
-    right: "lg:scale-90",
-  };
-
-  const zIndexMap = {
-    center: "z-30",
-    left: "z-20",
-    right: "z-20",
-  };
+  const c = accentColors[rank];
+  const isLarge = size === "lg";
 
   return (
     <div
-      className={`relative ${scaleMap[position]} ${zIndexMap[position]} transition-all duration-300`}
-      style={{
-        animation: `fadeInUp 0.8s ease-out ${delay}s both`,
-      }}
+      ref={cardRef}
       onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      onMouseEnter={handleMouseEnter}
+      onMouseLeave={() => { setTilt({ x: 0, y: 0 }); setHovered(false); }}
+      onMouseEnter={() => setHovered(true)}
+      className={`prize-card-wrap prize-card-${size}`}
+      style={{
+        animation: `riseUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s both`,
+        perspective: "1000px",
+        cursor: "pointer",
+      }}
     >
       <div
-        className="relative mx-auto h-80 w-full max-w-[280px] cursor-pointer sm:h-82 sm:max-w-sm"
         style={{
-          perspective: "1000px",
-          transform: `scale(${isHovered ? 1.05 : 1})`,
-          transition: "transform 0.3s ease-out",
+          transform: `rotateY(${tilt.x}deg) rotateX(${tilt.y}deg) scale(${hovered ? 1.04 : 1})`,
+          transition: "transform 0.2s ease-out",
+          transformStyle: "preserve-3d",
+          position: "relative",
+          borderRadius: "20px",
+          padding: isLarge ? "36px 28px 32px" : "28px 22px 24px",
+          background: "linear-gradient(145deg, rgba(18,18,22,0.95) 0%, rgba(10,10,14,0.98) 100%)",
+          border: `1px solid ${c.border}`,
+          boxShadow: hovered
+            ? `0 30px 60px -10px ${c.glow}, 0 0 0 1px ${c.border}, inset 0 1px 0 rgba(255,255,255,0.06)`
+            : `0 10px 30px -10px ${c.glow}, 0 0 0 1px rgba(255,255,255,0.04), inset 0 1px 0 rgba(255,255,255,0.04)`,
         }}
       >
-        <div
-          className="relative h-full w-full rounded-2xl transition-transform duration-200 ease-out"
-          style={{
-            transformStyle: "preserve-3d",
-            transform: `rotateX(${transform.rotateX}deg) rotateY(${transform.rotateY}deg)`,
-          }}
-        >
-          {/* Card background with glass effect */}
-          <div
-            className="absolute inset-0 overflow-hidden rounded-2xl border border-orange-500/30"
-            style={{
-              background: "rgba(0, 0, 0, 0.6)",
-              backdropFilter: "blur(10px)",
-              boxShadow: isHovered
-                ? "0 25px 50px -12px rgba(255, 140, 66, 0.5), 0 0 40px rgba(255, 140, 66, 0.3)"
-                : "0 10px 30px -5px rgba(255, 140, 66, 0.3)",
-              transition: "box-shadow 0.3s ease-out",
-            }}
-          >
-            {/* Animated gradient background */}
-            <div
-              className="absolute inset-0 opacity-30"
-              style={{
-                background: `linear-gradient(135deg, rgba(255, 140, 66, 0.2) 0%, rgba(255, 107, 53, 0.1) 50%, transparent 100%)`,
-                animation: "gradientShift 3s ease infinite",
-              }}
-            />
+        {/* Inner glow */}
+        <div style={{
+          position: "absolute", inset: 0, borderRadius: "20px",
+          background: `radial-gradient(ellipse at 50% 0%, ${c.shine} 0%, transparent 65%)`,
+          pointerEvents: "none",
+        }} />
 
-            {/* Glow effect on hover */}
-            {isHovered && (
-              <div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "radial-gradient(circle at center, rgba(255, 140, 66, 0.2) 0%, transparent 70%)",
-                  animation: "pulse 2s ease-in-out infinite",
-                }}
-              />
-            )}
-          </div>
-
-          {/* Content */}
-          <div className="relative z-10 flex h-full w-full flex-col items-center justify-between p-6 sm:p-8">
-            {/* Icon container */}
-            <div className="relative mb-4 h-24 w-24 sm:h-28 sm:w-28">
-              <div
-                className="absolute inset-0 rounded-full"
-                style={{
-                  background:
-                    "radial-gradient(circle, rgba(255, 140, 66, 0.3) 0%, transparent 70%)",
-                  filter: "blur(20px)",
-                }}
-              />
-              <div
-                className="relative h-full w-full"
-                style={{
-                  transform: `translateZ(${isHovered ? "50px" : "20px"})`,
-                  transition: "transform 0.3s ease-out",
-                }}
-              >
-                {icon}
-              </div>
-            </div>
-
-            {/* Prize text */}
-            <div className="space-y-3 text-center sm:space-y-4">
-              <div
-                className="text-xs font-bold tracking-widest text-orange-400 sm:text-sm"
-                style={{
-                  transform: `translateZ(${isHovered ? "30px" : "10px"})`,
-                  transition: "transform 0.3s ease-out",
-                }}
-              >
-                {prize}
-              </div>
-
-              <div
-                className="text-3xl font-bold tracking-tight text-white sm:text-4xl"
-                style={{
-                  transform: `translateZ(${isHovered ? "40px" : "20px"})`,
-                  transition: "transform 0.3s ease-out",
-                  textShadow: "0 0 20px rgba(255, 140, 66, 0.5)",
-                }}
-              >
-                {prizeAmount}
-              </div>
-
-              <div
-                className="px-2 text-xs text-gray-400 sm:text-sm"
-                style={{
-                  transform: `translateZ(${isHovered ? "20px" : "5px"})`,
-                  transition: "transform 0.3s ease-out",
-                }}
-              >
-                {subtitle}
-              </div>
-            </div>
-
-            {/* Bottom accent line */}
-            <div
-              className="mt-4 h-1 w-full rounded-full"
-              style={{
-                background:
-                  "linear-gradient(90deg, transparent, #FF8C42, transparent)",
-                transform: `translateZ(${isHovered ? "25px" : "10px"}) scaleX(${isHovered ? 1 : 0.7})`,
-                transition: "all 0.3s ease-out",
-              }}
-            />
-          </div>
-
-          {/* Corner accents */}
-          <div className="absolute top-0 left-0 h-16 w-16 rounded-tl-2xl border-t-2 border-l-2 border-orange-500/50" />
-          <div className="absolute right-0 bottom-0 h-16 w-16 rounded-br-2xl border-r-2 border-b-2 border-orange-500/50" />
+        {/* Rank label */}
+        <div style={{
+          fontFamily: "'Courier New', monospace",
+          fontSize: "10px",
+          fontWeight: 700,
+          letterSpacing: "0.25em",
+          color: c.text,
+          marginBottom: isLarge ? "20px" : "16px",
+          opacity: 0.85,
+        }}>
+          {rankLabels[rank]} PLACE
         </div>
+
+        {/* Trophy emoji */}
+        <div style={{
+          fontSize: isLarge ? "56px" : "44px",
+          lineHeight: 1,
+          marginBottom: isLarge ? "20px" : "16px",
+          transform: `translateZ(${hovered ? "40px" : "0px"})`,
+          transition: "transform 0.3s ease-out",
+          filter: hovered ? "drop-shadow(0 4px 12px rgba(255,255,255,0.2))" : "none",
+        }}>
+          {medals[rank]}
+        </div>
+
+        {/* Amount */}
+        <div style={{
+          fontFamily: "'Georgia', 'Times New Roman', serif",
+          fontSize: isLarge ? "2.4rem" : "1.85rem",
+          fontWeight: 700,
+          color: "#FFFFFF",
+          letterSpacing: "-0.02em",
+          lineHeight: 1,
+          marginBottom: "8px",
+          transform: `translateZ(${hovered ? "25px" : "0px"})`,
+          transition: "transform 0.3s ease-out",
+          textShadow: `0 0 30px ${c.glow}`,
+        }}>
+          {amount}
+        </div>
+
+        {/* Subtitle */}
+        <div style={{
+          fontSize: "11px",
+          color: "rgba(180,180,190,0.6)",
+          letterSpacing: "0.05em",
+          fontFamily: "'Courier New', monospace",
+          lineHeight: 1.5,
+        }}>
+          {subtitle}
+        </div>
+
+        {/* Bottom line */}
+        <div style={{
+          position: "absolute",
+          bottom: 0, left: "20%", right: "20%",
+          height: "2px",
+          borderRadius: "2px",
+          background: `linear-gradient(90deg, transparent, ${c.text}, transparent)`,
+          opacity: hovered ? 1 : 0.4,
+          transition: "opacity 0.3s ease, left 0.3s ease, right 0.3s ease",
+          ...(hovered ? { left: "10%", right: "10%" } : {}),
+        }} />
       </div>
-
-      <style jsx>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes gradientShift {
-          0%,
-          100% {
-            opacity: 0.3;
-          }
-          50% {
-            opacity: 0.5;
-          }
-        }
-
-        @keyframes pulse {
-          0%,
-          100% {
-            opacity: 0.5;
-          }
-          50% {
-            opacity: 0.8;
-          }
-        }
-      `}</style>
     </div>
   );
 }
 
 export default function About() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
   return (
-    <section className="relative min-h-screen overflow-hidden bg-neutral-950">
-      {/* Background gradient glow */}
-      <div className="absolute inset-0">
-        <div className="bg-gradient-radial absolute top-1/2 left-1/2 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 from-orange-600/30 via-orange-900/10 to-transparent blur-3xl"></div>
-        <div className="absolute top-1/3 right-1/4 h-[400px] w-[400px] rounded-full bg-orange-500/20 blur-[120px]"></div>
-        <div className="absolute bottom-1/4 left-1/4 h-[500px] w-[500px] rounded-full bg-amber-600/15 blur-[100px]"></div>
+    <section style={{
+      position: "relative",
+      minHeight: "100vh",
+      background: "#0A0A0C",
+      overflow: "hidden",
+      fontFamily: "system-ui, sans-serif",
+    }}>
+
+      {/* Background */}
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+        {/* Main radial */}
+        <div style={{
+          position: "absolute",
+          top: "50%", left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "900px", height: "900px",
+          background: "radial-gradient(circle, rgba(255,120,50,0.07) 0%, rgba(255,90,30,0.03) 40%, transparent 70%)",
+        }} />
+        {/* Side glows */}
+        <div style={{
+          position: "absolute", top: "20%", right: "-5%",
+          width: "500px", height: "500px", borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(255,140,60,0.06) 0%, transparent 70%)",
+        }} />
+        <div style={{
+          position: "absolute", bottom: "10%", left: "-5%",
+          width: "400px", height: "400px", borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(200,100,30,0.05) 0%, transparent 70%)",
+        }} />
+        {/* Grid overlay */}
+        <div style={{
+          position: "absolute", inset: 0,
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)`,
+          backgroundSize: "60px 60px",
+        }} />
       </div>
 
-      {/* Particle effects */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        {[...Array(30)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute h-1 w-1 rounded-full bg-orange-400/40"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animation: `float ${Math.random() * 5 + 3}s linear infinite`,
-              animationDelay: `${Math.random() * 3}s`,
-            }}
-          />
-        ))}
-      </div>
+      {/* Floating particles */}
+      {mounted && [...Array(20)].map((_, i) => (
+        <div
+          key={i}
+          style={{
+            position: "absolute",
+            width: i % 3 === 0 ? "3px" : "1.5px",
+            height: i % 3 === 0 ? "3px" : "1.5px",
+            borderRadius: "50%",
+            background: `rgba(255, ${120 + (i * 7) % 80}, 40, ${0.2 + (i % 5) * 0.08})`,
+            left: `${(i * 17 + 5) % 100}%`,
+            top: `${(i * 23 + 10) % 100}%`,
+            animation: `drift ${5 + (i % 5) * 2}s ease-in-out infinite alternate`,
+            animationDelay: `${(i * 0.4) % 4}s`,
+          }}
+        />
+      ))}
 
-      {/* Left side decorative icons - REPOSITIONED */}
-      <div className="absolute top-1/2 left-4 z-10 hidden -translate-y-1/2 space-y-16 lg:block">
-        {[
-          // Trophy Icon 1
-          <svg
-            key="1"
-            className="h-14 w-14 text-orange-500/50 transition-all duration-300 hover:scale-110 hover:text-orange-400/70"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={1.5}
-              d="M12 15v6m0 0H9m3 0h3M3 9h3m12 0h3M6 9V6.5A2.5 2.5 0 018.5 4h7A2.5 2.5 0 0118 6.5V9M6 9a6 6 0 1012 0"
-            />
-          </svg>,
-          // Trophy Icon 2
-          <svg
-            key="2"
-            className="h-14 w-14 text-orange-500/50 transition-all duration-300 hover:scale-110 hover:text-orange-400/70"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={1.5}
-              d="M12 15v6m0 0H9m3 0h3M3 9h3m12 0h3M6 9V6.5A2.5 2.5 0 018.5 4h7A2.5 2.5 0 0118 6.5V9M6 9a6 6 0 1012 0"
-            />
-          </svg>,
-          // Trophy Icon 3
-          <svg
-            key="3"
-            className="h-14 w-14 text-orange-500/50 transition-all duration-300 hover:scale-110 hover:text-orange-400/70"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={1.5}
-              d="M12 15v6m0 0H9m3 0h3M3 9h3m12 0h3M6 9V6.5A2.5 2.5 0 018.5 4h7A2.5 2.5 0 0118 6.5V9M6 9a6 6 0 1012 0"
-            />
-          </svg>,
-        ].map((icon, i) => (
-          <div
-            key={i}
-            className="opacity-0 transition-transform duration-300"
-            style={{
-              animation: `slideInLeft 0.8s ease-out ${i * 0.2}s forwards`,
-            }}
-          >
-            {icon}
-          </div>
-        ))}
-      </div>
+      <div className="about-grid" style={{
+        position: "relative",
+        maxWidth: "1200px",
+        margin: "0 auto",
+        padding: "80px 32px",
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        gap: "60px",
+        alignItems: "center",
+        minHeight: "100vh",
+      }}>
 
-      <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-32">
-        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          {/* Left Section - Text Content */}
-          <div className="z-10 space-y-6 sm:space-y-8">
-            <div className="border-orange-500/50 lg:border-l-4 lg:pl-8">
-              {/* Title with decorative shape */}
-              <div className="relative mb-6 inline-block">
-                {/* Decorative background shape */}
-                <div className="absolute -inset-4 rounded-lg bg-gradient-to-r from-orange-500/10 via-amber-500/10 to-orange-500/10 blur-xl"></div>
-                <div className="absolute -inset-2 rounded-lg border border-orange-500/20"></div>
+        {/* LEFT: Text */}
+        <div style={{ position: "relative" }}>
 
-                <h2 className="relative mb-4 bg-gradient-to-r from-orange-500 via-amber-400 to-orange-500 bg-clip-text text-3xl leading-tight font-bold tracking-wide text-transparent sm:mb-6 sm:text-4xl lg:text-5xl">
-                  INNOVATION AND
-                  <br />
-                  TEAMWORK
-                </h2>
-              </div>
-
-              <div className="space-y-4 text-sm leading-relaxed text-gray-300 sm:space-y-6 sm:text-base">
-                <p
-                  className="opacity-0"
-                  style={{ animation: "fadeIn 0.8s ease-out 0.3s forwards" }}
-                >
-                  Algorithm X is designed to push the boundaries of what's
-                  possible. We bring together brilliant minds to tackle complex
-                  challenges, fostering a collaborative environment where
-                  creativity and technical expertise converge.
-                </p>
-
-                <p
-                  className="opacity-0"
-                  style={{ animation: "fadeIn 0.8s ease-out 0.5s forwards" }}
-                >
-                  Join us to innovate, build, and define the future of
-                  technology through intense competition and shared passion.
-                  This is more than a hackathon; it's a crucible for
-                  groundbreaking ideas.
-                </p>
-
-                <button
-                  className="mt-6 rounded-lg border border-orange-500 bg-gradient-to-r from-orange-600 to-orange-700 px-6 py-3 text-sm font-semibold text-white opacity-0 shadow-[0_0_20px_rgba(255,140,66,0.3)] transition-all hover:scale-105 hover:from-orange-500 hover:to-orange-600 hover:shadow-[0_0_30px_rgba(255,140,66,0.5)] active:scale-95 sm:mt-8 sm:px-8 sm:text-base"
-                  style={{ animation: "fadeIn 0.8s ease-out 0.7s forwards" }}
-                  onClick={() => (window.location.href = "https://unstop.com")}
-                >
-                  LEARN MORE & REGISTER
-                </button>
-              </div>
-            </div>
+          {/* Event badge */}
+          <div style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "8px",
+            padding: "6px 14px",
+            borderRadius: "100px",
+            border: "1px solid rgba(255,140,60,0.3)",
+            background: "rgba(255,140,60,0.06)",
+            marginBottom: "32px",
+            animation: "fadeSlideUp 0.7s ease-out 0.1s both",
+          }}>
+            <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#FF8C3C", boxShadow: "0 0 8px #FF8C3C" }} />
+            <span style={{ fontFamily: "'Courier New', monospace", fontSize: "11px", letterSpacing: "0.2em", color: "rgba(255,140,60,0.9)", fontWeight: 700 }}>
+              ALGORITHM X · HACKATHON
+            </span>
           </div>
 
-          {/* Right Section - 3D Prize Cards */}
-          <div className="relative flex min-h-[500px] items-center justify-center sm:min-h-[600px] lg:min-h-[700px]">
-            {/* All screens - stacked layout */}
-            <div className="mx-auto flex w-full max-w-md flex-col items-center gap-6 px-4 sm:gap-8">
-              {/* 1st Prize - Top */}
-              <Card3D
-                position="center"
-                prize="1ST PRIZE"
-                prizeAmount="₹25,000"
-                subtitle="plus mentorship and tech gear"
-                icon={
-                  <svg
-                    className="h-full w-full"
-                    viewBox="0 0 100 100"
-                    fill="none"
-                  >
-                    {/* Trophy base */}
-                    <rect
-                      x="40"
-                      y="75"
-                      width="20"
-                      height="8"
-                      rx="2"
-                      fill="url(#gold1)"
-                    />
-                    <rect
-                      x="35"
-                      y="70"
-                      width="30"
-                      height="5"
-                      rx="2"
-                      fill="url(#gold2)"
-                    />
-                    {/* Trophy stem */}
-                    <rect
-                      x="45"
-                      y="55"
-                      width="10"
-                      height="15"
-                      fill="url(#gold3)"
-                    />
-                    {/* Trophy cup */}
-                    <path
-                      d="M30 25 L30 35 Q30 50 40 52 L40 55 L60 55 L60 52 Q70 50 70 35 L70 25 Z"
-                      fill="url(#gold4)"
-                      stroke="#FFA500"
-                      strokeWidth="1.5"
-                    />
-                    {/* Handles */}
-                    <path
-                      d="M28 30 Q20 30 20 40 Q20 48 28 48"
-                      stroke="url(#gold5)"
-                      strokeWidth="3"
-                      fill="none"
-                    />
-                    <path
-                      d="M72 30 Q80 30 80 40 Q80 48 72 48"
-                      stroke="url(#gold5)"
-                      strokeWidth="3"
-                      fill="none"
-                    />
-                    {/* Star decoration */}
-                    <path
-                      d="M50 32 L52 38 L58 38 L53 42 L55 48 L50 44 L45 48 L47 42 L42 38 L48 38 Z"
-                      fill="#FFF"
-                      opacity="0.9"
-                    />
-                    {/* Shine effect */}
-                    <ellipse
-                      cx="45"
-                      cy="35"
-                      rx="8"
-                      ry="12"
-                      fill="#FFF"
-                      opacity="0.3"
-                    />
-                    {/* Glow */}
-                    <circle
-                      cx="50"
-                      cy="45"
-                      r="40"
-                      fill="url(#glow1)"
-                      opacity="0.3"
-                    />
-                    <defs>
-                      <linearGradient
-                        id="gold1"
-                        x1="50"
-                        y1="75"
-                        x2="50"
-                        y2="83"
-                      >
-                        <stop offset="0%" stopColor="#B8860B" />
-                        <stop offset="100%" stopColor="#8B6914" />
-                      </linearGradient>
-                      <linearGradient
-                        id="gold2"
-                        x1="50"
-                        y1="70"
-                        x2="50"
-                        y2="75"
-                      >
-                        <stop offset="0%" stopColor="#DAA520" />
-                        <stop offset="100%" stopColor="#B8860B" />
-                      </linearGradient>
-                      <linearGradient
-                        id="gold3"
-                        x1="50"
-                        y1="55"
-                        x2="50"
-                        y2="70"
-                      >
-                        <stop offset="0%" stopColor="#DAA520" />
-                        <stop offset="100%" stopColor="#B8860B" />
-                      </linearGradient>
-                      <linearGradient
-                        id="gold4"
-                        x1="50"
-                        y1="25"
-                        x2="50"
-                        y2="55"
-                      >
-                        <stop offset="0%" stopColor="#FFE55C" />
-                        <stop offset="30%" stopColor="#FFD700" />
-                        <stop offset="70%" stopColor="#DAA520" />
-                        <stop offset="100%" stopColor="#B8860B" />
-                      </linearGradient>
-                      <linearGradient
-                        id="gold5"
-                        x1="0"
-                        y1="40"
-                        x2="100"
-                        y2="40"
-                      >
-                        <stop offset="0%" stopColor="#FFD700" />
-                        <stop offset="50%" stopColor="#FFA500" />
-                        <stop offset="100%" stopColor="#FFD700" />
-                      </linearGradient>
-                      <radialGradient id="glow1">
-                        <stop
-                          offset="0%"
-                          stopColor="#FFD700"
-                          stopOpacity="0.6"
-                        />
-                        <stop
-                          offset="100%"
-                          stopColor="#FFD700"
-                          stopOpacity="0"
-                        />
-                      </radialGradient>
-                    </defs>
-                  </svg>
-                }
-                delay={0.2}
-              />
+          {/* Headline */}
+          <h2 style={{
+            fontFamily: "'Orbitron', 'Times New Roman', serif",
+            fontSize: "clamp(2.8rem, 5vw, 4.2rem)",
+            fontWeight: 700,
+            lineHeight: 1.05,
+            letterSpacing: "-0.03em",
+            color: "#FFFFFF",
+            marginBottom: "8px",
+            animation: "fadeSlideUp 0.8s ease-out 0.2s both",
+          }}>
+            Innovation
+          </h2>
+          <h2 style={{
+            fontFamily: "'Orbitron', 'Times New Roman', serif",
+            fontSize: "clamp(2.8rem, 5vw, 4.2rem)",
+            fontWeight: 700,
+            lineHeight: 1.05,
+            letterSpacing: "-0.03em",
+            background: "linear-gradient(90deg, #FF8C3C, #FFB347, #FF6B35)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+            marginBottom: "40px",
+            animation: "fadeSlideUp 0.8s ease-out 0.3s both",
+          }}>
+            & Teamwork
+          </h2>
 
-              <div className="flex gap-4 sm:gap-6">
-                {/* 2nd Prize */}
-                <Card3D
-                  position="center"
-                  prize="2ND PRIZE"
-                  prizeAmount="₹15,000"
-                  subtitle="exclusive tech swags"
-                  icon={
-                    <svg
-                      className="h-full w-full"
-                      viewBox="0 0 100 100"
-                      fill="none"
-                    >
-                      {/* Trophy base */}
-                      <rect
-                        x="40"
-                        y="75"
-                        width="20"
-                        height="8"
-                        rx="2"
-                        fill="url(#silver1)"
-                      />
-                      <rect
-                        x="35"
-                        y="70"
-                        width="30"
-                        height="5"
-                        rx="2"
-                        fill="url(#silver2)"
-                      />
-                      {/* Trophy stem */}
-                      <rect
-                        x="45"
-                        y="55"
-                        width="10"
-                        height="15"
-                        fill="url(#silver3)"
-                      />
-                      {/* Trophy cup */}
-                      <path
-                        d="M30 25 L30 35 Q30 50 40 52 L40 55 L60 55 L60 52 Q70 50 70 35 L70 25 Z"
-                        fill="url(#silver4)"
-                        stroke="#A8A8A8"
-                        strokeWidth="1.5"
-                      />
-                      {/* Handles */}
-                      <path
-                        d="M28 30 Q20 30 20 40 Q20 48 28 48"
-                        stroke="url(#silver5)"
-                        strokeWidth="3"
-                        fill="none"
-                      />
-                      <path
-                        d="M72 30 Q80 30 80 40 Q80 48 72 48"
-                        stroke="url(#silver5)"
-                        strokeWidth="3"
-                        fill="none"
-                      />
-                      {/* Number 2 */}
-                      <text
-                        x="50"
-                        y="48"
-                        textAnchor="middle"
-                        fill="#FFF"
-                        fontSize="22"
-                        fontWeight="bold"
-                        fontFamily="Arial"
-                      >
-                        2
-                      </text>
-                      {/* Shine effect */}
-                      <ellipse
-                        cx="45"
-                        cy="35"
-                        rx="8"
-                        ry="12"
-                        fill="#FFF"
-                        opacity="0.4"
-                      />
-                      {/* Glow */}
-                      <circle
-                        cx="50"
-                        cy="45"
-                        r="40"
-                        fill="url(#glowSilver)"
-                        opacity="0.2"
-                      />
-                      <defs>
-                        <linearGradient
-                          id="silver1"
-                          x1="50"
-                          y1="75"
-                          x2="50"
-                          y2="83"
-                        >
-                          <stop offset="0%" stopColor="#A8A8A8" />
-                          <stop offset="100%" stopColor="#808080" />
-                        </linearGradient>
-                        <linearGradient
-                          id="silver2"
-                          x1="50"
-                          y1="70"
-                          x2="50"
-                          y2="75"
-                        >
-                          <stop offset="0%" stopColor="#C0C0C0" />
-                          <stop offset="100%" stopColor="#A8A8A8" />
-                        </linearGradient>
-                        <linearGradient
-                          id="silver3"
-                          x1="50"
-                          y1="55"
-                          x2="50"
-                          y2="70"
-                        >
-                          <stop offset="0%" stopColor="#C0C0C0" />
-                          <stop offset="100%" stopColor="#A8A8A8" />
-                        </linearGradient>
-                        <linearGradient
-                          id="silver4"
-                          x1="50"
-                          y1="25"
-                          x2="50"
-                          y2="55"
-                        >
-                          <stop offset="0%" stopColor="#F0F0F0" />
-                          <stop offset="30%" stopColor="#E8E8E8" />
-                          <stop offset="70%" stopColor="#C0C0C0" />
-                          <stop offset="100%" stopColor="#A8A8A8" />
-                        </linearGradient>
-                        <linearGradient
-                          id="silver5"
-                          x1="0"
-                          y1="40"
-                          x2="100"
-                          y2="40"
-                        >
-                          <stop offset="0%" stopColor="#E8E8E8" />
-                          <stop offset="50%" stopColor="#C0C0C0" />
-                          <stop offset="100%" stopColor="#E8E8E8" />
-                        </linearGradient>
-                        <radialGradient id="glowSilver">
-                          <stop
-                            offset="0%"
-                            stopColor="#E8E8E8"
-                            stopOpacity="0.6"
-                          />
-                          <stop
-                            offset="100%"
-                            stopColor="#E8E8E8"
-                            stopOpacity="0"
-                          />
-                        </radialGradient>
-                      </defs>
-                    </svg>
-                  }
-                  delay={0.5}
-                />
+          {/* Divider */}
+          <div style={{
+            width: "48px", height: "2px",
+            background: "linear-gradient(90deg, #FF8C3C, transparent)",
+            marginBottom: "32px",
+            animation: "fadeSlideUp 0.8s ease-out 0.35s both",
+          }} />
 
-                {/* 3rd Prize */}
-                <Card3D
-                  position="center"
-                  prize="3RD PRIZE"
-                  prizeAmount="₹10,000"
-                  subtitle="and recognition"
-                  icon={
-                    <svg
-                      className="h-full w-full"
-                      viewBox="0 0 100 100"
-                      fill="none"
-                    >
-                      {/* Trophy base */}
-                      <rect
-                        x="40"
-                        y="75"
-                        width="20"
-                        height="8"
-                        rx="2"
-                        fill="url(#bronze1)"
-                      />
-                      <rect
-                        x="35"
-                        y="70"
-                        width="30"
-                        height="5"
-                        rx="2"
-                        fill="url(#bronze2)"
-                      />
-                      {/* Trophy stem */}
-                      <rect
-                        x="45"
-                        y="55"
-                        width="10"
-                        height="15"
-                        fill="url(#bronze3)"
-                      />
-                      {/* Trophy cup */}
-                      <path
-                        d="M30 25 L30 35 Q30 50 40 52 L40 55 L60 55 L60 52 Q70 50 70 35 L70 25 Z"
-                        fill="url(#bronze4)"
-                        stroke="#8B4513"
-                        strokeWidth="1.5"
-                      />
-                      {/* Handles */}
-                      <path
-                        d="M28 30 Q20 30 20 40 Q20 48 28 48"
-                        stroke="url(#bronze5)"
-                        strokeWidth="3"
-                        fill="none"
-                      />
-                      <path
-                        d="M72 30 Q80 30 80 40 Q80 48 72 48"
-                        stroke="url(#bronze5)"
-                        strokeWidth="3"
-                        fill="none"
-                      />
-                      {/* Number 3 */}
-                      <text
-                        x="50"
-                        y="48"
-                        textAnchor="middle"
-                        fill="#FFF"
-                        fontSize="22"
-                        fontWeight="bold"
-                        fontFamily="Arial"
-                      >
-                        3
-                      </text>
-                      {/* Shine effect */}
-                      <ellipse
-                        cx="45"
-                        cy="35"
-                        rx="8"
-                        ry="12"
-                        fill="#FFF"
-                        opacity="0.3"
-                      />
-                      {/* Glow */}
-                      <circle
-                        cx="50"
-                        cy="45"
-                        r="40"
-                        fill="url(#glowBronze)"
-                        opacity="0.2"
-                      />
-                      <defs>
-                        <linearGradient
-                          id="bronze1"
-                          x1="50"
-                          y1="75"
-                          x2="50"
-                          y2="83"
-                        >
-                          <stop offset="0%" stopColor="#8B4513" />
-                          <stop offset="100%" stopColor="#654321" />
-                        </linearGradient>
-                        <linearGradient
-                          id="bronze2"
-                          x1="50"
-                          y1="70"
-                          x2="50"
-                          y2="75"
-                        >
-                          <stop offset="0%" stopColor="#CD7F32" />
-                          <stop offset="100%" stopColor="#8B4513" />
-                        </linearGradient>
-                        <linearGradient
-                          id="bronze3"
-                          x1="50"
-                          y1="55"
-                          x2="50"
-                          y2="70"
-                        >
-                          <stop offset="0%" stopColor="#CD7F32" />
-                          <stop offset="100%" stopColor="#8B4513" />
-                        </linearGradient>
-                        <linearGradient
-                          id="bronze4"
-                          x1="50"
-                          y1="25"
-                          x2="50"
-                          y2="55"
-                        >
-                          <stop offset="0%" stopColor="#E39B5C" />
-                          <stop offset="30%" stopColor="#CD7F32" />
-                          <stop offset="70%" stopColor="#B87333" />
-                          <stop offset="100%" stopColor="#8B4513" />
-                        </linearGradient>
-                        <linearGradient
-                          id="bronze5"
-                          x1="0"
-                          y1="40"
-                          x2="100"
-                          y2="40"
-                        >
-                          <stop offset="0%" stopColor="#CD7F32" />
-                          <stop offset="50%" stopColor="#B87333" />
-                          <stop offset="100%" stopColor="#CD7F32" />
-                        </linearGradient>
-                        <radialGradient id="glowBronze">
-                          <stop
-                            offset="0%"
-                            stopColor="#CD7F32"
-                            stopOpacity="0.6"
-                          />
-                          <stop
-                            offset="100%"
-                            stopColor="#CD7F32"
-                            stopOpacity="0"
-                          />
-                        </radialGradient>
-                      </defs>
-                    </svg>
-                  }
-                  delay={0.8}
-                />
+          {/* Body copy */}
+          <p style={{
+            fontSize: "15px",
+            lineHeight: 1.8,
+            color: "rgba(200,200,210,0.7)",
+            marginBottom: "20px",
+            maxWidth: "480px",
+            animation: "fadeSlideUp 0.8s ease-out 0.4s both",
+          }}>
+            Algorithm X is designed to push the boundaries of what's possible.
+            We bring together brilliant minds to tackle complex challenges,
+            fostering a collaborative environment where creativity and technical
+            expertise converge.
+          </p>
+
+          <p style={{
+            fontSize: "15px",
+            lineHeight: 1.8,
+            color: "rgba(200,200,210,0.7)",
+            marginBottom: "44px",
+            maxWidth: "480px",
+            animation: "fadeSlideUp 0.8s ease-out 0.5s both",
+          }}>
+            Join us to innovate, build, and define the future of technology.
+            This is more than a hackathon — it's a crucible for groundbreaking ideas.
+          </p>
+
+          {/* CTA */}
+          <div style={{ animation: "fadeSlideUp 0.8s ease-out 0.6s both" }}>
+            <button
+              onClick={() => (window.location.href = "https://unstop.com")}
+              style={{
+                position: "relative",
+                padding: "14px 32px",
+                borderRadius: "8px",
+                border: "1px solid rgba(255,140,60,0.6)",
+                background: "linear-gradient(135deg, rgba(255,100,30,0.15) 0%, rgba(255,140,60,0.08) 100%)",
+                color: "#FFFFFF",
+                fontSize: "12px",
+                fontFamily: "'inter', monospace",
+                fontWeight: 700,
+                letterSpacing: "0.2em",
+                cursor: "pointer",
+                transition: "all 0.25s ease",
+                boxShadow: "0 4px 20px rgba(255,120,40,0.15), inset 0 1px 0 rgba(255,255,255,0.08)",
+                overflow: "hidden",
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = "linear-gradient(135deg, rgba(255,100,30,0.3) 0%, rgba(255,140,60,0.2) 100%)";
+                e.currentTarget.style.boxShadow = "0 8px 30px rgba(255,120,40,0.35), inset 0 1px 0 rgba(255,255,255,0.1)";
+                e.currentTarget.style.transform = "translateY(-1px)";
+                e.currentTarget.style.borderColor = "rgba(255,140,60,0.9)";
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = "linear-gradient(135deg, rgba(255,100,30,0.15) 0%, rgba(255,140,60,0.08) 100%)";
+                e.currentTarget.style.boxShadow = "0 4px 20px rgba(255,120,40,0.15), inset 0 1px 0 rgba(255,255,255,0.08)";
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.borderColor = "rgba(255,140,60,0.6)";
+              }}
+            >
+              LEARN MORE & REGISTER →
+            </button>
+          </div>
+
+          {/* Stats row */}
+          <div className="stats-row" style={{
+            display: "flex",
+            gap: "32px",
+            marginTop: "56px",
+            animation: "fadeSlideUp 0.8s ease-out 0.7s both",
+            flexWrap: "wrap",
+          }}>
+            {[["₹50K+", "Total Prize Pool"], ["48H", "Hack Duration"], ["∞", "Ideas Welcome"]].map(([val, label]) => (
+              <div key={label}>
+                <div style={{ fontFamily: "'Georgia', serif", fontSize: "1.5rem", fontWeight: 700, color: "#FFFFFF", letterSpacing: "-0.02em" }}>{val}</div>
+                <div style={{ fontFamily: "'Courier New', monospace", fontSize: "10px", color: "rgba(255,255,255,0.35)", letterSpacing: "0.15em", marginTop: "2px" }}>{label}</div>
               </div>
-            </div>
+            ))}
+          </div>
+        </div>
+
+        {/* RIGHT: Prize Cards */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0" }}>
+
+          {/* Section label */}
+          <div style={{
+            fontFamily: "'inter', monospace",
+            fontSize: "10px",
+            letterSpacing: "0.3em",
+            color: "rgba(255,255,255,0.25)",
+            marginBottom: "32px",
+            animation: "fadeSlideUp 0.7s ease-out 0.2s both",
+          }}>
+            PRIZE DISTRIBUTION
+          </div>
+
+          {/* 1st Place - centered, larger */}
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}>
+            <PrizeCard rank={1} amount="₹25,000" subtitle="+ mentorship & premium tech gear" delay={0.3} size="lg" />
+          </div>
+
+          {/* 2nd & 3rd - side by side */}
+          <div style={{ display: "flex", gap: "16px", justifyContent: "center" }}>
+            <PrizeCard rank={2} amount="₹15,000" subtitle="+ exclusive tech swag" delay={0.5} size="md" />
+            <PrizeCard rank={3} amount="₹10,000" subtitle="+ recognition & perks" delay={0.65} size="md" />
+          </div>
+
+          {/* Total pool callout */}
+          <div style={{
+            marginTop: "28px",
+            padding: "12px 28px",
+            borderRadius: "100px",
+            border: "1px solid rgba(255,255,255,0.07)",
+            background: "rgba(255,255,255,0.025)",
+            animation: "fadeSlideUp 0.8s ease-out 0.8s both",
+          }}>
+            <span style={{ fontFamily: "'inter', monospace", fontSize: "11px", color: "rgba(255,255,255,0.4)", letterSpacing: "0.15em" }}>
+              TOTAL POOL:{" "}
+            </span>
+            <span style={{ fontFamily: "'Georgia', serif", fontSize: "13px", color: "rgba(255,200,80,0.85)", fontWeight: 700 }}>
+              ₹50,000
+            </span>
           </div>
         </div>
       </div>
 
-      {/* Decorative corner accent */}
-      <div className="pointer-events-none absolute right-0 bottom-0 h-64 w-64 opacity-20 sm:h-96 sm:w-96">
-        <svg viewBox="0 0 200 200" fill="none">
-          <path
-            d="M200 200L200 100C200 100 150 150 100 200L200 200Z"
-            fill="url(#corner-gradient)"
-          />
-          <defs>
-            <linearGradient
-              id="corner-gradient"
-              x1="100"
-              y1="100"
-              x2="200"
-              y2="200"
-            >
-              <stop offset="0%" stopColor="#FF8C42" stopOpacity="0" />
-              <stop offset="100%" stopColor="#FF8C42" stopOpacity="0.5" />
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
+      {/* Responsive styles + keyframes */}
+      <style>{`
+        @keyframes riseUp {
+          from { opacity: 0; transform: translateY(40px) scale(0.96); }
+          to   { opacity: 1; transform: translateY(0)  scale(1); }
+        }
+        @keyframes fadeSlideUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes drift {
+          from { transform: translate(0, 0); }
+          to   { transform: translate(8px, -14px); }
+        }
 
-      <style jsx>{`
-        @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0) translateX(0);
-            opacity: 0;
+        /* Prize card sizing */
+        .prize-card-lg > div { width: 260px; }
+        .prize-card-md > div { width: 200px; }
+
+        /* Tablet */
+        @media (max-width: 900px) {
+          .about-grid {
+            grid-template-columns: 1fr !important;
+            padding: 60px 28px !important;
+            gap: 40px !important;
+            min-height: unset !important;
           }
-          10% {
-            opacity: 1;
+          .prize-card-lg > div { width: 240px; }
+          .prize-card-md > div { width: 180px; }
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+          .about-grid {
+            padding: 48px 20px 60px !important;
+            gap: 36px !important;
           }
-          90% {
-            opacity: 1;
+
+          /* Prize card sizes shrink on mobile */
+          .prize-card-lg > div {
+            width: 100% !important;
+            max-width: 300px;
+            padding: 28px 24px 24px !important;
           }
-          100% {
-            transform: translateY(-100vh) translateX(20px);
-            opacity: 0;
+          .prize-card-md > div {
+            width: 100% !important;
+            padding: 22px 18px 20px !important;
+          }
+
+          /* Wrap the two smaller cards differently */
+          .prize-cards-row {
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 14px !important;
+          }
+          .prize-card-md {
+            width: 100% !important;
+            max-width: 300px !important;
+          }
+          .prize-card-md > div {
+            width: 100% !important;
+          }
+
+          .stats-row {
+            gap: 24px !important;
+            margin-top: 40px !important;
           }
         }
 
-        @keyframes slideInLeft {
-          from {
-            opacity: 0;
-            transform: translateX(-30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+        /* Very small phones */
+        @media (max-width: 380px) {
+          .prize-card-lg > div { padding: 22px 18px 20px !important; }
         }
       `}</style>
     </section>
