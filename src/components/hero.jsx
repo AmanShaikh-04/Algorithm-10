@@ -378,7 +378,7 @@ export default function Hero() {
   return (
     <section
       ref={heroRef}
-      className="relative min-h-screen w-full overflow-hidden bg-neutral-950 pt-20 sm:pt-0"
+      className="relative min-h-screen w-full overflow-hidden bg-[#080808] pt-20 sm:pt-0"
     >
       <ThreeBackground />
 

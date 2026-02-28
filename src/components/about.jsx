@@ -152,7 +152,7 @@ export default function About() {
     <section style={{
       position: "relative",
       minHeight: "100vh",
-      background: "#0A0A0C",
+      background: "#080808",
       overflow: "hidden",
       fontFamily: "system-ui, sans-serif",
     }}>

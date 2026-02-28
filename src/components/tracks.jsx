@@ -375,7 +375,7 @@ export default function Tracks() {
     <>
       <style>{styles}</style>
 
-      <section style={{ position: "relative", background: "bg-neutral-950", padding: "88px 0 100px", overflow: "hidden" }}>
+      <section style={{ position: "relative", background: "#080808", padding: "88px 0 100px", overflow: "hidden" }}>
         <GridBackground />
 
         {/* Heading */}

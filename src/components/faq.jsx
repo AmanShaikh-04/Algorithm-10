@@ -71,7 +71,7 @@ export default function Faq() {
 
   return (
     <main>
-      <section className="relative bg-neutral-950 py-16 text-white md:py-24">
+      <section className="relative bg-[#080808] py-16 text-white md:py-24">
         <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 lg:flex-row lg:gap-16">
 
           {/* LEFT */}

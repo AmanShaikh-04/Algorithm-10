@@ -47,12 +47,12 @@ export default function Page() {
             </section>
 
             <section id="timeline">
-              <div className="min-h-screen bg-[#0E0E10]">
+              <div className="min-h-screen bg-[#080808]">
                 <Timeline />
               </div>
             </section>
 
-<section id="gallery" className="relative py-20 bg-neutral-950 overflow-hidden">
+<section id="gallery" className="relative py-20 bg-[#080808] overflow-hidden">
 <Gallery/>
 </section>
 

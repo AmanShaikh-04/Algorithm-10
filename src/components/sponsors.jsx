@@ -173,7 +173,7 @@ export default function Sponsors() {
   ];
 
   return (
-    <section className="relative min-h-[60vh] overflow-hidden bg-neutral-950 px-4 py-24">
+    <section className="relative min-h-[60vh] overflow-hidden bg-[#080808] px-4 py-24">
       {/* Background Ambience */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute top-0 left-1/2 h-[300px] w-[600px] -translate-x-1/2 rounded-full bg-orange-600/10 blur-[100px]" />

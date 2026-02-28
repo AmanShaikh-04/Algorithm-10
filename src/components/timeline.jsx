@@ -368,7 +368,7 @@ const Timeline = () => {
   }, [currentIndex, sections.length]);
 
   return (
-    <div ref={scrollContainerRef} className="relative w-full bg-black">
+    <div ref={scrollContainerRef} className="relative w-full bg-[#080808]">
       <style jsx global>{`
         .font-orbitron {
           font-family: "Orbitron", sans-serif;
@@ -416,7 +416,7 @@ const Timeline = () => {
           </main>
 
           {/* Decorative Gradient at Bottom */}
-          <div className="pointer-events-none absolute bottom-0 left-0 z-20 h-64 w-full bg-gradient-to-t from-black via-black/90 to-transparent" />
+          <div className="pointer-events-none absolute bottom-0 left-0 z-20 h-64 w-full bg-gradient-to-t from-[#080808] via-[#080808]/90 to-transparent" />
         </div>
       </div>
     </div>

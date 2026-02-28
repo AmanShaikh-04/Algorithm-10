@@ -39,7 +39,7 @@ const Gallery = () => {
         <div className="h-px w-24 bg-gradient-to-l from-amber-500/50 to-transparent" />
       </div>
     </div>
-zzz
+
     {/* Gallery Dome Container with Enhanced Box */}
     <div className="relative group">
       {/* Outer Glow Effect */}
