@@ -6,12 +6,7 @@ import SpotlightCard from "./SpotlightCard";
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap');
 
-  @keyframes scanline {
-    0%   { top: -2px; opacity: 0; }
-    5%   { opacity: 1; }
-    95%  { opacity: 1; }
-    100% { top: 100%; opacity: 0; }
-  }
+
   @keyframes lockFloat {
     0%, 100% { transform: translateY(0px); }
     50%       { transform: translateY(-6px); }
@@ -210,12 +205,7 @@ function GridBackground() {
         animation: "pulseGlow 6s ease-in-out infinite",
       }} />
 
-      {/* Scanline sweep */}
-      <div style={{
-        position: "absolute", left: 0, right: 0, height: "1px",
-        background: "linear-gradient(90deg, transparent, rgba(251,191,36,0.3), transparent)",
-        animation: "scanline 8s linear infinite",
-      }} />
+
 
       {/* Corner brackets */}
       {[
@@ -378,27 +368,7 @@ export default function Tracks() {
       ],
       variant: "gold",
     },
-    {
-      domain: "Domain 1",
-      ps: [
-        "Yet to be revealed!"
-      ],
-      variant: "gold",
-    },
-    {
-      domain: "Domain 2",
-      ps: [
-        "Yet to be revealed!"
-      ],
-      variant: "gold",
-    },
-    {
-      domain: "Domain 3",
-      ps: [
-        "Yet to be revealed!"
-      ],
-      variant: "gold",
-    },
+   
   ];
 
   return (
