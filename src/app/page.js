@@ -13,9 +13,9 @@ import Faq from "@/components/faq";
 import Timeline from "@/components/timeline";
 import SharedBackground from "@/components/SharedBackground";
 
-import dynamic from 'next/dynamic';
-const Footer = dynamic(() => import('@/components/footer'), { ssr: false });
-const Gallery = dynamic(() => import('@/components/gallery'), { ssr: false });
+import dynamic from "next/dynamic";
+const Footer = dynamic(() => import("@/components/footer"), { ssr: false });
+const Gallery = dynamic(() => import("@/components/gallery"), { ssr: false });
 
 export default function Page() {
   const [showHome, setShowHome] = useState(false);

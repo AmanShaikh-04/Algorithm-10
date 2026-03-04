@@ -158,16 +158,79 @@ const styles = `
 
 function TechDivider() {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 12, width: "100%", maxWidth: 560, margin: "0 auto" }}>
-      <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg, transparent, rgba(245,158,11,0.4))" }} />
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 12,
+        width: "100%",
+        maxWidth: 560,
+        margin: "0 auto",
+      }}
+    >
+      <div
+        style={{
+          flex: 1,
+          height: 1,
+          background:
+            "linear-gradient(90deg, transparent, rgba(245,158,11,0.4))",
+        }}
+      />
       <div style={{ display: "flex", gap: 5, alignItems: "center" }}>
-        <div style={{ width: 3, height: 3, background: "#f59e0b", opacity: 0.4, transform: "rotate(45deg)" }} />
-        <div style={{ width: 6, height: 6, border: "1px solid #f59e0b", opacity: 0.5, transform: "rotate(45deg)" }} />
-        <div style={{ width: 8, height: 8, border: "1px solid #ea580c", opacity: 0.7, transform: "rotate(45deg)" }} />
-        <div style={{ width: 6, height: 6, border: "1px solid #f59e0b", opacity: 0.5, transform: "rotate(45deg)" }} />
-        <div style={{ width: 3, height: 3, background: "#f59e0b", opacity: 0.4, transform: "rotate(45deg)" }} />
+        <div
+          style={{
+            width: 3,
+            height: 3,
+            background: "#f59e0b",
+            opacity: 0.4,
+            transform: "rotate(45deg)",
+          }}
+        />
+        <div
+          style={{
+            width: 6,
+            height: 6,
+            border: "1px solid #f59e0b",
+            opacity: 0.5,
+            transform: "rotate(45deg)",
+          }}
+        />
+        <div
+          style={{
+            width: 8,
+            height: 8,
+            border: "1px solid #ea580c",
+            opacity: 0.7,
+            transform: "rotate(45deg)",
+          }}
+        />
+        <div
+          style={{
+            width: 6,
+            height: 6,
+            border: "1px solid #f59e0b",
+            opacity: 0.5,
+            transform: "rotate(45deg)",
+          }}
+        />
+        <div
+          style={{
+            width: 3,
+            height: 3,
+            background: "#f59e0b",
+            opacity: 0.4,
+            transform: "rotate(45deg)",
+          }}
+        />
       </div>
-      <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg, rgba(245,158,11,0.4), transparent)" }} />
+      <div
+        style={{
+          flex: 1,
+          height: 1,
+          background:
+            "linear-gradient(90deg, rgba(245,158,11,0.4), transparent)",
+        }}
+      />
     </div>
   );
 }
@@ -193,12 +256,18 @@ function Modal({ card, onClose }) {
             </div>
             <div className="modal-title">{card.domain}</div>
           </div>
-          <button className="modal-close" onClick={onClose}>✕</button>
+          <button className="modal-close" onClick={onClose}>
+            ✕
+          </button>
         </div>
         <div className="modal-body">
           <div className="ps-section-label">Problem Statements</div>
           {psList.map((ps, i) => (
-            <div className="ps-item" key={i} style={{ animationDelay: `${i * 0.07}s` }}>
+            <div
+              className="ps-item"
+              key={i}
+              style={{ animationDelay: `${i * 0.07}s` }}
+            >
               <span className="ps-num">{String(i + 1).padStart(2, "0")}</span>
               <span className="ps-text">{ps}</span>
             </div>
@@ -211,7 +280,10 @@ function Modal({ card, onClose }) {
 
 function DomainCard({ domain, ps, variant, index, onClick }) {
   return (
-    <div className="domain-card-wrapper" style={{ animationDelay: `${index * 0.13}s` }}>
+    <div
+      className="domain-card-wrapper"
+      style={{ animationDelay: `${index * 0.13}s` }}
+    >
       {/* Running border wrapper */}
       <div className="group relative h-[400px] w-[300px]">
         {/* Spinning border */}
@@ -222,29 +294,54 @@ function DomainCard({ domain, ps, variant, index, onClick }) {
 
         <SpotlightCard
           spotlightColor="rgba(251,191,36,0.15)"
-          className="cursor-pointer !w-[300px] !h-[400px] !p-0 !bg-[#111110] !border-transparent"
+          className="!h-[400px] !w-[300px] cursor-pointer !border-transparent !bg-[#111110] !p-0"
         >
           <div
             onClick={onClick}
             style={{
-              position: "absolute", inset: 0,
-              display: "flex", flexDirection: "column",
-              alignItems: "center", justifyContent: "center",
-              gap: 20, textAlign: "center", userSelect: "none",
+              position: "absolute",
+              inset: 0,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 20,
+              textAlign: "center",
+              userSelect: "none",
             }}
           >
             {/* Glow ring behind lock */}
-            <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <div style={{
-                position: "absolute", width: 110, height: 110,
-                background: "radial-gradient(circle, rgba(234,88,12,0.25) 0%, rgba(245,158,11,0.1) 50%, transparent 70%)",
-                borderRadius: "50%", pointerEvents: "none",
-                animation: "pulseGlow 4s ease-in-out infinite",
-              }} />
-              <svg className="lock-icon" xmlns="http://www.w3.org/2000/svg"
-                width="54" height="54" viewBox="0 0 24 24"
-                fill="none" stroke="#fbbf24" strokeWidth="1.5"
-                strokeLinecap="round" strokeLinejoin="round"
+            <div
+              style={{
+                position: "relative",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  width: 110,
+                  height: 110,
+                  background:
+                    "radial-gradient(circle, rgba(234,88,12,0.25) 0%, rgba(245,158,11,0.1) 50%, transparent 70%)",
+                  borderRadius: "50%",
+                  pointerEvents: "none",
+                  animation: "pulseGlow 4s ease-in-out infinite",
+                }}
+              />
+              <svg
+                className="lock-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="54"
+                height="54"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#fbbf24"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               >
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />
@@ -253,21 +350,41 @@ function DomainCard({ domain, ps, variant, index, onClick }) {
             </div>
 
             {/* Labels */}
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 7 }}>
-              <span style={{
-                fontSize: 10, letterSpacing: "0.28em", textTransform: "uppercase",
-                fontFamily: "inter", color: "#f59e0b", opacity: 0.6,
-              }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 7,
+              }}
+            >
+              <span
+                style={{
+                  fontSize: 10,
+                  letterSpacing: "0.28em",
+                  textTransform: "uppercase",
+                  fontFamily: "inter",
+                  color: "#f59e0b",
+                  opacity: 0.6,
+                }}
+              >
                 Track {String(index + 1).padStart(2, "0")}
               </span>
               <span className="reveal-text">Click to reveal</span>
             </div>
 
             {/* Bottom accent line */}
-            <div style={{
-              position: "absolute", bottom: 0, left: "15%", right: "15%", height: 1,
-              background: "linear-gradient(90deg, transparent, rgba(245,158,11,0.5), rgba(234,88,12,0.5), transparent)",
-            }} />
+            <div
+              style={{
+                position: "absolute",
+                bottom: 0,
+                left: "15%",
+                right: "15%",
+                height: 1,
+                background:
+                  "linear-gradient(90deg, transparent, rgba(245,158,11,0.5), rgba(234,88,12,0.5), transparent)",
+              }}
+            />
 
             {/* Watermark */}
             <span className="domain-number-bg">
@@ -305,25 +422,24 @@ export default function Tracks() {
     <>
       <style>{styles}</style>
 
-      <section className="relative flex flex-col items-center overflow-hidden bg-transparent py-24 px-10 pb-0">
-
+      <section className="relative flex flex-col items-center overflow-hidden bg-transparent px-10 py-24 pb-0">
         {/* Heading */}
-        <div className="relative z-10 text-center mb-14">
+        <div className="relative z-10 mb-14 text-center">
           <h2 className="font-orbitron text-4xl font-bold tracking-widest text-[#F5A623] uppercase drop-shadow-[0_0_15px_rgba(243,106,29,0.4)] md:text-6xl">
             Tracks
           </h2>
-      <p className="mt-2 max-w-xl px-4 text-sm font-light text-neutral-400 md:mt-4 md:text-lg">
-        Each Track is locked until reveal day.
-      </p>
-              </div>
+          <p className="mt-2 max-w-xl px-4 text-sm font-light text-neutral-400 md:mt-4 md:text-lg">
+            Each Track is locked until reveal day.
+          </p>
+        </div>
 
         {/* Top divider */}
-        <div className="relative z-10 w-full mb-14">
+        <div className="relative z-10 mb-14 w-full">
           <TechDivider />
         </div>
 
         {/* Cards */}
-        <div className="relative z-10 flex flex-wrap gap-7 justify-center w-full">
+        <div className="relative z-10 flex w-full flex-wrap justify-center gap-7">
           {cards.map((card, i) => (
             <DomainCard
               key={i}
@@ -337,11 +453,9 @@ export default function Tracks() {
         </div>
 
         {/* Bottom divider */}
-        <div className="relative z-10 w-full mt-14">
+        <div className="relative z-10 mt-14 w-full">
           <TechDivider />
         </div>
-
- 
       </section>
 
       {activeCard && (

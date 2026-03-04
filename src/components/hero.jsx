@@ -11,19 +11,18 @@ const VideoBackground = () => {
         autoPlay
         loop
         muted
-        playsInline 
+        playsInline
         className="h-full w-full object-cover opacity-40"
       >
-        <source 
+        <source
           // PASTE YOUR FINAL CLOUDINARY URL RIGHT HERE:
-          src="https://res.cloudinary.com/dptv6jzs8/video/upload/q_auto,f_auto/v1772641795/watermark_removed_d2664e2c-0b9d-4591-b8bc-afcf50619a71_mln33l.mp4" 
-          type="video/mp4" 
+          src="https://res.cloudinary.com/dptv6jzs8/video/upload/q_auto,f_auto/v1772641795/watermark_removed_d2664e2c-0b9d-4591-b8bc-afcf50619a71_mln33l.mp4"
+          type="video/mp4"
         />
       </video>
     </div>
   );
 };
-
 
 const ThreeBackground = () => {
   const mountRef = useRef(null);
@@ -399,8 +398,8 @@ export default function Hero() {
   return (
     <>
       <div className="sticky top-0 z-0 flex h-[100dvh] w-full items-center overflow-hidden bg-neutral-950">
-  <VideoBackground />
-  <ThreeBackground />
+        <VideoBackground />
+        <ThreeBackground />
         <div className="pointer-events-none absolute inset-0 z-10 bg-linear-to-br from-orange-950/20 via-neutral-950/60 to-neutral-950/90" />
 
         <motion.div
