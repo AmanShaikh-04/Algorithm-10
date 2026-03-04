@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useMemo, useRef, useCallback } from "react";
 import { useGesture } from "@use-gesture/react";
 
@@ -79,34 +80,18 @@ function computeItemBaseRotation(offsetX, offsetY, sizeX, sizeY, segments) {
 }
 
 const DEFAULT_IMAGES = [
-  {
-    src: "https://images.unsplash.com/photo-1755331039789-7e5680e26e8f?q=80&w=774&auto=format&fit=crop",
-    alt: "Abstract art",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1755569309049-98410b94f66d?q=80&w=772&auto=format&fit=crop",
-    alt: "Modern sculpture",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1755497595318-7e5e3523854f?q=80&w=774&auto=format&fit=crop",
-    alt: "Digital artwork",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1755353985163-c2a0fe5ac3d8?q=80&w=774&auto=format&fit=crop",
-    alt: "Contemporary art",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1745965976680-d00be7dc0377?q=80&w=774&auto=format&fit=crop",
-    alt: "Geometric pattern",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1752588975228-21f44630bb3c?q=80&w=774&auto=format&fit=crop",
-    alt: "Textured surface",
-  },
-  {
-    src: "https://pbs.twimg.com/media/Gyla7NnXMAAXSo_?format=jpg&name=large",
-    alt: "Social media image",
-  },
+  { src: "/gallery/1.webp", alt: "Gallery Image 1" },
+  { src: "/gallery/2.webp", alt: "Gallery Image 2" },
+  { src: "/gallery/3.webp", alt: "Gallery Image 3" },
+  { src: "/gallery/4.webp", alt: "Gallery Image 4" },
+  { src: "/gallery/5.webp", alt: "Gallery Image 5" },
+  { src: "/gallery/6.webp", alt: "Gallery Image 6" },
+  { src: "/gallery/7.webp", alt: "Gallery Image 7" },
+  { src: "/gallery/8.webp", alt: "Gallery Image 8" },
+  { src: "/gallery/9.webp", alt: "Gallery Image 9" },
+  { src: "/gallery/10.webp", alt: "Gallery Image 10" },
+  { src: "/gallery/11.webp", alt: "Gallery Image 11" },
+  { src: "/gallery/12.webp", alt: "Gallery Image 12" },
 ];
 
 export default function DomeGallery({
@@ -578,9 +563,14 @@ export default function DomeGallery({
             draggingRef.current = false;
             return;
           }
+
           if (draggingRef.current) {
-            event.preventDefault();
-            lockScroll();
+            if (Math.abs(mx) > 10) {
+              if (event.cancelable) {
+                event.preventDefault();
+              }
+              lockScroll();
+            }
           } else {
             return;
           }
@@ -981,13 +971,11 @@ export default function DomeGallery({
               backgroundImage: `radial-gradient(circle, transparent 65%, var(--overlay-blur-color, ${overlayBlurColor}) 100%)`,
             }}
           />
-
           <div
             className="pointer-events-none absolute inset-0 z-[3] m-auto"
             style={{
               WebkitMaskImage: `radial-gradient(circle, transparent 70%, black 90%)`,
               maskImage: `radial-gradient(circle, transparent 70%, black 90%)`,
-              backdropFilter: "blur(3px)",
             }}
           />
 
@@ -1000,8 +988,7 @@ export default function DomeGallery({
               ref={scrimRef}
               className="scrim pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-500"
               style={{
-                background: "rgba(0, 0, 0, 0.4)",
-                backdropFilter: "blur(3px)",
+                background: "rgba(0, 0, 0, 0.8)",
               }}
             />
             <div

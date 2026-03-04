@@ -7,9 +7,6 @@ export default function NavbarBanner() {
   const [isMobile, setIsMobile] = useState(false);
   const collapseTimer = useRef(null);
 
-  /* ----------------------------
-     Detect mobile screen
-  ---------------------------- */
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
@@ -17,9 +14,6 @@ export default function NavbarBanner() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  /* ----------------------------
-     Desktop hover
-  ---------------------------- */
   const handleMouseEnter = () => {
     if (isMobile) return;
     if (collapseTimer.current) clearTimeout(collapseTimer.current);
@@ -33,12 +27,16 @@ export default function NavbarBanner() {
     }, 800);
   };
 
-  /* ----------------------------
-     Mobile tap
-  ---------------------------- */
   const handleTap = () => {
     if (!isMobile) return;
     setExpanded((prev) => !prev);
+  };
+
+  const closeMenu = (e) => {
+    if (isMobile) {
+      e.stopPropagation(); // Prevent the tap from instantly re-triggering handleTap
+      setExpanded(false);
+    }
   };
 
   useEffect(() => {
@@ -46,7 +44,7 @@ export default function NavbarBanner() {
   }, []);
 
   return (
-    <header className="mt-4 flex w-full justify-center px-3">
+    <nav className="flex w-full transform-gpu justify-center px-4 will-change-transform">
       <div
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -64,7 +62,7 @@ export default function NavbarBanner() {
             <img src="/images/logo.png" alt="Logo" className="w-12 md:w-14" />
 
             {/* Desktop nav */}
-            <nav className="hidden gap-8 text-white md:flex">
+            <div className="hidden gap-8 text-white md:flex">
               <a href="#home" className="group relative">
                 Home
                 <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-orange-400 transition-all group-hover:w-full" />
@@ -89,7 +87,7 @@ export default function NavbarBanner() {
                 FAQ
                 <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-orange-400 transition-all group-hover:w-full" />
               </a>
-            </nav>
+            </div>
 
             {/* Desktop CTA */}
             <button className="hidden rounded-full bg-gradient-to-l from-orange-400 to-red-500 px-6 py-2 text-white transition hover:scale-105 md:block">
@@ -102,33 +100,51 @@ export default function NavbarBanner() {
 
           {/* Mobile menu */}
           {isMobile && (
-            <div className="space-y-4 px-6 pb-4 text-center text-white md:hidden">
-              <a href="#home" className="block border-b border-white/20 pb-2">
+            <div className="space-y-4 px-6 pb-6 text-center text-white md:hidden">
+              <a
+                href="#home"
+                onClick={closeMenu}
+                className="block border-b border-white/20 pb-2"
+              >
                 Home
               </a>
-              <a href="#about" className="block border-b border-white/20 pb-2">
+              <a
+                href="#about"
+                onClick={closeMenu}
+                className="block border-b border-white/20 pb-2"
+              >
                 About
               </a>
-              <a href="#tracks" className="block border-b border-white/20 pb-2">
+              <a
+                href="#tracks"
+                onClick={closeMenu}
+                className="block border-b border-white/20 pb-2"
+              >
                 Tracks
               </a>
               <a
                 href="#timeline"
+                onClick={closeMenu}
                 className="block border-b border-white/20 pb-2"
               >
                 Timeline
               </a>
               <a
                 href="#sponsors"
+                onClick={closeMenu}
                 className="block border-b border-white/20 pb-2"
               >
                 Sponsors
               </a>
-              <a href="#faq" className="block border-b border-white/20 pb-2">
+              <a
+                href="#faq"
+                onClick={closeMenu}
+                className="block border-b border-white/20 pb-2"
+              >
                 FAQ
               </a>
 
-              <button className="w-full rounded-full bg-gradient-to-l from-orange-400 to-red-500 py-2">
+              <button className="mt-2 w-full rounded-full bg-gradient-to-l from-orange-400 to-red-500 py-2 font-semibold">
                 Register
               </button>
             </div>
@@ -150,6 +166,6 @@ export default function NavbarBanner() {
           />
         </div>
       </div>
-    </header>
+    </nav>
   );
 }
