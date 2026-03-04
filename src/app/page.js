@@ -6,7 +6,7 @@ import Navbar from "@/components/navbar";
 import Hero from "@/components/hero";
 import About from "@/components/about";
 import Tracks from "@/components/tracks";
-import DomeGallery from "@/components/gallery";
+import Gallery from "@/components/gallery";
 import Sponsors from "@/components/sponsors";
 import Faq from "@/components/faq";
 import Footer from "@/components/footer";
@@ -34,18 +34,12 @@ export default function Page() {
             <Navbar />
           </header>
 
-<<<<<<< Updated upstream
-          <main className="relative overflow-x-hidden">
-            <section id="home">
-              <Hero />
-=======
           <main className="relative bg-neutral-950">
             
             {/* 1. HERO LAYER */}
             {/* The Hero component natively handles its own 100dvh sticky behavior */}
 <section id="home" className="relative z-10 bg-neutral-950">              
   <Hero />
->>>>>>> Stashed changes
             </section>
 
             {/* 2. MAIN CONTENT LAYER */}
@@ -79,26 +73,6 @@ export default function Page() {
               </div>
             </section>
 
-<<<<<<< Updated upstream
-            <section id="gallery">
-              <div className="relative h-[60vh] max-h-[800px] w-full overflow-hidden md:h-[80vh]">
-                <DomeGallery autoRotateSpeed={0.2} overlayBlurColor="#000000" />
-              </div>
-            </section>
-
-            <section id="sponsors">
-              <Sponsors />
-            </section>
-
-            <section id="faq">
-              <Faq />
-            </section>
-
-            <section id="footer">
-              <Footer />
-            </section>
-=======
->>>>>>> Stashed changes
           </main>
         </>
       )}

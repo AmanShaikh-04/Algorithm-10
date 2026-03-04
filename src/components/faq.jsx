@@ -1,12 +1,4 @@
 "use client";
-<<<<<<< Updated upstream
-import { useRef, useState, useEffect } from "react";
-import {
-  motion,
-  AnimatePresence,
-  useMotionValue,
-  useTransform,
-=======
 import { useRef, useState } from "react";
 import { 
   motion, 
@@ -14,7 +6,6 @@ import {
   useScroll, 
   useTransform, 
   useMotionTemplate 
->>>>>>> Stashed changes
 } from "framer-motion";
 
 const faq_items = [
@@ -61,20 +52,6 @@ const faq_items = [
 ];
 
 export default function Faq() {
-<<<<<<< Updated upstream
-  const [openIndex, setOpenIndex] = useState(null);
-  const [exitFooter, setExitFooter] = useState(false);
-
-  const listRef = useRef(null);
-  const exitTimeout = useRef(null);
-  const openIndexRef = useRef(null);
-
-  const scrollProgress = useMotionValue(0);
-  const gradientPosition = useTransform(
-    scrollProgress,
-    [0, 1],
-    ["0% 50%", "100% 50%"]
-=======
   const container_ref = useRef(null);
   const [open_index, set_open_index] = useState(null);
 
@@ -88,189 +65,10 @@ export default function Faq() {
     scroll_y_progress,
     [0.05, 0.15, 0.85, 0.95],
     [0, 1, 1, 0]
->>>>>>> Stashed changes
   );
   const left_blur = useTransform(scroll_y_progress, [0.85, 0.95], [0, 8]);
   const left_filter = useMotionTemplate`blur(${left_blur}px)`;
 
-<<<<<<< Updated upstream
-  useEffect(() => {
-    openIndexRef.current = openIndex;
-  }, [openIndex]);
-
-  useEffect(() => {
-    const list = listRef.current;
-    if (!list) return;
-
-    const handleScroll = () => {
-      const scrollTop = list.scrollTop;
-      const scrollHeight = list.scrollHeight - list.clientHeight;
-      if (scrollHeight <= 0) return;
-
-      scrollProgress.set(scrollTop / scrollHeight);
-
-      const atEnd = scrollTop >= scrollHeight - 8;
-      if (atEnd && openIndexRef.current === null) {
-        clearTimeout(exitTimeout.current);
-        exitTimeout.current = setTimeout(() => setExitFooter(true), 600);
-      } else {
-        clearTimeout(exitTimeout.current);
-        setExitFooter(false);
-      }
-    };
-
-    list.addEventListener("scroll", handleScroll);
-    return () => list.removeEventListener("scroll", handleScroll);
-  }, [scrollProgress]);
-
-  const leftVariants = {
-    visible: { y: 0, opacity: 1 },
-    exit: {
-      y: -80,
-      opacity: 0,
-      transition: { duration: 1.2, ease: "easeInOut" },
-    },
-  };
-
-  const cardVariants = {
-    visible: { y: 0, opacity: 1 },
-    exit: (i) => ({
-      y: -60,
-      opacity: 0,
-      transition: { duration: 0.8, delay: i * 0.08, ease: "easeInOut" },
-    }),
-  };
-
-  const gradientColors =
-    "linear-gradient(90deg, #8B0000, #FF4500, #FF7E00, #FFA500, #FFD580, #FF7E00, #5C1A00)";
-
-  return (
-    <section className="relative overflow-hidden bg-black py-16 text-white md:py-24">
-      <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 lg:flex-row">
-        {/* LEFT TEXT */}
-        <motion.div
-          variants={leftVariants}
-          initial="visible"
-          animate={exitFooter ? "exit" : "visible"}
-          className="flex w-full flex-col justify-center text-center lg:sticky lg:top-24 lg:w-1/2 lg:text-left"
-          style={{ fontFamily: "Orbitron" }}
-        >
-          <div className="relative mx-auto inline-block lg:mx-0">
-            <div className="glow-pulse absolute inset-0 rounded-full bg-orange-500/25 blur-3xl" />
-
-            <motion.h2
-              className="relative text-4xl leading-tight font-bold sm:text-5xl md:text-6xl lg:text-7xl"
-              style={{
-                backgroundImage: gradientColors,
-                backgroundSize: "300% 100%",
-                backgroundPosition: gradientPosition,
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                transition: "background-position 0.2s linear",
-              }}
-            >
-              Frequently Asked Questions
-            </motion.h2>
-          </div>
-
-          <p className="mt-4 text-lg opacity-70 md:text-xl">
-            Everything you need to know about Algorithm 10.0
-          </p>
-        </motion.div>
-
-        {/* FAQ LIST */}
-        <motion.div
-          ref={listRef}
-          className="no-scrollbar max-h-[80vh] w-full overflow-y-auto pt-6 pb-24 lg:w-1/2"
-        >
-          <AnimatePresence initial={false}>
-            {FAQ_ITEMS.map((item, i) => {
-              const isOpen = openIndex === i;
-
-              return (
-                <motion.div
-                  key={i}
-                  custom={i}
-                  variants={cardVariants}
-                  initial="visible"
-                  animate={exitFooter ? "exit" : "visible"}
-                  className="group relative mb-6 overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur"
-                >
-                  <div
-                    className={`pointer-events-none absolute inset-0 rounded-3xl transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
-                    style={{
-                      background: gradientColors,
-                      padding: "3px",
-                      WebkitMask:
-                        "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-                      WebkitMaskComposite: "xor",
-                      maskComposite: "exclude",
-                    }}
-                  />
-
-                  <button
-                    onClick={() => setOpenIndex(isOpen ? null : i)}
-                    className="relative z-10 flex w-full justify-between px-6 py-5 text-left md:px-8 md:py-6"
-                  >
-                    <span>{item.q}</span>
-                    <motion.span
-                      animate={{ rotate: isOpen ? 180 : 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      ⌄
-                    </motion.span>
-                  </button>
-
-                  <AnimatePresence initial={false}>
-                    {isOpen && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.22, ease: "easeOut" }}
-                        className="relative z-10 overflow-hidden px-6 pb-6 md:px-8"
-                      >
-                        <p className="text-gray-300">{item.a}</p>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
-        </motion.div>
-      </div>
-
-      <style jsx global>{`
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        .no-scrollbar {
-          scrollbar-width: none;
-          -ms-overflow-style: none;
-        }
-
-        @keyframes orangePulse {
-          0% {
-            box-shadow:
-              0 0 18px rgba(255, 126, 0, 0.25),
-              0 0 40px rgba(255, 126, 0, 0.15);
-          }
-          50% {
-            box-shadow:
-              0 0 28px rgba(255, 126, 0, 0.45),
-              0 0 65px rgba(255, 126, 0, 0.25);
-          }
-          100% {
-            box-shadow:
-              0 0 18px rgba(255, 126, 0, 0.25),
-              0 0 40px rgba(255, 126, 0, 0.15);
-          }
-        }
-
-        .glow-pulse {
-          animation: orangePulse 2.8s ease-in-out infinite;
-=======
   // --- RIGHT SIDE ANIMATIONS ---
   const right_opacity = useTransform(
     scroll_y_progress,
@@ -392,7 +190,6 @@ export default function Faq() {
         @keyframes shimmer {
           0% { background-position: 0% 50%; }
           100% { background-position: 200% 50%; }
->>>>>>> Stashed changes
         }
       `}</style>
     </section>
