@@ -352,7 +352,7 @@ const Footer = () => {
             </span>
           </p>
           <p className="mt-1.5 text-[10px] font-extralight tracking-wider text-white/40 lg:text-xs">
-            © 2026 Algorithm 10. All rights reserved. Navi Mumbai.
+            © 2026 Algorithm X . All rights reserved. Navi Mumbai.
           </p>
         </div>
       </div>

@@ -10,12 +10,12 @@ import {
 
 const faq_items = [
   {
-    q: "What is Algorithm 10.0?",
-    a: "Algorithm 10.0 is a 32-hour national-level hackathon that brings together innovators, students, and tech enthusiasts from across the country to explore futuristic technologies and solve real-world problems.",
+    q: "What is Algorithm X?",
+    a: "Algorithm X is a 32-hour national-level hackathon that brings together innovators, students, and tech enthusiasts from across the country to explore futuristic technologies and solve real-world problems.",
   },
   {
     q: "When and where is it held?",
-    a: "The hackathon will take place on February 21–22, 2026 at Kalsekar Technical Campus, New Panvel, with a fully equipped and collaborative environment.",
+    a: "The hackathon will take place on April 3-4, 2026 at Kalsekar Technical Campus, New Panvel, with a fully equipped and collaborative environment.",
   },
   {
     q: "Who is eligible to participate?",
@@ -23,11 +23,11 @@ const faq_items = [
   },
   {
     q: "Is there a participation fee?",
-    a: "No, Algorithm 10.0 is completely free to participate in, with meals, internet, and resources provided.",
+    a: "No, Algorithm X is completely free to participate in, with meals, internet, and resources provided.",
   },
   {
     q: "How can I register?",
-    a: "Participants can register through the official Algorithm 10.0 website where all guidelines and updates are available.",
+    a: "Participants can register through the official UnStop Event Page where all guidelines and updates are available.",
   },
   {
     q: "Are prizes awarded?",
@@ -104,7 +104,7 @@ export default function Faq() {
                 </h2>
                 <div className="mt-6 h-1 w-20 rounded-full bg-orange-600" />
                 <p className="mt-6 max-w-md text-xl leading-relaxed text-gray-400">
-                  Everything you need to know about Algorithm 10.0
+                  Everything you need to know about Algorithm X
                 </p>
               </div>
             </motion.div>
