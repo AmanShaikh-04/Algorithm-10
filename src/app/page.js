@@ -6,12 +6,16 @@ import Navbar from "@/components/navbar";
 import Hero from "@/components/hero";
 import About from "@/components/about";
 import Tracks from "@/components/tracks";
-import Gallery from "@/components/gallery";
+// import Gallery from "@/components/gallery";
 import Sponsors from "@/components/sponsors";
 import Faq from "@/components/faq";
-import Footer from "@/components/footer";
+// import Footer from "@/components/footer";
 import Timeline from "@/components/timeline";
 import SharedBackground from "@/components/SharedBackground";
+
+import dynamic from "next/dynamic";
+const Footer = dynamic(() => import("@/components/footer"), { ssr: false });
+const Gallery = dynamic(() => import("@/components/gallery"), { ssr: false });
 
 export default function Page() {
   const [showHome, setShowHome] = useState(false);

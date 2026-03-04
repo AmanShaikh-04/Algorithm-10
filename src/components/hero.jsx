@@ -4,80 +4,22 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import * as THREE from "three";
 
-const ImageSequenceBackground = () => {
-  const [currentFrame, setCurrentFrame] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isMobile, setIsMobile] = useState(true); // Default to true to prevent initial accidental loads
-  const totalFrames = 192;
-
-  // Preload all images on mount, BUT only if it's a desktop device
-  useEffect(() => {
-    // Check if the user is on mobile
-    const checkIsMobile = window.innerWidth < 768;
-    setIsMobile(checkIsMobile);
-
-    // If mobile, stop here and do not preload the 192 images
-    if (checkIsMobile) {
-      return;
-    }
-
-    let isMounted = true;
-    const preloadImages = async () => {
-      const promises = [];
-
-      for (let i = 0; i < totalFrames; i++) {
-        const frameString = String(i).padStart(3, "0");
-        const src = `/herosection/frame_${frameString}_delay-0.041s.webp`;
-
-        promises.push(
-          new Promise((resolve) => {
-            const img = new Image();
-            img.src = src;
-            // Resolve the promise whether it loads successfully or fails
-            img.onload = resolve;
-            img.onerror = resolve;
-          })
-        );
-      }
-
-      // Wait for all images to finish downloading
-      await Promise.all(promises);
-      if (isMounted) {
-        setIsLoaded(true);
-      }
-    };
-
-    preloadImages();
-
-    // Cleanup function to prevent setting state if component unmounts
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  // Start the animation ONLY after all images are preloaded and user is NOT on mobile
-  useEffect(() => {
-    if (!isLoaded || isMobile) return; 
-
-    const speedMs = 90;
-    const interval = setInterval(() => {
-      setCurrentFrame((prev) => (prev + 1) % totalFrames);
-    }, speedMs);
-
-    return () => clearInterval(interval);
-  }, [isLoaded, isMobile]);
-
-  const frameString = String(currentFrame).padStart(3, "0");
-  const imageSrc = `/herosection/frame_${frameString}_delay-0.041s.webp`;
-
+const VideoBackground = () => {
   return (
     <div className="absolute inset-0 z-0 h-full w-full bg-neutral-950">
-      <img
-        // If it's mobile or images aren't loaded yet, show only the static first frame
-        src={(!isMobile && isLoaded) ? imageSrc : `/herosection/frame_000_delay-0.041s.webp`}
-        alt="Animated Background"
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
         className="h-full w-full object-cover opacity-40"
-      />
+      >
+        <source
+          // PASTE YOUR FINAL CLOUDINARY URL RIGHT HERE:
+          src="https://res.cloudinary.com/dptv6jzs8/video/upload/q_auto,f_auto/v1772641795/watermark_removed_d2664e2c-0b9d-4591-b8bc-afcf50619a71_mln33l.mp4"
+          type="video/mp4"
+        />
+      </video>
     </div>
   );
 };
@@ -456,7 +398,7 @@ export default function Hero() {
   return (
     <>
       <div className="sticky top-0 z-0 flex h-[100dvh] w-full items-center overflow-hidden bg-neutral-950">
-        <ImageSequenceBackground />
+        <VideoBackground />
         <ThreeBackground />
         <div className="pointer-events-none absolute inset-0 z-10 bg-linear-to-br from-orange-950/20 via-neutral-950/60 to-neutral-950/90" />
 
