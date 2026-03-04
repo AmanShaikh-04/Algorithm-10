@@ -7,15 +7,11 @@ import SharedBackground from "./SharedBackground";
 const base_team_members = [
   { image: "/team/M-member1.webp", role: "Management", name: "Basheer" },
   { image: "/team/M-member2.webp", role: "Management", name: "Ayesha" },
-  { image: "/team/M-member3.webp", role: "Media & Marketing", name: "Qaif" },
+  { image: "/team/M-member3.webp", role: "Management", name: "Qaif" },
   { image: "/team/MM-member1.webp", role: "Media & Marketing", name: "Arman" },
   { image: "/team/MM-member2.webp", role: "Media & Marketing", name: "Aman" },
   { image: "/team/MM-member3.webp", role: "Media & Marketing", name: "Alamin" },
-  {
-    image: "/team/MM-member4.webp",
-    role: "Media & Marketing",
-    name: "Javeriya",
-  },
+  { image: "/team/MM-member4.webp", role: "Media & Marketing", name: "Javeriya",},
   { image: "/team/MM-member5.webp", role: "Media & Marketing", name: "Altaf" },
   { image: "/team/MM-member6.webp", role: "Media & Marketing", name: "Zain" },
   { image: "/team/S-member1.webp", role: "Sponsorship", name: "Umar" },
