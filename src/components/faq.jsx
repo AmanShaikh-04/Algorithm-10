@@ -5,9 +5,10 @@ import {
   AnimatePresence,
   useScroll,
   useTransform,
+  useMotionTemplate,
 } from "framer-motion";
 
-const FAQ_ITEMS = [
+const faq_items = [
   {
     q: "What is Algorithm 10.0?",
     a: "Algorithm 10.0 is a 32-hour national-level hackathon that brings together innovators, students, and tech enthusiasts from across the country to explore futuristic technologies and solve real-world problems.",
@@ -51,179 +52,166 @@ const FAQ_ITEMS = [
 ];
 
 export default function Faq() {
-  const [openIndex, setOpenIndex] = useState(null);
-  const listRef = useRef(null);
+  const container_ref = useRef(null);
+  const [open_index, set_open_index] = useState(null);
 
-  /* Scroll-based gradient animation */
-  const { scrollYProgress } = useScroll({
-    target: listRef,
-    offset: ["start start", "end end"],
+  const { scrollYProgress: scroll_y_progress } = useScroll({
+    target: container_ref,
+    offset: ["start end", "end start"],
   });
 
-  const gradientPosition = useTransform(
-    scrollYProgress,
-    [0, 1],
-    ["0% 50%", "100% 50%"]
+  // --- LEFT SIDE ANIMATIONS ---
+  const left_opacity = useTransform(
+    scroll_y_progress,
+    [0.05, 0.15, 0.85, 0.95],
+    [0, 1, 1, 0]
   );
+  const left_blur = useTransform(scroll_y_progress, [0.85, 0.95], [0, 8]);
+  const left_filter = useMotionTemplate`blur(${left_blur}px)`;
 
-  const gradientColors =
+  // --- RIGHT SIDE ANIMATIONS ---
+  const right_opacity = useTransform(
+    scroll_y_progress,
+    [0.05, 0.15, 0.85, 0.95],
+    [0, 1, 1, 0]
+  );
+  const right_blur = useTransform(scroll_y_progress, [0.85, 0.95], [0, 12]);
+  const right_scale = useTransform(scroll_y_progress, [0.85, 0.95], [1, 0.95]);
+  const right_filter = useMotionTemplate`blur(${right_blur}px)`;
+
+  const gradient_colors =
     "linear-gradient(90deg, #8B0000, #FF4500, #FF7E00, #FFA500, #FFD580, #FF7E00, #5C1A00)";
 
   return (
-    <main>
-      <section className="relative bg-neutral-950 py-16 text-white md:py-24">
-        <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 lg:flex-row lg:gap-16">
-
-          {/* LEFT */}
-          <div className="w-full lg:w-1/2 lg:sticky lg:top-20 lg:self-start">
+    <section
+      ref={container_ref}
+      className="relative bg-transparent py-24 text-white md:py-32"
+    >
+      <div className="relative z-10 mx-auto max-w-7xl px-6">
+        <div className="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:gap-20">
+          {/* --- LEFT SIDE: STICKY CONTAINER --- */}
+          <div className="z-10 lg:sticky lg:top-1/2 lg:-translate-y-1/2 lg:self-start">
             <motion.div
-              className="w-full text-center lg:text-left"
-              style={{ fontFamily: "Orbitron" }}
+              style={{ opacity: left_opacity, filter: left_filter }}
+              className="space-y-6"
             >
-              <div className="relative mx-auto inline-block lg:mx-0">
-                <div className="glow-pulse absolute -inset-6 rounded-full bg-orange-500/25 blur-3xl" />
-
-                <motion.h2
-                  className="relative text-4xl font-bold leading-tight sm:text-5xl md:text-6xl lg:text-7xl"
-                  style={{
-                    backgroundImage: gradientColors,
-                    backgroundSize: "300% 100%",
-                    backgroundPosition: gradientPosition,
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                  }}
-                >
-                  Frequently Asked Questions
-                </motion.h2>
+              <div>
+                <h2 className="text-5xl leading-tight font-bold tracking-tight md:text-7xl">
+                  Frequently Asked <br />
+                  <span className="bg-gradient-to-r from-orange-600 to-orange-400 bg-clip-text text-transparent">
+                    Questions
+                  </span>
+                </h2>
+                <div className="mt-6 h-1 w-20 rounded-full bg-orange-600" />
+                <p className="mt-6 max-w-md text-xl leading-relaxed text-gray-400">
+                  Everything you need to know about Algorithm 10.0
+                </p>
               </div>
-
-              <p className="mt-4 text-lg text-gray-400 md:text-xl">
-                Everything you need to know about Algorithm 10.0
-              </p>
             </motion.div>
           </div>
 
-          {/* RIGHT */}
-          <div ref={listRef} className="w-full lg:w-1/2 lg:py-24">
-            <AnimatePresence initial={false}>
-              {FAQ_ITEMS.map((item, i) => {
-                const isOpen = openIndex === i;
+          {/* --- RIGHT SIDE: SCROLLING CONTENT --- */}
+          <motion.div
+            style={{
+              opacity: right_opacity,
+              filter: right_filter,
+              scale: right_scale,
+            }}
+            className="relative z-20 w-full space-y-6"
+          >
+            {faq_items.map((item, i) => {
+              const isOpen = open_index === i;
+              return (
+                <div
+                  key={i}
+                  className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm"
+                >
+                  <div
+                    className={`pointer-events-none absolute inset-0 rounded-3xl transition-opacity duration-300 ${
+                      isOpen
+                        ? "opacity-100"
+                        : "opacity-0 group-hover:opacity-100"
+                    }`}
+                    style={{
+                      backgroundImage: gradient_colors,
+                      backgroundSize: "200% 100%",
+                      padding: "3px",
+                      WebkitMask:
+                        "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                      WebkitMaskComposite: "xor",
+                      maskComposite: "exclude",
+                      animation: isOpen ? "shimmer 3s linear infinite" : "none",
+                    }}
+                  />
 
-                return (
-                  <motion.div
-                    key={i}
-                    className="group relative mb-5 overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.05, duration: 0.4 }}
-                  >
-                    {/* Gradient border */}
-                    <motion.div
-                      className="pointer-events-none absolute inset-0 rounded-3xl"
-                      initial={{ opacity: 0 }}
-                      animate={{ 
-                        opacity: isOpen ? 1 : 0
-                      }}
-                      whileHover={{ opacity: 1 }}
-                      transition={{ duration: 0.4, ease: "easeInOut" }}
-                      style={{
-                        background: gradientColors,
-                        padding: "3px",
-                        WebkitMask:
-                          "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-                        WebkitMaskComposite: "xor",
-                        maskComposite: "exclude",
-                      }}
-                    />
-
+                  <div className="relative z-10">
                     <button
-                      onClick={() => setOpenIndex(isOpen ? null : i)}
-                      className="relative z-10 flex w-full items-center justify-between px-6 py-5 text-left text-lg md:px-8 md:py-6"
+                      onClick={() => set_open_index(isOpen ? null : i)}
+                      className="flex w-full cursor-pointer items-center justify-between p-7 text-left outline-none md:p-8"
                     >
-                      <span className="pr-4">{item.q}</span>
-                      <motion.span
-                        animate={{ rotate: isOpen ? 180 : 0 }}
-                        transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-                        className="text-2xl"
+                      <span
+                        className={`pr-4 text-lg font-semibold transition-colors duration-300 md:text-xl ${
+                          isOpen
+                            ? "text-orange-500"
+                            : "text-gray-300 group-hover:text-white"
+                        }`}
                       >
-                        ⌄
-                      </motion.span>
+                        {item.q}
+                      </span>
+                      <motion.div
+                        animate={{ rotate: isOpen ? 180 : 0 }}
+                        className={`flex-shrink-0 transition-colors ${isOpen ? "text-orange-500" : "text-gray-600"}`}
+                      >
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                      </motion.div>
                     </button>
 
                     <AnimatePresence initial={false}>
                       {isOpen && (
                         <motion.div
-                          initial={{ 
-                            height: 0, 
-                            opacity: 0,
-                            marginTop: 0
-                          }}
-                          animate={{ 
-                            height: "auto", 
-                            opacity: 1,
-                            marginTop: 0
-                          }}
-                          exit={{ 
-                            height: 0, 
-                            opacity: 0,
-                            marginTop: 0
-                          }}
-                          transition={{ 
-                            height: {
-                              duration: 0.4,
-                              ease: [0.4, 0, 0.2, 1]
-                            },
-                            opacity: {
-                              duration: 0.3,
-                              ease: "easeInOut"
-                            }
-                          }}
-                          className="relative z-10 overflow-hidden"
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.35, ease: "easeInOut" }}
                         >
-                          <motion.div
-                            initial={{ y: -10 }}
-                            animate={{ y: 0 }}
-                            exit={{ y: -10 }}
-                            transition={{ duration: 0.3, ease: "easeOut" }}
-                            className="px-6 pb-6 md:px-8"
-                          >
-                            <p className="text-gray-300">{item.a}</p>
-                          </motion.div>
+                          <div className="px-8 pb-8">
+                            <div className="mb-6 h-px w-full bg-white/10" />
+                            <p className="text-lg leading-relaxed font-light text-gray-400">
+                              {item.a}
+                            </p>
+                          </div>
                         </motion.div>
                       )}
                     </AnimatePresence>
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
-          </div>
+                  </div>
+                </div>
+              );
+            })}
+          </motion.div>
         </div>
+      </div>
 
-        {/* Glow animation */}
-        <style jsx global>{`
-          @keyframes orangePulse {
-            0% {
-              box-shadow:
-                0 0 18px rgba(255, 126, 0, 0.25),
-                0 0 40px rgba(255, 126, 0, 0.15);
-            }
-            50% {
-              box-shadow:
-                0 0 30px rgba(255, 126, 0, 0.45),
-                0 0 70px rgba(255, 126, 0, 0.25);
-            }
-            100% {
-              box-shadow:
-                0 0 18px rgba(255, 126, 0, 0.25),
-                0 0 40px rgba(255, 126, 0, 0.15);
-            }
+      <style jsx global>{`
+        @keyframes shimmer {
+          0% {
+            background-position: 0% 50%;
           }
-
-          .glow-pulse {
-            animation: orangePulse 3s ease-in-out infinite;
+          100% {
+            background-position: 200% 50%;
           }
-        `}</style>
-      </section>
-    </main>
+        }
+      `}</style>
+    </section>
   );
 }

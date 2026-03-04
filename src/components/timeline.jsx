@@ -8,6 +8,15 @@ const BackgroundAnimation = ({ progress, totalSections }) => {
   const [pathLength, setPathLength] = useState(0);
   const [pathD, setPathD] = useState("");
   const [logoTransform, setLogoTransform] = useState("translate(0, 0)");
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile to disable heavy SVG filters
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // SVG Constants
   const sectionHeight = 100;
@@ -72,9 +81,6 @@ const BackgroundAnimation = ({ progress, totalSections }) => {
     }
   }, [progress, pathLength]);
 
-  // REMOVED: Independent circleOpacity logic.
-  // The circle will now stay visible and fade out only when the parent component fades.
-
   return (
     <div className="pointer-events-none absolute inset-0 z-0">
       <svg
@@ -82,12 +88,14 @@ const BackgroundAnimation = ({ progress, totalSections }) => {
         height="100%"
         viewBox={`0 0 100 ${viewBoxHeight}`}
         preserveAspectRatio="none"
+        className="will-change-transform"
       >
         <defs>
           <linearGradient id="line-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor="#F36A1D" stopOpacity="0.8" />
             <stop offset="100%" stopColor="#F5A623" stopOpacity="1" />
           </linearGradient>
+          {/* Filters are kept in defs but only applied on desktop to save mobile performance */}
           <filter id="line-glow" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="0.8" result="coloredBlur" />
           </filter>
@@ -126,7 +134,7 @@ const BackgroundAnimation = ({ progress, totalSections }) => {
             fill="none"
             stroke="url(#line-gradient)"
             strokeWidth="0.2"
-            filter="url(#line-glow)"
+            filter={isMobile ? undefined : "url(#line-glow)"}
             style={{
               strokeDasharray: pathLength,
               strokeDashoffset: strokeDashoffset,
@@ -141,7 +149,7 @@ const BackgroundAnimation = ({ progress, totalSections }) => {
               cy="0"
               r="1.5"
               fill="#F5A623"
-              filter="url(#node-glow)"
+              filter={isMobile ? undefined : "url(#node-glow)"}
             />
             <circle cx="0" cy="0" r="0.5" fill="#FFF" />
           </g>
@@ -160,22 +168,26 @@ const SectionContent = ({ section, isCurrent, index }) => {
     : "justify-center md:justify-end";
 
   const containerClasses = isLeft
-    ? "md:ml-[15%] lg:ml-[20%] text-left items-start"
-    : "md:mr-[15%] lg:mr-[20%] text-right items-end";
+    ? "md:ml-[15%] lg:ml-[20%] text-center md:text-left items-center md:items-start"
+    : "md:mr-[15%] lg:mr-[20%] text-center md:text-right items-center md:items-end";
 
   const borderClass = isLeft
-    ? "border-l-4 border-[#F36A1D] pl-6"
-    : "border-r-4 border-[#F36A1D] pr-6";
+    ? "md:border-l-4 border-[#F36A1D] md:pl-6"
+    : "md:border-r-4 border-[#F36A1D] md:pr-6";
 
   const gradientClass = isLeft
-    ? "bg-gradient-to-r from-[#F36A1D]/10 to-transparent"
-    : "bg-gradient-to-l from-[#F36A1D]/10 to-transparent";
+    ? "bg-gradient-to-b md:bg-gradient-to-r from-[#F36A1D]/10 to-transparent"
+    : "bg-gradient-to-b md:bg-gradient-to-l from-[#F36A1D]/10 to-transparent";
 
   return (
-    <div className={`absolute inset-0 flex items-center px-6 ${justifyClass}`}>
+    <div
+      className={`absolute inset-0 flex items-center px-6 ${justifyClass} transform-gpu`}
+    >
       <div
-        className={`relative flex max-w-lg flex-col py-6 transition-all duration-700 ease-out ${containerClasses} ${
-          isCurrent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-30"
+        className={`relative flex max-w-lg flex-col py-6 transition-all duration-700 ease-out will-change-transform ${containerClasses} ${
+          isCurrent
+            ? "translate-y-0 scale-105 opacity-100"
+            : "translate-y-8 scale-95 opacity-20"
         }`}
       >
         <div
@@ -184,25 +196,27 @@ const SectionContent = ({ section, isCurrent, index }) => {
           }`}
         />
 
-        <div className={`${borderClass} flex flex-col gap-2`}>
+        <div className={`${borderClass} flex flex-col gap-1 md:gap-2`}>
           <div className="font-orbitron leading-none font-bold">
-            <span className="block text-2xl text-[#F5A623]/80 md:text-3xl">
+            <span className="block text-xl text-[#F5A623]/80 md:text-3xl">
               {section.number.line1}
             </span>
             <span
-              className={`block text-6xl text-[#F36A1D] transition-all duration-500 md:text-7xl lg:text-8xl ${
-                isCurrent ? "blur-0 scale-100" : "scale-90 blur-sm"
+              className={`block text-5xl text-[#F36A1D] transition-all duration-500 md:text-7xl lg:text-8xl ${
+                isCurrent
+                  ? "md:blur-0 scale-100 opacity-100"
+                  : "scale-95 opacity-60 md:blur-sm"
               }`}
             >
               {section.number.line2}
             </span>
           </div>
 
-          <h2 className="font-orbitron mt-2 text-xl font-bold tracking-wider text-white uppercase md:text-2xl">
+          <h2 className="font-orbitron mt-1 text-lg font-bold tracking-wider text-white uppercase md:text-2xl">
             {section.title}
           </h2>
 
-          <p className="max-w-xs font-sans text-sm leading-relaxed font-medium text-neutral-300 md:text-base">
+          <p className="max-w-[280px] font-sans text-xs leading-relaxed font-medium text-neutral-300 md:max-w-xs md:text-base">
             {section.description}
           </p>
         </div>
@@ -215,33 +229,33 @@ const SectionContent = ({ section, isCurrent, index }) => {
 const Timeline = () => {
   const sections = [
     {
-      number: { line1: "JAN", line2: "12" },
+      number: { line1: "MAR", line2: "05" },
       title: "Registrations Start",
       description: "Registration opens. Gather your team and sign up.",
     },
     {
-      number: { line1: "JAN", line2: "24" },
+      number: { line1: "MAR", line2: "28" },
       title: "Registrations Close",
       description: "Deadline day. Ensure your team is registered.",
     },
     {
-      number: { line1: "JAN", line2: "26" },
+      number: { line1: "MAR", line2: "28" },
+      title: "Problem Statement Live",
+      description:
+        "Challenges revealed.Choose your domain and plan your solution.",
+    },
+    {
+      number: { line1: "MAR", line2: "29" },
       title: "Round 1: Quiz",
       description: "Quiz round. Only team lead allowed. Timing TBA.",
     },
     {
-      number: { line1: "JAN", line2: "27" },
-      title: "Shortlist Announced",
-      description:
-        "By 9 AM. Selected teams listed on website & WhatsApp groups.",
-    },
-    {
-      number: { line1: "JAN", line2: "30" },
+      number: { line1: "APR", line2: "03" },
       title: "Hackathon Starts",
       description: "The 32-hour offline hackathon begins.",
     },
     {
-      number: { line1: "JAN", line2: "31" },
+      number: { line1: "APR", line2: "04" },
       title: "Hackathon Ends",
       description: "Competition concludes and winners declared.",
     },
@@ -249,8 +263,6 @@ const Timeline = () => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [progress, setProgress] = useState(0);
-
-  // Animation states
   const [headerOpacity, setHeaderOpacity] = useState(1);
   const [componentOpacity, setComponentOpacity] = useState(1);
 
@@ -262,6 +274,8 @@ const Timeline = () => {
   }, [sections.length]);
 
   useEffect(() => {
+    let ticking = false; // Add throttle flag
+
     const handleScroll = () => {
       const container = scrollContainerRef.current;
       if (!container) return;
@@ -271,7 +285,7 @@ const Timeline = () => {
       const containerHeight = containerRect.height;
       const windowHeight = window.innerHeight;
 
-      // --- 1. Progress Calculation ---
+      // Progress Calculation
       const totalSections = sections.length;
       const sectionHeight = 100;
       const startY = 50;
@@ -293,7 +307,7 @@ const Timeline = () => {
 
       setProgress(adjustedProgress);
 
-      // --- 2. Header Fade In/Out ---
+      // Header Fade
       const headerFadeStart = windowHeight * 0.2;
       const headerFadeEnd = -100;
       let newHeaderOpacity = 1;
@@ -304,20 +318,14 @@ const Timeline = () => {
       }
       setHeaderOpacity(newHeaderOpacity);
 
-      // --- 3. Component Exit Fade (Anchor to Last Section) ---
-      // We check the position of the LAST section specifically.
-      // We want opacity to remain 1 until the last section reaches the top area.
-
+      // Component Exit Fade
       let newComponentOpacity = 1;
       const lastSection = sectionRefs.current[sections.length - 1];
 
       if (lastSection) {
         const lastRect = lastSection.getBoundingClientRect();
         const elementCenter = lastRect.top + lastRect.height / 2;
-
-        // Start fading when the center of the last element hits the top 20% of the viewport
         const fadeStartPos = windowHeight * 0.2;
-        // Finish fading when it has moved up another 20% (fully off or near off screen)
         const fadeEndPos = -windowHeight * 0.1;
 
         if (elementCenter < fadeStartPos) {
@@ -325,19 +333,10 @@ const Timeline = () => {
           const distance = elementCenter - fadeEndPos;
           newComponentOpacity = Math.min(1, Math.max(0, distance / range));
         }
-      } else {
-        // Fallback if ref not found (rare)
-        if (containerRect.bottom < windowHeight * 0.5) {
-          newComponentOpacity = Math.max(
-            0,
-            containerRect.bottom / (windowHeight * 0.5)
-          );
-        }
       }
-
       setComponentOpacity(newComponentOpacity);
 
-      // --- 4. Active Section Logic ---
+      // Active Section Logic
       const viewportCenter = windowHeight / 2;
       let newCurrentIndex = 0;
       let minDistance = Infinity;
@@ -359,33 +358,43 @@ const Timeline = () => {
       }
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
+    // Optimization: Wrap scroll logic in requestAnimationFrame to prevent layout thrashing
+    const scrollListener = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
+
+    window.addEventListener("scroll", scrollListener, { passive: true });
+    scrollListener(); // Initialize once
+    return () => window.removeEventListener("scroll", scrollListener);
   }, [currentIndex, sections.length]);
 
   return (
-    <div ref={scrollContainerRef} className="relative w-full bg-black">
+    <div
+      ref={scrollContainerRef}
+      className="relative w-full overflow-hidden bg-transparent"
+    >
       <style jsx global>{`
         .font-orbitron {
           font-family: "Orbitron", sans-serif;
         }
       `}</style>
 
-      {/* Main Wrapper with Scroll-Driven Opacity */}
-      <div style={{ opacity: componentOpacity }}>
-        {/* Header Section */}
+      <div style={{ opacity: componentOpacity }} className="transform-gpu">
+        {/* Header Section*/}
         <div
-          className="relative z-10 flex flex-col items-center justify-center pt-24 pb-12 text-center md:pt-32"
+          className="will-change-opacity relative z-10 flex flex-col items-center justify-center pt-20 pb-8 text-center md:pt-32 md:pb-12"
           style={{ opacity: headerOpacity }}
         >
           <h2 className="font-orbitron text-4xl font-bold tracking-widest text-[#F5A623] uppercase drop-shadow-[0_0_15px_rgba(243,106,29,0.4)] md:text-6xl">
             Timeline
           </h2>
-          <p className="mt-4 max-w-xl px-4 text-base font-light text-neutral-400 md:text-lg">
+          <p className="mt-2 max-w-xl px-4 text-sm font-light text-neutral-400 md:mt-4 md:text-lg">
             Follow the journey from registration to the final showdown.
           </p>
         </div>
@@ -396,15 +405,14 @@ const Timeline = () => {
             totalSections={sections.length}
           />
 
-          {/* Small padding to keep content neat, but not create a huge gap */}
-          <main className="relative z-10 pb-20">
+          <main className="relative z-10 pb-4">
             {sections.map((section, index) => (
               <div
                 key={index}
                 ref={(el) => {
                   sectionRefs.current[index] = el;
                 }}
-                className="relative flex min-h-[50vh] w-full flex-shrink-0 items-center justify-center md:min-h-[60vh]"
+                className="relative flex min-h-[35vh] w-full flex-shrink-0 items-center justify-center md:min-h-[60vh]"
               >
                 <SectionContent
                   section={section}
@@ -414,9 +422,6 @@ const Timeline = () => {
               </div>
             ))}
           </main>
-
-          {/* Decorative Gradient at Bottom */}
-          <div className="pointer-events-none absolute bottom-0 left-0 z-20 h-64 w-full bg-gradient-to-t from-black via-black/90 to-transparent" />
         </div>
       </div>
     </div>
