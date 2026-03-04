@@ -29,6 +29,7 @@ const Terminal = ({
   inputValue,
   setInputValue,
   handleSave,
+  resetAutoTimer, // NEW: Receive the prop here
 }) => {
   return (
     <motion.div
@@ -38,7 +39,6 @@ const Terminal = ({
       transition={{ duration: 0.6 }}
     >
       <div className="w-full max-w-2xl">
-        {/* Main Terminal Window - Style Kept As Requested */}
         <div className="relative overflow-hidden rounded-lg border border-white/10 bg-black/60 p-4 shadow-2xl backdrop-blur-sm sm:p-6">
           {/* Header (Dots) - Kept As Requested */}
           <div className="mb-4 flex items-center gap-2 border-b border-white/10 pb-3">
@@ -75,8 +75,18 @@ const Terminal = ({
                   <input
                     autoFocus
                     value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleSave()}
+                    // NEW: Reset timer on click
+                    onClick={() => resetAutoTimer && resetAutoTimer()} 
+                    // NEW: Reset timer on typing
+                    onChange={(e) => {
+                      setInputValue(e.target.value);
+                      if (resetAutoTimer) resetAutoTimer();
+                    }}
+                    // NEW: Reset timer on any key press
+                    onKeyDown={(e) => {
+                      if (resetAutoTimer) resetAutoTimer();
+                      if (e.key === "Enter") handleSave();
+                    }}
                     className="flex-1 border-none bg-transparent font-mono text-base text-white placeholder-white/20 outline-none sm:text-lg"
                     placeholder="Enter Username..."
                   />

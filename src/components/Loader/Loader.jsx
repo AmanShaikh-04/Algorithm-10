@@ -10,13 +10,15 @@ function Loader({ onComplete }) {
   const [inputValue, setInputValue] = useState("");
   const [showInput, setShowInput] = useState(false);
   const hasNavigatedRef = useRef(false);
+  
+  // NEW: Add a state to trigger the timer reset
+  const [interactionTick, setInteractionTick] = useState(0);
 
   useEffect(() => {
     const saved = localStorage.getItem("username");
     if (saved) setUsername(saved);
 
     const logoTimer = setTimeout(() => setStage("terminal"), 2800);
-    // Keep logo visible when terminal appears
     const inputTimer = setTimeout(() => {
       if (!saved) setShowInput(true);
     }, 5300);
@@ -32,26 +34,30 @@ function Loader({ onComplete }) {
     hasNavigatedRef.current = true;
     onComplete(username);
   };
+
   const handleSave = () => {
     if (!inputValue.trim()) return;
     localStorage.setItem("username", inputValue.trim());
     setUsername(inputValue.trim());
   };
+
+  // NEW: Function to reset the timer
+  const resetAutoTimer = () => {
+    setInteractionTick((prev) => prev + 1);
+  };
+
   useEffect(() => {
     if (stage !== "terminal") return;
-    const delay = username ? 3000 : 9000;
+    
+    // UPDATED: Increased the default delay from 9000 (9s) to 20000 (20s)
+    const delay = username ? 3000 : 20000; 
     const autoTimer = setTimeout(goHome, delay);
-    // window.addEventListener("keydown", goHome);
-    // window.addEventListener("click", goHome);
-    // window.addEventListener("touchstart", goHome);
 
     return () => {
       clearTimeout(autoTimer);
-      // window.removeEventListener("keydown", goHome);
-      // window.removeEventListener("click", goHome);
-      // window.removeEventListener("touchstart", goHome);
     };
-  }, [stage, username]);
+  }, [stage, username, interactionTick]); // NEW: Added interactionTick as a dependency
+
   const isDrawing = stage === "logo";
 
   return (
@@ -81,18 +87,15 @@ function Loader({ onComplete }) {
       </svg>
 
       <AnimatePresence>
-        {(stage === "logo" || stage === "terminal") && (
-          <motion.div
-            className="absolute inset-0 z-10 flex items-center justify-center"
-            initial={{ opacity: 0 }}
-            animate={{
-              opacity: stage === "terminal" ? 0.3 : 1,
-              filter: stage === "terminal" ? "blur(8px)" : "blur(0px)",
-            }}
-            transition={{ duration: 0.8 }}
-          >
-            <Logo isDrawing={stage === "logo"} />
-          </motion.div>
+        {stage === "terminal" && (
+          <Terminal
+            username={username}
+            showInput={showInput}
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+            handleSave={handleSave}
+            resetAutoTimer={resetAutoTimer} // NEW: Pass the reset function to the Terminal
+          />
         )}
       </AnimatePresence>
 

@@ -4,6 +4,66 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import * as THREE from "three";
 
+const ImageSequenceBackground = () => {
+  const [currentFrame, setCurrentFrame] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const totalFrames = 192;
+
+  // Preload all images on mount
+  useEffect(() => {
+    const preloadImages = async () => {
+      const promises = [];
+      
+      for (let i = 0; i < totalFrames; i++) {
+        const frameString = String(i).padStart(3, "0");
+        const src = `/herosection/frame_${frameString}_delay-0.041s.webp`;
+        
+        promises.push(
+          new Promise((resolve) => {
+            const img = new Image();
+            img.src = src;
+            // Resolve the promise whether it loads successfully or fails
+            // (this prevents the whole sequence from freezing if 1 frame drops)
+            img.onload = resolve;
+            img.onerror = resolve; 
+          })
+        );
+      }
+      
+      // Wait for all 192 images to finish downloading
+      await Promise.all(promises);
+      setIsLoaded(true);
+    };
+
+    preloadImages();
+  }, []);
+
+  // Start the animation ONLY after all images are preloaded
+  useEffect(() => {
+    if (!isLoaded) return; // Do nothing if not loaded
+
+    const speedMs = 90; 
+    const interval = setInterval(() => {
+      setCurrentFrame((prev) => (prev + 1) % totalFrames);
+    }, speedMs);
+    
+    return () => clearInterval(interval);
+  }, [isLoaded]); 
+
+  const frameString = String(currentFrame).padStart(3, "0");
+  const imageSrc = `/herosection/frame_${frameString}_delay-0.041s.webp`;
+
+  return (
+    <div className="absolute inset-0 z-0 h-full w-full bg-neutral-950">
+      <img
+        src={isLoaded ? imageSrc : `/herosection/frame_000_delay-0.041s.webp`}
+        alt="Animated Background"
+        className="h-full w-full object-cover opacity-40" 
+      />
+    </div>
+  );
+};
+
 const ThreeBackground = () => {
   const mountRef = useRef(null);
   const mouseRef = useRef({ x: 0, y: 0 });
@@ -159,7 +219,7 @@ const ThreeBackground = () => {
   return (
     <div
       ref={mountRef}
-      className="pointer-events-none absolute inset-0 z-0 h-full w-full"
+      className="pointer-events-none absolute inset-0 z-10 h-full w-full"
       style={{ opacity: 0.25 }}
     />
   );
@@ -311,7 +371,7 @@ const CountdownTimer = ({ targetDate }) => {
   const TimeBox = ({ value, label, index }) => (
     <motion.div
       className="flex flex-col items-center"
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
         duration: 0.6,
@@ -320,25 +380,25 @@ const CountdownTimer = ({ targetDate }) => {
       }}
     >
       <div className="group relative">
-        <div className="relative flex min-w-16 items-center justify-center rounded-lg border border-orange-500/20 bg-neutral-900/80 px-3 py-3 shadow-lg backdrop-blur-sm transition-all duration-300 group-hover:border-orange-500/40 sm:min-w-24 sm:rounded-xl sm:px-6 sm:py-5 md:min-w-28">
+        <div className="relative flex min-w-14 items-center justify-center rounded-lg border border-orange-500/20 bg-neutral-900/80 px-2 py-2 shadow-lg backdrop-blur-sm transition-all duration-300 group-hover:border-orange-500/40 sm:min-w-20 sm:rounded-xl sm:px-4 sm:py-4 md:min-w-24">
           <motion.span
             key={value}
-            initial={{ y: -10, opacity: 0 }}
+            initial={{ y: -5, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="relative text-center font-mono text-2xl font-bold text-white tabular-nums sm:text-4xl md:text-5xl lg:text-6xl"
+            className="relative text-center font-mono text-xl font-bold text-white tabular-nums sm:text-3xl md:text-4xl lg:text-5xl"
           >
             {String(value).padStart(2, "0")}
           </motion.span>
         </div>
       </div>
-      <span className="mt-2 text-xs font-light tracking-wider text-white/50 uppercase sm:mt-3 sm:text-sm">
+      <span className="mt-1 text-[10px] font-light tracking-wider text-white/50 uppercase sm:mt-2 sm:text-xs">
         {label}
       </span>
     </motion.div>
   );
 
   return (
-    <div className="flex flex-wrap justify-center gap-2 sm:gap-4 md:gap-6">
+    <div className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4">
       <TimeBox value={timeLeft.days} label="Days" index={0} />
       <TimeBox value={timeLeft.hours} label="Hours" index={1} />
       <TimeBox value={timeLeft.minutes} label="Minutes" index={2} />
@@ -348,23 +408,23 @@ const CountdownTimer = ({ targetDate }) => {
 };
 
 export default function Hero() {
-  const heroRef = useRef(null);
+  const spacerRef = useRef(null);
   const { scrollYProgress } = useScroll({
-    target: heroRef,
+    target: spacerRef,
     offset: ["start start", "end start"],
   });
 
   const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
   const opacity = useSpring(
-    useTransform(scrollYProgress, [0, 0.5], [1, 0]),
-    springConfig
-  );
+  useTransform(scrollYProgress, [0, 0.5], [1, 0]),
+  springConfig
+);
   const scale = useSpring(
     useTransform(scrollYProgress, [0, 0.5], [1, 0.95]),
     springConfig
   );
 
-  const hackathonDate = "2026-02-15T00:00:00";
+  const hackathonDate = "2026-04-03T00:00:00";
 
   const [username, setUsername] = useState(null);
 
@@ -376,221 +436,189 @@ export default function Hero() {
   }, []);
 
   return (
-    <section
-      ref={heroRef}
-      className="relative min-h-screen w-full overflow-hidden bg-neutral-950 pt-20 sm:pt-0"
-    >
-      <ThreeBackground />
+    <>
+<div className="sticky top-0 z-0 flex h-[100dvh] w-full items-center overflow-hidden bg-neutral-950">
+        <ImageSequenceBackground />
+        <ThreeBackground />
+        <div className="pointer-events-none absolute inset-0 z-10 bg-linear-to-br from-orange-950/20 via-neutral-950/60 to-neutral-950/90" />
 
-      <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-orange-950/10 via-neutral-950/50 to-neutral-950" />
+        <motion.div
+          style={{ opacity, scale }}
+          className="relative z-20 flex h-full w-full items-center justify-center px-4 sm:px-6 lg:px-8"
+        >
+          <div className="mx-auto w-full max-w-7xl mt-8 md:mt-10">
+            <div className="grid items-center gap-4 sm:gap-8 lg:grid-cols-2 lg:gap-12">
+              
+              {/* Left Column */}
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="order-1 flex flex-col items-center lg:items-start"
+              >
+                <div className="relative">
+                  <AnimatedLogo className="relative h-20 w-16 sm:h-28 sm:w-24 md:h-36 md:w-32 lg:h-48 lg:w-44 xl:h-52 xl:w-48" />
+                </div>
 
-      <motion.div
-        style={{ opacity, scale }}
-        className="relative z-10 flex min-h-screen w-full items-center px-4 py-12 sm:px-6 sm:py-16 lg:px-8"
-      >
-        <div className="mx-auto w-full max-w-7xl">
-          <div className="grid items-center gap-8 sm:gap-12 lg:grid-cols-2 lg:gap-16">
-            {/* Left Column - Logo, Name and Username */}
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="order-1 flex flex-col items-center lg:items-start"
-            >
-              <div className="relative sm:mt-10">
-                <AnimatedLogo className="relative h-36 w-32 sm:h-52 sm:w-48 md:h-60 md:w-56 lg:h-72 lg:w-64" />
-              </div>
-
-              <div className="-mt-4 text-center sm:-mt-8 lg:text-left">
-                <motion.h1
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.3 }}
-                  className="mb-3 text-4xl font-black tracking-tight sm:mb-4 sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
-                >
-                  <span className="block text-white">Algorithm</span>
-                  <span className="block bg-linear-to-r from-orange-400 via-orange-500 to-orange-400 bg-clip-text text-transparent">
-                    X
-                  </span>
-                </motion.h1>
-
-                <motion.div
-                  initial={{ opacity: 0, scaleX: 0 }}
-                  animate={{ opacity: 1, scaleX: 1 }}
-                  transition={{ duration: 0.8, delay: 0.5 }}
-                  className="mx-auto mb-4 h-0.5 w-9 bg-orange-500 sm:mb-6 sm:w-19 lg:mx-0"
-                />
-
-                <motion.p
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.6 }}
-                  className="max-w-md px-4 text-sm font-light text-white/60 sm:px-0 sm:text-base md:text-lg lg:text-xl"
-                >
-                  Where <span className="text-orange-400">Innovation</span>{" "}
-                  Meets <span className="text-orange-400">Excellence</span>
-                </motion.p>
-
-                {/* Username Display */}
-                {username && (
-                  <motion.div
+                <div className="mt-0 text-center lg:text-left sm:mt-1">
+                  <motion.h1
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.9 }}
-                    className="mt-8 w-full max-w-md self-start px-4 text-left sm:mt-10 sm:px-0"
+                    transition={{ duration: 0.8, delay: 0.3 }}
+                    className="mb-2 text-4xl font-black tracking-tight sm:mb-3 sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl"
                   >
-                    <div className="group relative cursor-default">
-                      {/* Main container */}
-                      <div className="relative overflow-hidden rounded-xl border border-orange-500/10 bg-neutral-900/40 px-5 py-3 backdrop-blur-md">
-                        {/* Animated gradient overlay */}
-                        <motion.div
-                          className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                          style={{
-                            background:
-                              "linear-gradient(90deg, transparent, rgba(251, 146, 60, 0.03), transparent)",
-                          }}
-                          animate={{
-                            x: ["-100%", "200%"],
-                          }}
-                          transition={{
-                            duration: 2,
-                            repeat: Infinity,
-                            ease: "linear",
-                            repeatDelay: 1,
-                          }}
-                        />
+                    <span className="block text-white">Algorithm</span>
+                    <span className="block bg-linear-to-r from-orange-400 via-orange-500 to-orange-400 bg-clip-text text-transparent">
+                      10
+                    </span>
+                  </motion.h1>
 
-                        {/* Content */}
-                        <div className="relative flex items-center gap-3">
-                          {/* Minimalist icon */}
+                  <motion.div
+                    initial={{ opacity: 0, scaleX: 0 }}
+                    animate={{ opacity: 1, scaleX: 1 }}
+                    transition={{ duration: 0.8, delay: 0.5 }}
+                    className="mx-auto mb-3 h-0.5 w-12 bg-orange-500 sm:mb-4 sm:w-16 lg:mx-0"
+                  />
+
+                  <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.6 }}
+                    className="max-w-md px-4 text-xs font-light text-white/60 sm:px-0 sm:text-base md:text-lg lg:text-xl"
+                  >
+                    Where <span className="text-orange-400">Innovation</span>{" "}
+                    Meets <span className="text-orange-400">Excellence</span>
+                  </motion.p>
+
+                  {username && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.9 }}
+                      className="mt-4 w-full max-w-md self-start px-4 text-left sm:mt-6 sm:px-0"
+                    >
+                      <div className="group relative cursor-default">
+                        <div className="relative overflow-hidden rounded-xl border border-orange-500/10 bg-neutral-900/40 px-4 py-2 backdrop-blur-md">
                           <motion.div
-                            className="h-8 w-1 flex-shrink-0 rounded-full bg-gradient-to-b from-orange-500 to-orange-600"
-                            animate={{
-                              scaleY: [1, 1.2, 1],
+                            className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                            style={{
+                              background:
+                                "linear-gradient(90deg, transparent, rgba(251, 146, 60, 0.03), transparent)",
                             }}
-                            transition={{
-                              duration: 2,
-                              repeat: Infinity,
-                              ease: "easeInOut",
-                            }}
+                            animate={{ x: ["-100%", "200%"] }}
+                            transition={{ duration: 2, repeat: Infinity, ease: "linear", repeatDelay: 1 }}
                           />
-
-                          {/* Text content */}
-                          <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-2">
-                              <span className="text-[9px] font-medium tracking-[0.2em] text-orange-500/60 uppercase">
-                                Welcome
-                              </span>
-                              <motion.div
-                                className="h-1 w-1 rounded-full bg-green-500"
-                                animate={{
-                                  opacity: [1, 0.3, 1],
-                                }}
-                                transition={{
-                                  duration: 2,
-                                  repeat: Infinity,
-                                  ease: "easeInOut",
-                                }}
-                              />
-                            </div>
-                            <div className="mt-0.5 truncate text-lg font-light tracking-wide text-white sm:text-xl">
-                              {username}
+                          <div className="relative flex items-center gap-3">
+                            <motion.div
+                              className="h-6 w-1 flex-shrink-0 rounded-full bg-gradient-to-b from-orange-500 to-orange-600"
+                              animate={{ scaleY: [1, 1.2, 1] }}
+                              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                            />
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-2">
+                                <span className="text-[8px] font-medium tracking-[0.2em] text-orange-500/60 uppercase">
+                                  Welcome
+                                </span>
+                                <motion.div
+                                  className="h-1 w-1 rounded-full bg-green-500"
+                                  animate={{ opacity: [1, 0.3, 1] }}
+                                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                                />
+                              </div>
+                              <div className="mt-0.5 truncate text-base font-light tracking-wide text-white sm:text-lg">
+                                {username}
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </motion.div>
-                )}
-              </div>
-            </motion.div>
+                    </motion.div>
+                  )}
+                </div>
+              </motion.div>
 
-            {/* Right Column - Timer and Buttons */}
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-              className="order-2 flex flex-col items-center space-y-6 sm:space-y-8 lg:items-end"
-            >
-              <div className="w-full max-w-xl">
+              {/* Right Column */}
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                className="order-2 flex flex-col items-center space-y-4 sm:space-y-6 lg:items-end"
+              >
+                <div className="w-full max-w-xl">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.6 }}
+                    className="mb-4 text-center sm:mb-6"
+                  >
+                    <h2 className="mb-2 text-lg font-bold text-white sm:mb-3 sm:text-xl md:text-2xl">
+                      Event Starts In
+                    </h2>
+                    <div className="mx-auto h-0.5 w-16 bg-orange-500 sm:w-20" />
+                  </motion.div>
+
+                  <CountdownTimer targetDate={hackathonDate} />
+                </div>
+
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.6 }}
-                  className="mb-6 text-center sm:mb-8"
+                  transition={{ duration: 0.6, delay: 1.2 }}
+                  className="flex w-full max-w-xl flex-col gap-2 px-4 sm:flex-row sm:gap-4 sm:px-0 mt-2 sm:mt-4"
                 >
-                  <h2 className="mb-2 text-xl font-bold text-white sm:mb-3 sm:text-2xl md:text-3xl">
-                    Event Starts In
-                  </h2>
-                  <div className="mx-auto h-0.5 w-20 bg-orange-500 sm:w-24" />
+                  <motion.a
+                    href="https://unstop.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group relative flex-1 overflow-hidden rounded-lg px-4 py-3 font-bold text-white shadow-lg transition-all duration-300 sm:px-6 sm:py-4"
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <div className="absolute inset-0 bg-linear-to-r from-orange-600 to-orange-500" />
+                    <div className="absolute inset-0 bg-linear-to-r from-orange-500 to-orange-400 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    <span className="relative z-10 flex items-center justify-center gap-2 text-sm sm:gap-3 sm:text-base">
+                      Register Now
+                      <svg
+                        className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                    </span>
+                  </motion.a>
+
+                  <motion.a
+                    href="#about"
+                    className="group relative flex-1 overflow-hidden rounded-lg border border-orange-500/30 px-4 py-3 font-bold text-white backdrop-blur-sm transition-all duration-300 hover:border-orange-500/50 sm:px-6 sm:py-4"
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <div className="absolute inset-0 bg-orange-500/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    <span className="relative z-10 flex items-center justify-center gap-2 text-sm sm:gap-3 sm:text-base">
+                      Learn More
+                      <svg
+                        className="h-4 w-4 transition-transform group-hover:translate-y-1"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </span>
+                  </motion.a>
                 </motion.div>
-
-                <CountdownTimer targetDate={hackathonDate} />
-              </div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 1.2 }}
-                className="flex w-full max-w-xl flex-col gap-3 px-4 sm:flex-row sm:gap-4 sm:px-0"
-              >
-                <motion.a
-                  href="https://unstop.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group relative flex-1 overflow-hidden rounded-lg px-6 py-4 font-bold text-white shadow-lg transition-all duration-300 sm:px-8 sm:py-5 md:px-10"
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <div className="absolute inset-0 bg-linear-to-r from-orange-600 to-orange-500" />
-                  <div className="absolute inset-0 bg-linear-to-r from-orange-500 to-orange-400 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <span className="relative z-10 flex items-center justify-center gap-2 text-base sm:gap-3 sm:text-lg">
-                    Register Now
-                    <svg
-                      className="h-4 w-4 transition-transform group-hover:translate-x-1 sm:h-5 sm:w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2.5}
-                        d="M13 7l5 5m0 0l-5 5m5-5H6"
-                      />
-                    </svg>
-                  </span>
-                </motion.a>
-
-                <motion.a
-                  href="#about"
-                  className="group relative flex-1 overflow-hidden rounded-lg border border-orange-500/30 px-6 py-4 font-bold text-white backdrop-blur-sm transition-all duration-300 hover:border-orange-500/50 sm:px-8 sm:py-5 md:px-10"
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <div className="absolute inset-0 bg-orange-500/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <span className="relative z-10 flex items-center justify-center gap-2 text-base sm:gap-3 sm:text-lg">
-                    Learn More
-                    <svg
-                      className="h-4 w-4 transition-transform group-hover:translate-y-1 sm:h-5 sm:w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2.5}
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </span>
-                </motion.a>
               </motion.div>
-            </motion.div>
+            </div>
           </div>
-        </div>
-      </motion.div>
-    </section>
+        </motion.div>
+      </div>
+      
+      <div 
+        ref={spacerRef} 
+        className="pointer-events-none relative z-0 h-[100dvh] w-full" 
+      />
+    </>
   );
 }
