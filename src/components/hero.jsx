@@ -7,10 +7,21 @@ import * as THREE from "three";
 const ImageSequenceBackground = () => {
   const [currentFrame, setCurrentFrame] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isMobile, setIsMobile] = useState(true); // Default to true to prevent initial accidental loads
   const totalFrames = 192;
 
-  // Preload all images on mount
+  // Preload all images on mount, BUT only if it's a desktop device
   useEffect(() => {
+    // Check if the user is on mobile
+    const checkIsMobile = window.innerWidth < 768;
+    setIsMobile(checkIsMobile);
+
+    // If mobile, stop here and do not preload the 192 images
+    if (checkIsMobile) {
+      return;
+    }
+
+    let isMounted = true;
     const preloadImages = async () => {
       const promises = [];
 
@@ -23,24 +34,30 @@ const ImageSequenceBackground = () => {
             const img = new Image();
             img.src = src;
             // Resolve the promise whether it loads successfully or fails
-            // (this prevents the whole sequence from freezing if 1 frame drops)
             img.onload = resolve;
             img.onerror = resolve;
           })
         );
       }
 
-      // Wait for all 192 images to finish downloading
+      // Wait for all images to finish downloading
       await Promise.all(promises);
-      setIsLoaded(true);
+      if (isMounted) {
+        setIsLoaded(true);
+      }
     };
 
     preloadImages();
+
+    // Cleanup function to prevent setting state if component unmounts
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  // Start the animation ONLY after all images are preloaded
+  // Start the animation ONLY after all images are preloaded and user is NOT on mobile
   useEffect(() => {
-    if (!isLoaded) return; // Do nothing if not loaded
+    if (!isLoaded || isMobile) return; 
 
     const speedMs = 90;
     const interval = setInterval(() => {
@@ -48,7 +65,7 @@ const ImageSequenceBackground = () => {
     }, speedMs);
 
     return () => clearInterval(interval);
-  }, [isLoaded]);
+  }, [isLoaded, isMobile]);
 
   const frameString = String(currentFrame).padStart(3, "0");
   const imageSrc = `/herosection/frame_${frameString}_delay-0.041s.webp`;
@@ -56,7 +73,8 @@ const ImageSequenceBackground = () => {
   return (
     <div className="absolute inset-0 z-0 h-full w-full bg-neutral-950">
       <img
-        src={isLoaded ? imageSrc : `/herosection/frame_000_delay-0.041s.webp`}
+        // If it's mobile or images aren't loaded yet, show only the static first frame
+        src={(!isMobile && isLoaded) ? imageSrc : `/herosection/frame_000_delay-0.041s.webp`}
         alt="Animated Background"
         className="h-full w-full object-cover opacity-40"
       />
