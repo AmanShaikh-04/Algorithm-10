@@ -931,35 +931,36 @@ export default function DomeGallery({
                   }}
                 >
                   <div
-                    className="item__image"
-                    role="button"
-                    tabIndex={0}
-                    aria-label={it.alt || "Open image"}
-                    onClick={(e) => {
-                      if (
-                        draggingRef.current ||
-                        movedRef.current ||
-                        performance.now() - lastDragEndAt.current < 80 ||
-                        openingRef.current
-                      )
-                        return;
-                      openItemFromElement(e.currentTarget);
-                    }}
-                    style={{
-                      backfaceVisibility: "hidden",
-                    }}
-                  >
-                    <img
-                      src={it.src}
-                      draggable={false}
-                      alt={it.alt}
-                      className="pointer-events-none h-full w-full object-cover"
-                      style={{
-                        backfaceVisibility: "hidden",
-                        filter: `var(--image-filter, none)`,
-                      }}
-                    />
-                  </div>
+  className="item__image"
+  role="button"
+  tabIndex={0}
+  aria-label={it.alt || "Open image"}
+  onClick={(e) => {
+    if (
+      draggingRef.current ||
+      movedRef.current ||
+      performance.now() - lastDragEndAt.current < 80 ||
+      openingRef.current
+    )
+      return;
+    openItemFromElement(e.currentTarget);
+  }}
+  style={{
+    backfaceVisibility: "hidden",
+  }}
+>
+  <img
+    src={it.src}
+    draggable={false}
+    alt={it.alt}
+    loading="lazy" /* <--- ADD THIS LINE HERE */
+    className="pointer-events-none h-full w-full object-cover"
+    style={{
+      backfaceVisibility: "hidden",
+      filter: `var(--image-filter, none)`,
+    }}
+  />
+</div>
                 </div>
               ))}
             </div>
