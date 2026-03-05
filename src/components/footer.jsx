@@ -36,8 +36,10 @@ const base_team_members = [
   { image: "/team/DE-member1.webp", role: "Decoration", name: "Reefa" },
   { image: "/team/DE-member2.webp", role: "Decoration", name: "Yahya" },
   { image: "/team/DE-member3.webp", role: "Decoration", name: "Afrah" },
-  { image: "/team/DE-member4.webp", role: "Decoration", name: "Ashish" },
-  { image: "/team/DE-member5.webp", role: "Decoration", name: "Shweta" },
+  { image: "/team/DE-member4.webp", role: "Decoration", name: "Shweta" },
+  { image: "/team/DE-member5.webp", role: "Decoration", name: "Ashish" },
+  { image: "/team/DE-member6.webp", role: "Decoration", name: "M.Kazi" },
+  
 ];
 
 const Team_card = ({ image_src, role, name }) => (

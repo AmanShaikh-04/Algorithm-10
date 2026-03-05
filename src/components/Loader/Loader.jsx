@@ -86,19 +86,24 @@ function Loader({ onComplete }) {
         </defs>
       </svg>
 
+      {/* --- THIS IS THE LOGO ANIMATION FROM YOUR PREVIOUS CODE --- */}
       <AnimatePresence>
-        {stage === "terminal" && (
-          <Terminal
-            username={username}
-            showInput={showInput}
-            inputValue={inputValue}
-            setInputValue={setInputValue}
-            handleSave={handleSave}
-            resetAutoTimer={resetAutoTimer} // NEW: Pass the reset function to the Terminal
-          />
+        {(stage === "logo" || stage === "terminal") && (
+          <motion.div
+            className="absolute inset-0 z-10 flex items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: stage === "terminal" ? 0.3 : 1,
+              filter: stage === "terminal" ? "blur(8px)" : "blur(0px)",
+            }}
+            transition={{ duration: 0.8 }}
+          >
+            <Logo isDrawing={stage === "logo"} />
+          </motion.div>
         )}
       </AnimatePresence>
 
+      {/* --- YOUR CURRENT TERMINAL WITH THE RESET TIMER LOGIC --- */}
       <AnimatePresence>
         {stage === "terminal" && (
           <Terminal
@@ -107,6 +112,7 @@ function Loader({ onComplete }) {
             inputValue={inputValue}
             setInputValue={setInputValue}
             handleSave={handleSave}
+            resetAutoTimer={resetAutoTimer}
           />
         )}
       </AnimatePresence>
