@@ -91,35 +91,35 @@ const social_items = [
   {
     name: "Instagram",
     icon: instagram_svg,
-    url: "#",
+    url: "https://www.instagram.com/aiktcofficial",
     colors:
       "text-[#E1306C] border-[#E1306C]/50 bg-[#E1306C]/10 drop-shadow-[0_0_10px_rgba(225,48,108,0.3)] hover:bg-[#E1306C] hover:text-white hover:border-[#E1306C] hover:drop-shadow-[0_0_20px_rgba(225,48,108,0.8)]",
   },
   {
     name: "Twitter",
     icon: twitter_svg,
-    url: "#",
+    url: "https://x.com/aiktcofficial",
     colors:
       "text-[#1DA1F2] border-[#1DA1F2]/50 bg-[#1DA1F2]/10 drop-shadow-[0_0_10px_rgba(29,161,242,0.3)] hover:bg-[#1DA1F2] hover:text-white hover:border-[#1DA1F2] hover:drop-shadow-[0_0_20px_rgba(29,161,242,0.8)]",
   },
   {
     name: "LinkedIn",
     icon: linkedin_svg,
-    url: "#",
+    url: "https://www.linkedin.com/school/anjuman-i-islams-kalsekar-technical-campus",
     colors:
       "text-[#0A66C2] border-[#0A66C2]/50 bg-[#0A66C2]/10 drop-shadow-[0_0_10px_rgba(10,102,194,0.3)] hover:bg-[#0A66C2] hover:text-white hover:border-[#0A66C2] hover:drop-shadow-[0_0_20px_rgba(10,102,194,0.8)]",
   },
   {
     name: "YouTube",
     icon: youtube_svg,
-    url: "#",
+    url: "https://youtube.com/@aiktctv?si=c1XtJNHfQr7GsTBl",
     colors:
       "text-[#FF0000] border-[#FF0000]/50 bg-[#FF0000]/10 drop-shadow-[0_0_10px_rgba(255,0,0,0.3)] hover:bg-[#FF0000] hover:text-white hover:border-[#FF0000] hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.8)]",
   },
   {
     name: "Gmail",
     icon: gmail_svg,
-    url: "#",
+    url: "https://mail.google.com/mail/?view=cm&fs=1&to=pc@aiktc.ac.in",
     colors:
       "text-[#EA4335] border-[#EA4335]/50 bg-[#EA4335]/10 drop-shadow-[0_0_10px_rgba(234,67,53,0.3)] hover:bg-[#EA4335] hover:text-white hover:border-[#EA4335] hover:drop-shadow-[0_0_20px_rgba(234,67,53,0.8)]",
   },
