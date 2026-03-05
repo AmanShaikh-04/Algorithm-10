@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import SpotlightCard from "./SpotlightCard";
 
 const styles = `
@@ -64,7 +64,7 @@ const styles = `
   }
 
   .domain-number-bg {
-    font-size: 80px;
+    font-size: 50px;
     font-weight: 800;
     font-family: 'Syne', sans-serif;
     opacity: 0.04;
@@ -74,6 +74,21 @@ const styles = `
     pointer-events: none;
     user-select: none;
     color: #fbbf24;
+  }
+  
+  @media (min-width: 1024px) {
+    .domain-number-bg {
+      font-size: 80px;
+    }
+  }
+
+  /* Utility to hide scrollbar for the mobile carousel */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 
   /* Modal */
@@ -136,6 +151,12 @@ const styles = `
   .modal-body::-webkit-scrollbar-track { background: transparent; }
   .modal-body::-webkit-scrollbar-thumb { background: #2a2520; border-radius: 4px; }
 
+  @media (max-width: 640px) {
+    .modal-header { padding: 20px 20px 16px; }
+    .modal-body { padding: 16px 20px 24px; }
+    .modal-title { font-size: 20px; }
+  }
+
   .ps-section-label {
     font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase;
     font-family: 'inter', monospace; opacity: 0.35; color: #fbbf24; margin-bottom: 16px;
@@ -154,86 +175,17 @@ const styles = `
     font-size: 14px; color: rgba(255,255,255,0.65);
     line-height: 1.7; font-family: 'inter', monospace; font-weight: 300;
   }
+
+  @keyframes gradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient 3s ease infinite;
+}
 `;
 
-function TechDivider() {
-  return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 12,
-        width: "100%",
-        maxWidth: 560,
-        margin: "0 auto",
-      }}
-    >
-      <div
-        style={{
-          flex: 1,
-          height: 1,
-          background:
-            "linear-gradient(90deg, transparent, rgba(245,158,11,0.4))",
-        }}
-      />
-      <div style={{ display: "flex", gap: 5, alignItems: "center" }}>
-        <div
-          style={{
-            width: 3,
-            height: 3,
-            background: "#f59e0b",
-            opacity: 0.4,
-            transform: "rotate(45deg)",
-          }}
-        />
-        <div
-          style={{
-            width: 6,
-            height: 6,
-            border: "1px solid #f59e0b",
-            opacity: 0.5,
-            transform: "rotate(45deg)",
-          }}
-        />
-        <div
-          style={{
-            width: 8,
-            height: 8,
-            border: "1px solid #ea580c",
-            opacity: 0.7,
-            transform: "rotate(45deg)",
-          }}
-        />
-        <div
-          style={{
-            width: 6,
-            height: 6,
-            border: "1px solid #f59e0b",
-            opacity: 0.5,
-            transform: "rotate(45deg)",
-          }}
-        />
-        <div
-          style={{
-            width: 3,
-            height: 3,
-            background: "#f59e0b",
-            opacity: 0.4,
-            transform: "rotate(45deg)",
-          }}
-        />
-      </div>
-      <div
-        style={{
-          flex: 1,
-          height: 1,
-          background:
-            "linear-gradient(90deg, rgba(245,158,11,0.4), transparent)",
-        }}
-      />
-    </div>
-  );
-}
 
 function Modal({ card, onClose }) {
   const psList = Array.isArray(card.ps) ? card.ps : [card.ps];
@@ -256,9 +208,7 @@ function Modal({ card, onClose }) {
             </div>
             <div className="modal-title">{card.domain}</div>
           </div>
-          <button className="modal-close" onClick={onClose}>
-            ✕
-          </button>
+          <button className="modal-close" onClick={onClose}>✕</button>
         </div>
         <div className="modal-body">
           <div className="ps-section-label">Problem Statements</div>
@@ -281,11 +231,10 @@ function Modal({ card, onClose }) {
 function DomainCard({ domain, ps, variant, index, onClick }) {
   return (
     <div
-      className="domain-card-wrapper"
+      className="domain-card-wrapper w-full shrink-0 snap-center flex justify-center sm:w-auto"
       style={{ animationDelay: `${index * 0.13}s` }}
     >
-      {/* Running border wrapper */}
-      <div className="group relative h-[400px] w-[300px]">
+      <div className="group relative h-[260px] w-[200px] sm:h-[300px] sm:w-[240px] lg:h-[400px] lg:w-[300px]">
         {/* Spinning border */}
         <div className="absolute -inset-[2px] z-0 overflow-hidden rounded-2xl">
           <div className="absolute top-1/2 left-1/2 aspect-square w-[200%] -translate-x-1/2 -translate-y-1/2 animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_0_270deg,#f59e0b_360deg)] opacity-60" />
@@ -294,7 +243,7 @@ function DomainCard({ domain, ps, variant, index, onClick }) {
 
         <SpotlightCard
           spotlightColor="rgba(251,191,36,0.15)"
-          className="!h-[400px] !w-[300px] cursor-pointer !border-transparent !bg-[#111110] !p-0"
+          className="!h-[260px] !w-[200px] sm:!h-[300px] sm:!w-[240px] lg:!h-[400px] lg:!w-[300px] cursor-pointer !border-transparent !bg-[#111110] !p-0"
         >
           <div
             onClick={onClick}
@@ -320,22 +269,16 @@ function DomainCard({ domain, ps, variant, index, onClick }) {
               }}
             >
               <div
+                className="absolute rounded-full pointer-events-none w-16 h-16 lg:w-[110px] lg:h-[110px]"
                 style={{
-                  position: "absolute",
-                  width: 110,
-                  height: 110,
                   background:
                     "radial-gradient(circle, rgba(234,88,12,0.25) 0%, rgba(245,158,11,0.1) 50%, transparent 70%)",
-                  borderRadius: "50%",
-                  pointerEvents: "none",
                   animation: "pulseGlow 4s ease-in-out infinite",
                 }}
               />
               <svg
-                className="lock-icon"
+                className="lock-icon w-8 h-8 lg:w-[54px] lg:h-[54px]"
                 xmlns="http://www.w3.org/2000/svg"
-                width="54"
-                height="54"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="#fbbf24"
@@ -399,62 +342,99 @@ function DomainCard({ domain, ps, variant, index, onClick }) {
 
 export default function Tracks() {
   const [activeCard, setActiveCard] = useState(null);
+  const scrollContainerRef = useRef(null);
+
+  const scroll = (direction) => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = scrollContainerRef.current.clientWidth;
+      scrollContainerRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
 
   const cards = [
-    {
-      domain: "Track 1",
-      ps: ["Yet to be revealed!"],
-      variant: "gold",
-    },
-    {
-      domain: "Track 2",
-      ps: ["Yet to be revealed!"],
-      variant: "gold",
-    },
-    {
-      domain: "Track 3",
-      ps: ["Yet to be revealed!"],
-      variant: "gold",
-    },
+    { domain: "Track 1", ps: ["Yet to be revealed!"], variant: "gold" },
+    { domain: "Track 2", ps: ["Yet to be revealed!"], variant: "gold" },
+    { domain: "Track 3", ps: ["Yet to be revealed!"], variant: "gold" },
   ];
 
   return (
     <>
       <style>{styles}</style>
 
-      <section className="relative flex flex-col items-center overflow-hidden bg-transparent px-10 py-24 pb-0">
-        {/* Heading */}
-        <div className="relative z-10 mb-14 text-center">
-          <h2 className="font-orbitron text-4xl font-bold tracking-widest text-[#F5A623] uppercase drop-shadow-[0_0_15px_rgba(243,106,29,0.4)] md:text-6xl">
-            Tracks
-          </h2>
-          <p className="mt-2 max-w-xl px-4 text-sm font-light text-neutral-400 md:mt-4 md:text-lg">
-            Each Track is locked until reveal day.
-          </p>
-        </div>
+      {/* Added id="tracks", min-h-[85vh] for mobile vertical centering, and scroll-mt-24 to stop navbar overlap */}
+      <section 
+        id="tracks" 
+        className="relative flex flex-col items-center justify-center overflow-hidden bg-transparent py-12 lg:px-10 lg:py-24 pb-0 min-h-[85vh] sm:min-h-0 scroll-mt-24"
+      >
+        {/* Section Header */}
+<div className="relative z-10 mb-8 transform text-center transition-all duration-1000 hover:scale-105 md:mb-12">
+  {/* Decorative Line Above */}
+  <div className="mb-4 flex items-center justify-center md:mb-6">
+    <div className="h-px w-8 bg-gradient-to-r from-transparent via-orange-500 to-transparent md:w-12" />
+    <div className="mx-3 h-2 w-2 animate-pulse rounded-full bg-orange-500 md:mx-4" />
+    <div className="h-px w-8 bg-gradient-to-r from-transparent via-amber-500 to-transparent md:w-12" />
+  </div>
 
-        {/* Top divider */}
-        <div className="relative z-10 mb-14 w-full">
-          <TechDivider />
-        </div>
+  {/* Main Heading with Gradient, Glow, and Orbitron Font */}
+  <h2 className="font-orbitron animate-gradient relative mb-3 inline-block bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 bg-clip-text text-3xl font-bold tracking-widest uppercase text-transparent md:mb-4 md:text-5xl lg:text-5xl">
+      Tracks
+    <div className="absolute inset-0 -z-10 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 opacity-30 blur-2xl" />
+  </h2>
 
-        {/* Cards */}
-        <div className="relative z-10 flex w-full flex-wrap justify-center gap-7">
-          {cards.map((card, i) => (
-            <DomainCard
-              key={i}
-              domain={card.domain}
-              ps={card.ps}
-              variant={card.variant}
-              index={i}
-              onClick={() => setActiveCard({ ...card, index: i })}
-            />
-          ))}
-        </div>
+  {/* Subtitle */}
+  <p className="mx-auto max-w-2xl px-4 text-sm font-light leading-relaxed text-gray-400 md:text-md">
+      Each Track is locked until reveal day.
+  </p>
 
-        {/* Bottom divider */}
-        <div className="relative z-10 mt-14 w-full">
-          <TechDivider />
+  {/* Decorative Line Below */}
+  <div className="mt-4 flex items-center justify-center md:mt-6">
+    <div className="h-px w-16 bg-gradient-to-r from-orange-500/50 to-transparent md:w-24" />
+    <div className="mx-2 h-1 w-1 rounded-full bg-amber-500 md:mx-3" />
+    <div className="h-px w-16 bg-gradient-to-l from-amber-500/50 to-transparent md:w-24" />
+  </div>
+</div>
+
+        {/* Cards Navigation Wrapper */}
+        <div className="relative z-10 flex w-full max-w-[100vw] items-center group">
+          
+          {/* Mobile Left Arrow */}
+          <button 
+            onClick={() => scroll('left')}
+            className="absolute left-2 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-[#111110] border border-[#f59e0b]/30 text-[#f59e0b] shadow-[0_0_10px_rgba(245,158,11,0.2)] transition-all active:scale-95 sm:hidden"
+            aria-label="Previous track"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+
+          {/* Scrollable Cards Container */}
+          <div 
+            ref={scrollContainerRef}
+            className="flex w-full snap-x snap-mandatory overflow-x-auto pb-8 sm:flex-wrap sm:justify-center sm:overflow-visible sm:snap-none sm:pb-0 gap-0 sm:gap-5 lg:gap-7 hide-scrollbar"
+          >
+            {cards.map((card, i) => (
+              <DomainCard
+                key={i}
+                domain={card.domain}
+                ps={card.ps}
+                variant={card.variant}
+                index={i}
+                onClick={() => setActiveCard({ ...card, index: i })}
+              />
+            ))}
+          </div>
+
+          {/* Mobile Right Arrow */}
+          <button 
+            onClick={() => scroll('right')}
+            className="absolute right-2 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-[#111110] border border-[#f59e0b]/30 text-[#f59e0b] shadow-[0_0_10px_rgba(245,158,11,0.2)] transition-all active:scale-95 sm:hidden"
+            aria-label="Next track"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+
         </div>
       </section>
 

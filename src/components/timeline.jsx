@@ -263,7 +263,6 @@ const Timeline = () => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [progress, setProgress] = useState(0);
-  const [headerOpacity, setHeaderOpacity] = useState(1);
   const [componentOpacity, setComponentOpacity] = useState(1);
 
   const scrollContainerRef = useRef(null);
@@ -306,17 +305,6 @@ const Timeline = () => {
       adjustedProgress = Math.min(1, Math.max(0, adjustedProgress));
 
       setProgress(adjustedProgress);
-
-      // Header Fade
-      const headerFadeStart = windowHeight * 0.2;
-      const headerFadeEnd = -100;
-      let newHeaderOpacity = 1;
-      if (containerTop < headerFadeStart) {
-        const distance = containerTop - headerFadeEnd;
-        const range = headerFadeStart - headerFadeEnd;
-        newHeaderOpacity = Math.min(1, Math.max(0, distance / range));
-      }
-      setHeaderOpacity(newHeaderOpacity);
 
       // Component Exit Fade
       let newComponentOpacity = 1;
@@ -380,24 +368,47 @@ const Timeline = () => {
       className="relative w-full overflow-hidden bg-transparent"
     >
       <style jsx global>{`
-        .font-orbitron {
-          font-family: "Orbitron", sans-serif;
-        }
-      `}</style>
+  .font-orbitron {
+    font-family: "Orbitron", sans-serif;
+  }
+  @keyframes gradient {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient 3s ease infinite;
+  }
+`}</style>
 
       <div style={{ opacity: componentOpacity }} className="transform-gpu">
-        {/* Header Section*/}
-        <div
-          className="will-change-opacity relative z-10 flex flex-col items-center justify-center pt-20 pb-8 text-center md:pt-32 md:pb-12"
-          style={{ opacity: headerOpacity }}
-        >
-          <h2 className="font-orbitron text-4xl font-bold tracking-widest text-[#F5A623] uppercase drop-shadow-[0_0_15px_rgba(243,106,29,0.4)] md:text-6xl">
-            Timeline
-          </h2>
-          <p className="mt-2 max-w-xl px-4 text-sm font-light text-neutral-400 md:mt-4 md:text-lg">
-            Follow the journey from registration to the final showdown.
-          </p>
-        </div>
+        {/* Section Header */}
+<div className="relative z-10 mb-8 transform text-center transition-all duration-1000 hover:scale-105 md:mb-12">
+  {/* Decorative Line Above */}
+  <div className="mb-4 flex items-center justify-center md:mb-6">
+    <div className="h-px w-8 bg-gradient-to-r from-transparent via-orange-500 to-transparent md:w-12" />
+    <div className="mx-3 h-2 w-2 animate-pulse rounded-full bg-orange-500 md:mx-4" />
+    <div className="h-px w-8 bg-gradient-to-r from-transparent via-amber-500 to-transparent md:w-12" />
+  </div>
+
+  {/* Main Heading with Gradient, Glow, and Orbitron Font */}
+  <h2 className="font-orbitron animate-gradient relative mb-3 inline-block bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 bg-clip-text text-3xl font-bold tracking-widest uppercase text-transparent md:mb-4 md:text-5xl lg:text-5xl">
+    Timeline
+    <div className="absolute inset-0 -z-10 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 opacity-30 blur-2xl" />
+  </h2>
+
+  {/* Subtitle */}
+  <p className="mx-auto max-w-2xl px-4 text-sm font-light leading-relaxed text-gray-400 md:text-md">
+    Follow the journey from registration to the final showdown.
+  </p>
+
+  {/* Decorative Line Below */}
+  <div className="mt-4 flex items-center justify-center md:mt-6">
+    <div className="h-px w-16 bg-gradient-to-r from-orange-500/50 to-transparent md:w-24" />
+    <div className="mx-2 h-1 w-1 rounded-full bg-amber-500 md:mx-3" />
+    <div className="h-px w-16 bg-gradient-to-l from-amber-500/50 to-transparent md:w-24" />
+  </div>
+</div>
 
         <div className="relative">
           <BackgroundAnimation

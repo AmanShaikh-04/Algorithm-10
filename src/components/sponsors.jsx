@@ -163,13 +163,13 @@ export default function Sponsors() {
           </div>
 
           {/* Main Heading with Gradient and Glow */}
-          <h2 className="relative mb-4 inline-block bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 bg-clip-text text-4xl font-bold tracking-tight text-transparent md:text-5xl lg:text-6xl">
-            Our Partners
+          <h2 className="font-orbitron animate-gradient relative mb-3 inline-block bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 bg-clip-text text-2xl font-bold tracking-widest uppercase text-transparent md:mb-4 md:text-5xl lg:text-5xl">
+            Sponsors
             <div className="absolute inset-0 -z-10 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 opacity-30 blur-2xl" />
           </h2>
 
           {/* Subtitle */}
-          <p className="mx-auto mt-2 max-w-2xl text-lg leading-relaxed text-gray-400">
+          <p className="mx-auto mt-2 max-w-2xl text-sm lg:text-md leading-relaxed text-gray-400">
             Fueling innovation through collaboration and technology.
           </p>
 
