@@ -14,6 +14,10 @@ const faq_items = [
     a: "Algorithm X is a 32-hour national-level hackathon that brings together innovators, students, and tech enthusiasts from across the country to explore futuristic technologies and solve real-world problems.",
   },
   {
+    q: "Are cross college teams allowed?",
+    a: "Yes, students from different colleges and universities can collaborate and form a team together.",
+  },
+  {
     q: "When and where is it held?",
     a: "The hackathon will take place on April 3-4, 2026 at Kalsekar Technical Campus, New Panvel, with a fully equipped and collaborative environment.",
   },

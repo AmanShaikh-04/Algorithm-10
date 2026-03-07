@@ -15,7 +15,6 @@ const VideoBackground = () => {
         className="h-full w-full object-cover opacity-40"
       >
         <source
-          // PASTE YOUR FINAL CLOUDINARY URL RIGHT HERE:
           src="https://res.cloudinary.com/dptv6jzs8/video/upload/q_auto,f_auto/v1772641795/watermark_removed_d2664e2c-0b9d-4591-b8bc-afcf50619a71_mln33l.mp4"
           type="video/mp4"
         />
@@ -189,109 +188,258 @@ const AnimatedLogo = ({ className = "" }) => {
   const [drawComplete, setDrawComplete] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setDrawComplete(true), 2000);
+    // Triggers the fill fade-in after the stroke draws
+    const timer = setTimeout(() => setDrawComplete(true), 1600);
     return () => clearTimeout(timer);
   }, []);
 
+  const drawTransition = { duration: 1.5, ease: "easeInOut" };
+  const fadeTransition = { duration: 0.8, ease: "easeOut" };
+
   return (
     <motion.svg
-      viewBox="0 0 350 400"
+      width="100%"
+      height="100%"
+      viewBox="0 0 1011 892"
       fill="none"
+      xmlns="http://www.w3.org/2000/svg"
       className={className}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1, ease: "easeOut" }}
     >
       <defs>
-        <radialGradient id="heroSilverRadial" cx="50%" cy="50%" r="65%">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.95" />
-          <stop offset="50%" stopColor="#E8E8E8" stopOpacity="0.9" />
-          <stop offset="100%" stopColor="#A0A0A0" stopOpacity="0.85" />
-        </radialGradient>
-        <linearGradient
-          id="heroOrangeGradient"
-          x1="0%"
-          y1="100%"
-          x2="100%"
-          y2="0%"
-        >
-          <stop offset="0%" stopColor="#FF6B35" stopOpacity="1" />
-          <stop offset="50%" stopColor="#FFA500" stopOpacity="1" />
-          <stop offset="100%" stopColor="#FFB347" stopOpacity="1" />
+        <filter id="filter0_dddddd_266_3" x="0.000156403" y="0.00210953" width="696.088" height="839.215" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+          <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+          <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+          <feOffset/>
+          <feGaussianBlur stdDeviation="0.367441"/>
+          <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0"/>
+          <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_266_3"/>
+          <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+          <feOffset/>
+          <feGaussianBlur stdDeviation="0.734883"/>
+          <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0"/>
+          <feBlend mode="normal" in2="effect1_dropShadow_266_3" result="effect2_dropShadow_266_3"/>
+          <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+          <feOffset/>
+          <feGaussianBlur stdDeviation="2.57209"/>
+          <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0"/>
+          <feBlend mode="normal" in2="effect2_dropShadow_266_3" result="effect3_dropShadow_266_3"/>
+          <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+          <feOffset/>
+          <feGaussianBlur stdDeviation="5.14418"/>
+          <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0"/>
+          <feBlend mode="normal" in2="effect3_dropShadow_266_3" result="effect4_dropShadow_266_3"/>
+          <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+          <feOffset/>
+          <feGaussianBlur stdDeviation="8.81859"/>
+          <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0"/>
+          <feBlend mode="normal" in2="effect4_dropShadow_266_3" result="effect5_dropShadow_266_3"/>
+          <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+          <feOffset/>
+          <feGaussianBlur stdDeviation="15.4325"/>
+          <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0"/>
+          <feBlend mode="normal" in2="effect5_dropShadow_266_3" result="effect6_dropShadow_266_3"/>
+          <feBlend mode="normal" in="SourceGraphic" in2="effect6_dropShadow_266_3" result="shape"/>
+        </filter>
+        <filter id="filter1_dd_266_3" x="11.3832" y="219.992" width="998.629" height="656.502" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+          <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+          <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+          <feOffset dx="4"/>
+          <feGaussianBlur stdDeviation="11.5"/>
+          <feComposite in2="hardAlpha" operator="out"/>
+          <feColorMatrix type="matrix" values="0 0 0 0 0.992157 0 0 0 0 0.454902 0 0 0 0 0.0627451 0 0 0 0.67 0"/>
+          <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_266_3"/>
+          <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+          <feOffset dx="-4" dy="4"/>
+          <feGaussianBlur stdDeviation="10.7"/>
+          <feComposite in2="hardAlpha" operator="out"/>
+          <feColorMatrix type="matrix" values="0 0 0 0 0.992157 0 0 0 0 0.486275 0 0 0 0 0.0431373 0 0 0 1 0"/>
+          <feBlend mode="normal" in2="effect1_dropShadow_266_3" result="effect2_dropShadow_266_3"/>
+          <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_266_3" result="shape"/>
+        </filter>
+        <filter id="filter2_dd_266_3" x="11.3832" y="219.992" width="998.629" height="656.502" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+          <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+          <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+          <feOffset dx="4"/>
+          <feGaussianBlur stdDeviation="11.5"/>
+          <feComposite in2="hardAlpha" operator="out"/>
+          <feColorMatrix type="matrix" values="0 0 0 0 0.992157 0 0 0 0 0.454902 0 0 0 0 0.0627451 0 0 0 0.67 0"/>
+          <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_266_3"/>
+          <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+          <feOffset dx="-4" dy="4"/>
+          <feGaussianBlur stdDeviation="10.7"/>
+          <feComposite in2="hardAlpha" operator="out"/>
+          <feColorMatrix type="matrix" values="0 0 0 0 0.992157 0 0 0 0 0.486275 0 0 0 0 0.0431373 0 0 0 1 0"/>
+          <feBlend mode="normal" in2="effect1_dropShadow_266_3" result="effect2_dropShadow_266_3"/>
+          <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_266_3" result="shape"/>
+        </filter>
+        <filter id="filter3_d_266_3" x="628.956" y="508.144" width="328.931" height="383.65" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+          <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+          <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+          <feOffset dx="4" dy="5"/>
+          <feGaussianBlur stdDeviation="6.85"/>
+          <feComposite in2="hardAlpha" operator="out"/>
+          <feColorMatrix type="matrix" values="0 0 0 0 0.760784 0 0 0 0 0.764706 0 0 0 0 0.74902 0 0 0 1 0"/>
+          <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_266_3"/>
+          <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_266_3" result="shape"/>
+        </filter>
+        <filter id="filter4_d_266_3" x="16.9699" y="26.3078" width="671.045" height="809.345" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+          <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+          <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+          <feOffset dx="4" dy="5"/>
+          <feGaussianBlur stdDeviation="6.85"/>
+          <feComposite in2="hardAlpha" operator="out"/>
+          <feColorMatrix type="matrix" values="0 0 0 0 0.760784 0 0 0 0 0.764706 0 0 0 0 0.74902 0 0 0 1 0"/>
+          <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_266_3"/>
+          <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_266_3" result="shape"/>
+        </filter>
+        <linearGradient id="paint0_linear_266_3" x1="258.273" y1="892.094" x2="626.273" y2="417.594" gradientUnits="userSpaceOnUse">
+          <stop offset="0.281977" stopColor="#F95320"/>
+          <stop offset="0.463709" stopColor="#FF8A05"/>
+          <stop offset="0.673711" stopColor="#FFD06B"/>
+          <stop offset="0.899868" stopColor="#F7E23D"/>
+        </linearGradient>
+        <linearGradient id="paint1_linear_266_3" x1="258.273" y1="892.094" x2="626.273" y2="417.594" gradientUnits="userSpaceOnUse">
+          <stop offset="0.281977" stopColor="#F95320"/>
+          <stop offset="0.463709" stopColor="#FF8A05"/>
+          <stop offset="0.673711" stopColor="#FFD06B"/>
+          <stop offset="0.899868" stopColor="#F7E23D"/>
+        </linearGradient>
+        <linearGradient id="paint2_linear_266_3" x1="0.273426" y1="879.094" x2="429.274" y2="348.094" gradientUnits="userSpaceOnUse">
+          <stop offset="0.264423" stopColor="#F95320" stopOpacity="0.5"/>
+          <stop offset="0.5" stopColor="#FF8A05"/>
+          <stop offset="0.855769" stopColor="#FFD06B"/>
+          <stop offset="1" stopColor="#F7E23D"/>
+        </linearGradient>
+        <linearGradient id="paint3_linear_266_3" x1="499.074" y1="83.5483" x2="849.282" y2="1002.66" gradientUnits="userSpaceOnUse">
+          <stop offset="0.730769" stopColor="#C3B1A3"/>
+          <stop offset="1" stopColor="#E2D9C7"/>
+        </linearGradient>
+        <linearGradient id="paint4_linear_266_3" x1="645.773" y1="641.094" x2="474.45" y2="158.643" gradientUnits="userSpaceOnUse">
+          <stop offset="0.461538" stopColor="#D0C0B0"/>
+          <stop offset="1" stopColor="#F5F0EA"/>
+        </linearGradient>
+        <linearGradient id="paint5_linear_266_3" x1="526.931" y1="107.603" x2="1108.72" y2="1138.01" gradientUnits="userSpaceOnUse">
+          <stop offset="0.403846" stopColor="#F7F8F2"/>
+          <stop offset="0.576923" stopColor="#EAE4D6"/>
+          <stop offset="0.6875" stopColor="#C4B4A4"/>
+        </linearGradient>
+        <linearGradient id="paint6_linear_266_3" x1="507.424" y1="6.42974" x2="213.247" y2="530.251" gradientUnits="userSpaceOnUse">
+          <stop offset="0.254808" stopColor="#F7F3EA"/>
+          <stop offset="0.889423" stopColor="#BCAA9C"/>
         </linearGradient>
       </defs>
 
-      <motion.g
-        transform="translate(75, 56)"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.6 }}
-      >
+      <motion.g opacity={0.55} filter="url(#filter0_dddddd_266_3)">
         <motion.path
-          d="M1.22721 169.92L87.1784 58.077L109.408 95.2285L140.418 76.2462L97.1276 0.572083L0.434512 170.405L1.22721 169.92Z"
-          stroke="#FFFFFF"
-          strokeWidth="1.5"
-          fill="none"
+          d="M471.273 40.0938L34.7734 805.594L425.773 302.094L523.273 472.094L659.273 383.594L471.273 40.0938Z"
+          stroke="#9F9F9F"
+          strokeWidth="9"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
-          transition={{ duration: 1.2, ease: "easeInOut" }}
-        />
-        <motion.path
-          d="M1.22721 169.92L87.1784 58.077L109.408 95.2285L140.418 76.2462L97.1276 0.572083L0.434512 170.405L1.22721 169.92Z"
-          fill="url(#heroSilverRadial)"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: drawComplete ? 1 : 0 }}
-          transition={{ duration: 0.6 }}
+          transition={drawTransition}
         />
       </motion.g>
 
-      <motion.g
-        transform="translate(76, 98)"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3, duration: 0.6 }}
-      >
+      <g filter="url(#filter1_dd_266_3)">
         <motion.path
-          d="M0.270066 132.479L70.1833 132.737L205.851 0.357864L205.923 0.490149L0.270066 132.479Z"
-          stroke="#FFA500"
-          strokeWidth="1.5"
-          fill="none"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1.4, ease: "easeInOut", delay: 0.2 }}
-        />
-        <motion.path
-          d="M0.270066 132.479L70.1833 132.737L205.851 0.357864L205.923 0.490149L0.270066 132.479Z"
-          fill="url(#heroOrangeGradient)"
+          d="M357.773 848.594H45.2734L981.273 245.094L357.773 848.594Z"
+          fill="url(#paint0_linear_266_3)"
           initial={{ opacity: 0 }}
           animate={{ opacity: drawComplete ? 1 : 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
+          transition={fadeTransition}
         />
-      </motion.g>
+        <motion.path
+          d="M357.773 848.594H45.2734L981.273 245.094L357.773 848.594Z"
+          stroke="#FAED32"
+          strokeWidth="5"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={drawTransition}
+        />
+      </g>
 
-      <motion.g
-        transform="translate(198, 156)"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4, duration: 0.6 }}
-      >
+      <g filter="url(#filter2_dd_266_3)">
         <motion.path
-          d="M0.441675 28.4332L26.4417 77.4332L66 77.1675L65.5552 76.8958L26.5552 0.895835L26.6277 0.333772L0.627715 29.3338L0.441675 28.4332Z"
-          stroke="#FFFFFF"
-          strokeWidth="1.5"
-          fill="none"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1, ease: "easeInOut", delay: 0.4 }}
-        />
-        <motion.path
-          d="M0.441675 28.4332L26.4417 77.4332L66 77.1675L65.5552 76.8958L26.5552 0.895835L26.6277 0.333772L0.627715 29.3338L0.441675 28.4332Z"
-          fill="url(#heroSilverRadial)"
+          d="M357.773 848.594H45.2734L981.273 245.094L357.773 848.594Z"
+          fill="url(#paint1_linear_266_3)"
           initial={{ opacity: 0 }}
           animate={{ opacity: drawComplete ? 1 : 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          transition={fadeTransition}
         />
-      </motion.g>
+        <motion.path
+          d="M357.773 848.594H45.2734L981.273 245.094L357.773 848.594Z"
+          stroke="#FAED32"
+          strokeWidth="5"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={drawTransition}
+        />
+      </g>
+
+      <motion.path
+        d="M228.773 846.594H60.2734L979.273 249.094L228.773 846.594Z"
+        fill="url(#paint2_linear_266_3)"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: drawComplete ? 1 : 0 }}
+        transition={fadeTransition}
+      />
+
+      <g filter="url(#filter3_d_266_3)">
+        <motion.path
+          d="M756.528 522.094L642.273 649.73L756.528 870.094H935.273L756.528 522.094Z"
+          fill="url(#paint3_linear_266_3)"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: drawComplete ? 1 : 0 }}
+          transition={fadeTransition}
+        />
+        <motion.path
+          d="M756.528 522.094L642.273 649.73L756.528 870.094H935.273L756.528 522.094Z"
+          stroke="#EAE4CF"
+          strokeWidth="6"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={drawTransition}
+        />
+      </g>
+
+      <g opacity="0.98" filter="url(#filter4_d_266_3)">
+        <motion.path
+          d="M472.729 41.0938L29.2734 815.094L431.327 306.324L526.602 469.998L666.273 386.189L472.729 41.0938Z"
+          fill="url(#paint4_linear_266_3)"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: drawComplete ? 1 : 0 }}
+          transition={fadeTransition}
+        />
+        <motion.path
+          d="M472.729 41.0938L29.2734 815.094L431.327 306.324L526.602 469.998L666.273 386.189L472.729 41.0938Z"
+          stroke="#E5E0CD"
+          strokeWidth="6"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={drawTransition}
+        />
+      </g>
+
+      <motion.path
+        d="M699.273 591.656L756.381 528.094L931.273 867.094H842.553L699.273 591.656Z"
+        fill="url(#paint5_linear_266_3)"
+        stroke="#A5A5A5"
+        strokeWidth="0.5"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: drawComplete ? 0.7 : 0 }}
+        transition={fadeTransition}
+      />
+
+      <motion.path
+        d="M48.7734 788.594L449.773 173.594V256.594L429.773 303.594L48.7734 788.594Z"
+        fill="url(#paint6_linear_266_3)"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: drawComplete ? 0.7 : 0 }}
+        transition={fadeTransition}
+      />
     </motion.svg>
   );
 };
@@ -416,8 +564,8 @@ export default function Hero() {
                 className="order-1 flex flex-col items-center lg:items-start"
               >
                 <div className="relative">
-                  <AnimatedLogo className="relative h-20 w-16 sm:h-28 sm:w-24 md:h-36 md:w-32 lg:h-48 lg:w-44 xl:h-52 xl:w-48" />
-                </div>
+  <AnimatedLogo className="relative h-16 w-20 md:h-20 md:w-24 lg:h-28 lg:w-32 xl:h-32 xl:w-36" />
+</div>
 
                 <div className="mt-0 text-center sm:mt-1 lg:text-left">
                   <motion.h1
@@ -428,7 +576,7 @@ export default function Hero() {
                   >
                     <span className="block text-white">Algorithm</span>
                     <span className="block bg-linear-to-r from-orange-400 via-orange-500 to-orange-400 bg-clip-text text-transparent">
-                      X
+                      10
                     </span>
                   </motion.h1>
 
@@ -445,8 +593,8 @@ export default function Hero() {
                     transition={{ duration: 0.8, delay: 0.6 }}
                     className="max-w-md px-4 text-xs font-light text-white/60 sm:px-0 sm:text-base md:text-lg lg:text-xl"
                   >
-                    Where <span className="text-orange-400">Innovation</span>{" "}
-                    Meets <span className="text-orange-400">Excellence</span>
+                    Innovation <span className="text-orange-400">For a</span>{" "}
+                    Sustainable <span className="text-orange-400">Future</span>
                   </motion.p>
 
                   {username && (
