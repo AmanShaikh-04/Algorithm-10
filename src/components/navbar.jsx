@@ -90,9 +90,12 @@ export default function NavbarBanner() {
             </div>
 
             {/* Desktop CTA */}
-            <button className="hidden rounded-full bg-gradient-to-l from-orange-400 to-red-500 px-6 py-2 text-white transition hover:scale-105 md:block">
-              Register
-            </button>
+            <button 
+  onClick={() => window.open("https://unstop.com/o/en0CQj3?lb=CFaCJlmw&utm_medium=Share&utm_source=progrclu63495&utm_campaign=Online_coding_challenge", "_blank")}
+  className="hidden rounded-full bg-gradient-to-l from-orange-400 to-red-500 px-6 py-2 text-white transition hover:scale-105 md:block"
+>
+  Register
+</button>
 
             {/* Mobile icon */}
             <span className="text-xl text-white md:hidden">☰</span>
@@ -144,9 +147,12 @@ export default function NavbarBanner() {
                 FAQ
               </a>
 
-              <button className="mt-2 w-full rounded-full bg-gradient-to-l from-orange-400 to-red-500 py-2 font-semibold">
-                Register
-              </button>
+              <button 
+  onClick={() => window.open("https://unstop.com/o/en0CQj3?lb=CFaCJlmw&utm_medium=Share&utm_source=progrclu63495&utm_campaign=Online_coding_challenge", "_blank")}
+  className="mt-2 w-full rounded-full bg-gradient-to-l from-orange-400 to-red-500 py-2 font-semibold"
+>
+  Register
+</button>
             </div>
           )}
         </div>

@@ -92,88 +92,111 @@ const styles = `
   }
 
   /* Modal */
+  /* Modal Redesign */
   .modal-backdrop {
     position: fixed; inset: 0;
-    background: rgba(0,0,0,0.9);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     z-index: 1000;
     display: flex; align-items: center; justify-content: center;
     padding: 24px;
-    animation: backdropIn 0.25s ease;
+    animation: backdropIn 0.3s ease;
   }
   .modal-box {
-    background: #111110;
-    border: 1px solid #2a2520;
-    border-radius: 22px;
-    width: 100%; max-width: 540px;
+    background: rgba(15, 15, 15, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    border-radius: 24px;
+    width: 100%; max-width: 600px;
     overflow: hidden;
-    animation: modalIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    animation: modalIn 0.4s cubic-bezier(0.16,1,0.3,1);
     font-family: 'Syne', sans-serif;
-    box-shadow: 0 0 0 1px rgba(251,191,36,0.06), 0 40px 80px rgba(0,0,0,0.8), 0 0 60px rgba(234,88,12,0.08);
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8), 0 0 40px rgba(245, 158, 11, 0.1);
   }
   .modal-accent-bar {
-    height: 2px; width: 100%;
-    background: linear-gradient(90deg, transparent, #f59e0b, #ea580c, transparent);
+    height: 3px; width: 100%;
+    background: linear-gradient(90deg, #f59e0b, #ea580c, #f59e0b);
+    background-size: 200% 100%;
+    animation: gradient 3s ease infinite;
   }
   .modal-header {
-    padding: 26px 32px 20px;
-    border-bottom: 1px solid #1e1b16;
+    padding: 32px 32px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
     display: flex; align-items: flex-start;
     justify-content: space-between; gap: 16px;
   }
   .modal-tag {
     display: inline-flex; align-items: center; gap: 6px;
-    padding: 3px 10px; border-radius: 99px;
-    font-size: 10px; font-family: 'inter', monospace;
-    letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 4px 12px; border-radius: 99px;
+    font-size: 11px; font-family: 'inter', monospace;
+    letter-spacing: 0.15em; text-transform: uppercase;
     background: rgba(245,158,11,0.1); color: #fbbf24;
-    margin-bottom: 8px;
+    margin-bottom: 12px; border: 1px solid rgba(245,158,11,0.2);
   }
-  .modal-tag-dot { width: 5px; height: 5px; border-radius: 50%; background: #f59e0b; flex-shrink: 0; }
-  .modal-title { font-size: 26px; font-weight: 800; color: white; line-height: 1.1; }
+  .modal-tag-dot { width: 6px; height: 6px; border-radius: 50%; background: #f59e0b; flex-shrink: 0; box-shadow: 0 0 8px #f59e0b; }
+  .modal-title { 
+    font-size: 32px; font-weight: 800; line-height: 1.1; 
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    background: linear-gradient(to right, #ffffff, #fbbf24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
   .modal-close {
-    background: #1a1814; border: 1px solid #2a2520;
-    color: #52525b; width: 36px; height: 36px;
-    border-radius: 10px; cursor: pointer; font-size: 15px;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    color: white; width: 40px; height: 40px;
+    border-radius: 50%; cursor: pointer; font-size: 16px;
     display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; transition: all 0.2s ease;
+    flex-shrink: 0; transition: all 0.3s ease;
   }
   .modal-close:hover {
-    background: #2a2520; color: #fbbf24;
-    transform: rotate(90deg); border-color: #3a3020;
+    background: rgba(245, 158, 11, 0.15); color: #fbbf24;
+    transform: rotate(90deg); border-color: rgba(245, 158, 11, 0.4);
   }
   .modal-body {
-    padding: 22px 32px 32px;
-    max-height: 58vh; overflow-y: auto;
+    padding: 24px 32px 32px;
+    max-height: 60vh; overflow-y: auto;
   }
-  .modal-body::-webkit-scrollbar { width: 3px; }
+  .modal-body::-webkit-scrollbar { width: 4px; }
   .modal-body::-webkit-scrollbar-track { background: transparent; }
-  .modal-body::-webkit-scrollbar-thumb { background: #2a2520; border-radius: 4px; }
+  .modal-body::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.3); border-radius: 10px; }
 
   @media (max-width: 640px) {
-    .modal-header { padding: 20px 20px 16px; }
-    .modal-body { padding: 16px 20px 24px; }
-    .modal-title { font-size: 20px; }
+    .modal-header { padding: 24px 24px 20px; }
+    .modal-body { padding: 20px 24px 28px; }
+    .modal-title { font-size: 24px; }
   }
 
   .ps-section-label {
-    font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase;
-    font-family: 'inter', monospace; opacity: 0.35; color: #fbbf24; margin-bottom: 16px;
+    font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase;
+    font-family: 'inter', monospace; color: #fbbf24; opacity: 0.6; margin-bottom: 20px;
   }
   .ps-item {
-    display: flex; gap: 16px; align-items: flex-start;
-    padding: 15px 0; border-bottom: 1px solid #1a1714;
-    animation: psIn 0.4s ease both;
+    display: flex; gap: 20px; align-items: flex-start;
+    padding: 20px; background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 16px; margin-bottom: 12px;
+    transition: all 0.3s ease;
+    animation: psIn 0.5s cubic-bezier(0.16,1,0.3,1) both;
   }
-  .ps-item:last-child { border-bottom: none; }
+  .ps-item:hover {
+    background: rgba(245, 158, 11, 0.05);
+    border-color: rgba(245, 158, 11, 0.2);
+    transform: translateX(4px);
+  }
+  .ps-item:last-child { margin-bottom: 0; }
+  
   .ps-num {
-    font-size: 10px; font-family: 'inter', monospace;
-    opacity: 0.22; flex-shrink: 0; margin-top: 3px; width: 20px; color: #fbbf24;
+    font-size: 13px; font-family: 'inter', monospace; font-weight: 700;
+    color: #fbbf24; background: rgba(245, 158, 11, 0.15);
+    padding: 6px 10px; border-radius: 8px; flex-shrink: 0;
   }
   .ps-text {
-    font-size: 14px; color: rgba(255,255,255,0.65);
-    line-height: 1.7; font-family: 'inter', monospace; font-weight: 300;
+    font-size: 15px; color: rgba(255,255,255,0.85);
+    line-height: 1.6; font-family: 'inter', sans-serif; font-weight: 400;
+    margin-top: 4px;
   }
 
   @keyframes gradient {
@@ -216,7 +239,7 @@ function Modal({ card, onClose }) {
             <div
               className="ps-item"
               key={i}
-              style={{ animationDelay: `${i * 0.07}s` }}
+              style={{ animationDelay: `${i * 0.08}s` }}
             >
               <span className="ps-num">{String(i + 1).padStart(2, "0")}</span>
               <span className="ps-text">{ps}</span>
