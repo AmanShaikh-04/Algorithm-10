@@ -576,7 +576,7 @@ export default function Hero() {
                   >
                     <span className="block text-white">Algorithm</span>
                     <span className="block bg-linear-to-r from-orange-400 via-orange-500 to-orange-400 bg-clip-text text-transparent">
-                      10
+                      X
                     </span>
                   </motion.h1>
 
