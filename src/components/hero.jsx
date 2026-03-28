@@ -697,7 +697,7 @@ export default function Hero() {
                     <div className="absolute inset-0 bg-linear-to-r from-orange-600 to-orange-500" />
                     <div className="absolute inset-0 bg-linear-to-r from-orange-500 to-orange-400 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                     <span className="relative z-10 flex items-center justify-center gap-2 text-sm sm:gap-3 sm:text-base">
-                      Register Now
+                      Registration Closed
                       <svg
                         className="h-4 w-4 transition-transform group-hover:translate-x-1"
                         fill="none"
