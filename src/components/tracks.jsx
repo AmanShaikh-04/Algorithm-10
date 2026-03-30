@@ -1,218 +1,38 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import SpotlightCard from "./SpotlightCard";
 
-const styles = `
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap');
-
-  @keyframes lockFloat {
-    0%, 100% { transform: translateY(0px); }
-    50%       { transform: translateY(-6px); }
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(28px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes backdropIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-  }
-  @keyframes modalIn {
-    from { opacity: 0; transform: scale(0.88) translateY(20px); }
-    to   { opacity: 1; transform: scale(1) translateY(0); }
-  }
-  @keyframes psIn {
-    from { opacity: 0; transform: translateX(-10px); }
-    to   { opacity: 1; transform: translateX(0); }
-  }
-  @keyframes pulseGlow {
-    0%, 100% { opacity: 0.4; transform: scale(1); }
-    50%       { opacity: 0.7; transform: scale(1.08); }
-  }
-
-  .domain-card-wrapper {
-    animation: fadeUp 0.6s ease both;
-    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  .domain-card-wrapper:hover { transform: translateY(-10px) scale(1.03); }
-
-  .lock-icon {
-    filter: drop-shadow(0 0 10px rgba(251,191,36,0.35));
-    animation: lockFloat 3s ease-in-out infinite;
-    transition: filter 0.3s ease, transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
-  }
-  .domain-card-wrapper:hover .lock-icon {
-    filter: drop-shadow(0 0 24px rgba(251,191,36,0.9));
-    transform: scale(1.18) translateY(-4px);
-    animation: none;
-  }
-
-  .reveal-text {
-    font-size: 10px;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    opacity: 0;
-    transform: translateY(8px);
-    transition: all 0.3s ease 0.1s;
-    font-family: 'inter', monospace;
-    color: #fbbf24;
-  }
-  .domain-card-wrapper:hover .reveal-text {
-    opacity: 0.7;
-    transform: translateY(0);
-  }
-
-  .domain-number-bg {
-    font-size: 50px;
-    font-weight: 800;
-    font-family: 'Syne', sans-serif;
-    opacity: 0.04;
-    position: absolute;
-    bottom: 10px; right: 16px;
-    line-height: 1;
-    pointer-events: none;
-    user-select: none;
-    color: #fbbf24;
-  }
-  
-  @media (min-width: 1024px) {
-    .domain-number-bg {
-      font-size: 80px;
-    }
-  }
-
-  /* Utility to hide scrollbar for the mobile carousel */
-  .hide-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
-  /* Modal */
-  /* Modal Redesign */
-  .modal-backdrop {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    z-index: 1000;
-    display: flex; align-items: center; justify-content: center;
-    padding: 24px;
-    animation: backdropIn 0.3s ease;
-  }
-  .modal-box {
-    background: rgba(15, 15, 15, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(245, 158, 11, 0.2);
-    border-radius: 24px;
-    width: 100%; max-width: 600px;
-    overflow: hidden;
-    animation: modalIn 0.4s cubic-bezier(0.16,1,0.3,1);
-    font-family: 'Syne', sans-serif;
-    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8), 0 0 40px rgba(245, 158, 11, 0.1);
-  }
-  .modal-accent-bar {
-    height: 3px; width: 100%;
-    background: linear-gradient(90deg, #f59e0b, #ea580c, #f59e0b);
-    background-size: 200% 100%;
-    animation: gradient 3s ease infinite;
-  }
-  .modal-header {
-    padding: 32px 32px 24px;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    display: flex; align-items: flex-start;
-    justify-content: space-between; gap: 16px;
-  }
-  .modal-tag {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 4px 12px; border-radius: 99px;
-    font-size: 11px; font-family: 'inter', monospace;
-    letter-spacing: 0.15em; text-transform: uppercase;
-    background: rgba(245,158,11,0.1); color: #fbbf24;
-    margin-bottom: 12px; border: 1px solid rgba(245,158,11,0.2);
-  }
-  .modal-tag-dot { width: 6px; height: 6px; border-radius: 50%; background: #f59e0b; flex-shrink: 0; box-shadow: 0 0 8px #f59e0b; }
-  .modal-title { 
-    font-size: 32px; font-weight: 800; line-height: 1.1; 
-    font-family: 'Orbitron', sans-serif;
-    text-transform: uppercase; letter-spacing: 0.05em;
-    background: linear-gradient(to right, #ffffff, #fbbf24);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .modal-close {
-    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-    color: white; width: 40px; height: 40px;
-    border-radius: 50%; cursor: pointer; font-size: 16px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; transition: all 0.3s ease;
-  }
-  .modal-close:hover {
-    background: rgba(245, 158, 11, 0.15); color: #fbbf24;
-    transform: rotate(90deg); border-color: rgba(245, 158, 11, 0.4);
-  }
-  .modal-body {
-    padding: 24px 32px 32px;
-    max-height: 60vh; overflow-y: auto;
-  }
-  .modal-body::-webkit-scrollbar { width: 4px; }
-  .modal-body::-webkit-scrollbar-track { background: transparent; }
-  .modal-body::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.3); border-radius: 10px; }
-
-  @media (max-width: 640px) {
-    .modal-header { padding: 24px 24px 20px; }
-    .modal-body { padding: 20px 24px 28px; }
-    .modal-title { font-size: 24px; }
-  }
-
-  .ps-section-label {
-    font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase;
-    font-family: 'inter', monospace; color: #fbbf24; opacity: 0.6; margin-bottom: 20px;
-  }
-  .ps-item {
-    display: flex; gap: 20px; align-items: flex-start;
-    padding: 20px; background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.05);
-    border-radius: 16px; margin-bottom: 12px;
-    transition: all 0.3s ease;
-    animation: psIn 0.5s cubic-bezier(0.16,1,0.3,1) both;
-  }
-  .ps-item:hover {
-    background: rgba(245, 158, 11, 0.05);
-    border-color: rgba(245, 158, 11, 0.2);
-    transform: translateX(4px);
-  }
-  .ps-item:last-child { margin-bottom: 0; }
-  
-  .ps-num {
-    font-size: 13px; font-family: 'inter', monospace; font-weight: 700;
-    color: #fbbf24; background: rgba(245, 158, 11, 0.15);
-    padding: 6px 10px; border-radius: 8px; flex-shrink: 0;
-  }
-  .ps-text {
-    font-size: 15px; color: rgba(255,255,255,0.85);
-    line-height: 1.6; font-family: 'inter', sans-serif; font-weight: 400;
-    margin-top: 4px;
-  }
-
-  @keyframes gradient {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient 3s ease infinite;
-}
-`;
-
+const cards = [
+  {
+    domain: "Next-Gen Generative AI",
+    description: "Build transformative tools using LLMs or multimodal AI to democratize education, automate workflows, or bridge language barriers.",
+    matches: "SDG 4 (Quality Education), SDG 8 (Decent Work), SDG 10 (Reduced Inequalities)",
+  },
+  {
+    domain: "Web3 for Decentralized Trust",
+    description: "Create tamper-proof blockchain applications for carbon tracking, ethical supply chains, or green energy distribution.",
+    matches: "SDG 12 (Responsible Consumption), SDG 13 (Climate Action)",
+  },
+  {
+    domain: "Cybersecurity for Public Infra",
+    description: "Design robust security systems to detect threats and protect critical civic networks like smart water grids or traffic systems.",
+    matches: "SDG 6 (Clean Water & Sanitation), SDG 9 (Industry, Innovation & Infrastructure)",
+  },
+  {
+    domain: "Cloud Architecture for Crisis",
+    description: "Architect highly scalable, serverless platforms to manage resource allocation and volunteer coordination during sudden emergencies.",
+    matches: "SDG 9 (Industry & Infrastructure), SDG 11 (Sustainable Cities), SDG 13 (Climate Action)",
+  },
+  {
+    domain: "Open Innovation",
+    description: "Identify a specific community friction point and build a creative, tech-driven solution using any technology stack.",
+    matches: "Any of the 17 SDGs",
+  },
+];
 
 function Modal({ card, onClose }) {
-  const psList = Array.isArray(card.ps) ? card.ps : [card.ps];
-
   useEffect(() => {
     const fn = (e) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", fn);
@@ -220,250 +40,279 @@ function Modal({ card, onClose }) {
   }, [onClose]);
 
   return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal-box" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-accent-bar" />
-        <div className="modal-header">
-          <div>
-            <div className="modal-tag">
-              <span className="modal-tag-dot" />
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm sm:p-6"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        className="relative w-full max-w-[650px] overflow-hidden rounded-xl border border-white/10 bg-[#0d0d0d] shadow-[0_0_40px_rgba(245,158,11,0.15)]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Top Orange Accent Line */}
+        <div className="absolute left-0 right-0 top-0 h-1.5 bg-gradient-to-r from-orange-500 to-amber-500" />
+
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute right-5 top-6 flex h-8 w-8 items-center justify-center rounded-full border border-orange-500/50 text-sm font-bold text-orange-500 transition-all hover:bg-orange-500 hover:text-[#0d0d0d]"
+        >
+          ✕
+        </button>
+
+        <div className="p-8 sm:p-10">
+          {/* Header */}
+          <div className="mb-6 border-b border-white/10 pb-6">
+            <div className="font-mono text-sm font-semibold tracking-widest text-orange-500">
               Track {String(card.index + 1).padStart(2, "0")}
             </div>
-            <div className="modal-title">{card.domain}</div>
+            <h2 className="font-syne mt-2 text-3xl font-bold uppercase leading-tight text-white sm:text-4xl">
+              {card.domain}
+            </h2>
           </div>
-          <button className="modal-close" onClick={onClose}>✕</button>
-        </div>
-        <div className="modal-body">
-          <div className="ps-section-label">Problem Statements</div>
-          {psList.map((ps, i) => (
-            <div
-              className="ps-item"
-              key={i}
-              style={{ animationDelay: `${i * 0.08}s` }}
+
+          {/* Body / Problem Statements */}
+          <div className="max-h-[50vh] overflow-y-auto pr-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-orange-500/30 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar]:w-1.5">
+            
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             >
-              <span className="ps-num">{String(i + 1).padStart(2, "0")}</span>
-              <span className="ps-text">{ps}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
+              <h3 className="mb-4 font-mono text-xs uppercase tracking-[0.25em] text-gray-400">
+                Problem Statement
+              </h3>
+              <p className="font-sans text-[16px] leading-relaxed text-gray-300">
+                {card.description}
+              </p>
+            </motion.div>
 
-function DomainCard({ domain, ps, variant, index, onClick }) {
-  return (
-    <div
-      className="domain-card-wrapper w-full shrink-0 snap-center flex justify-center sm:w-auto"
-      style={{ animationDelay: `${index * 0.13}s` }}
-    >
-      <div className="group relative h-[260px] w-[200px] sm:h-[300px] sm:w-[240px] lg:h-[400px] lg:w-[300px]">
-        {/* Spinning border */}
-        <div className="absolute -inset-[2px] z-0 overflow-hidden rounded-2xl">
-          <div className="absolute top-1/2 left-1/2 aspect-square w-[200%] -translate-x-1/2 -translate-y-1/2 animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_0_270deg,#f59e0b_360deg)] opacity-60" />
-          <div className="absolute inset-[2px] rounded-[14px] bg-[#111110]" />
-        </div>
-
-        <SpotlightCard
-          spotlightColor="rgba(251,191,36,0.15)"
-          className="!h-[260px] !w-[200px] sm:!h-[300px] sm:!w-[240px] lg:!h-[400px] lg:!w-[300px] cursor-pointer !border-transparent !bg-[#111110] !p-0"
-        >
-          <div
-            onClick={onClick}
-            style={{
-              position: "absolute",
-              inset: 0,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 20,
-              textAlign: "center",
-              userSelect: "none",
-            }}
-          >
-            {/* Glow ring behind lock */}
-            <div
-              style={{
-                position: "relative",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
+            {/* SDGs Match Section */}
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              className="mt-8 rounded-lg border border-amber-500/20 bg-amber-500/5 p-5"
             >
-              <div
-                className="absolute rounded-full pointer-events-none w-16 h-16 lg:w-[110px] lg:h-[110px]"
-                style={{
-                  background:
-                    "radial-gradient(circle, rgba(234,88,12,0.25) 0%, rgba(245,158,11,0.1) 50%, transparent 70%)",
-                  animation: "pulseGlow 4s ease-in-out infinite",
-                }}
-              />
-              <svg
-                className="lock-icon w-8 h-8 lg:w-[54px] lg:h-[54px]"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#fbbf24"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                <circle cx="12" cy="16" r="1" fill="#fbbf24" stroke="none" />
-              </svg>
-            </div>
+              <h3 className="mb-2 font-mono text-xs uppercase tracking-[0.2em] text-amber-500">
+                SDG Matches
+              </h3>
+              <p className="font-sans text-[15px] font-medium leading-relaxed text-amber-100/90">
+                {card.matches}
+              </p>
+            </motion.div>
 
-            {/* Labels */}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 7,
-              }}
-            >
-              <span
-                style={{
-                  fontSize: 10,
-                  letterSpacing: "0.28em",
-                  textTransform: "uppercase",
-                  fontFamily: "inter",
-                  color: "#f59e0b",
-                  opacity: 0.6,
-                }}
-              >
-                Track {String(index + 1).padStart(2, "0")}
-              </span>
-              <span className="reveal-text">Click to reveal</span>
-            </div>
-
-            {/* Bottom accent line */}
-            <div
-              style={{
-                position: "absolute",
-                bottom: 0,
-                left: "15%",
-                right: "15%",
-                height: 1,
-                background:
-                  "linear-gradient(90deg, transparent, rgba(245,158,11,0.5), rgba(234,88,12,0.5), transparent)",
-              }}
-            />
-
-            {/* Watermark */}
-            <span className="domain-number-bg">
-              {String(index + 1).padStart(2, "0")}
-            </span>
           </div>
-        </SpotlightCard>
-      </div>
-    </div>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
 export default function Tracks() {
   const [activeCard, setActiveCard] = useState(null);
-  const scrollContainerRef = useRef(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const scroll = (direction) => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = scrollContainerRef.current.clientWidth;
-      scrollContainerRef.current.scrollBy({
-        left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth",
-      });
+  // Auto-rotate carousel
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % cards.length);
+    }, 4000); 
+    return () => clearInterval(timer);
+  }, [currentIndex]); 
+
+  const nextSlide = () => setCurrentIndex((prev) => (prev + 1) % cards.length);
+  const prevSlide = () => setCurrentIndex((prev) => (prev - 1 + cards.length) % cards.length);
+
+  // Calculates the relative position of each card for the looping effect (3 visible)
+  const getCardStyles = (index) => {
+    const total = cards.length;
+    let diff = (index - currentIndex + total) % total;
+    if (diff > Math.floor(total / 2)) {
+      diff -= total; 
     }
-  };
 
-  const cards = [
-    { domain: "Track 1", ps: ["Yet to be revealed!"], variant: "gold" },
-    { domain: "Track 2", ps: ["Yet to be revealed!"], variant: "gold" },
-    { domain: "Track 3", ps: ["Yet to be revealed!"], variant: "gold" },
-  ];
+    let x = "0%";
+    let scale = 1;
+    let opacity = 1;
+    let zIndex = 30;
+
+    if (diff === 0) {
+      x = "0%"; scale = 1; opacity = 1; zIndex = 30;
+    } else if (diff === 1) {
+      x = "115%"; scale = 0.85; opacity = 0.7; zIndex = 20;
+    } else if (diff === -1) {
+      x = "-115%"; scale = 0.85; opacity = 0.7; zIndex = 20;
+    } else if (diff === 2) {
+      x = "180%"; scale = 0.6; opacity = 0; zIndex = 10;
+    } else if (diff === -2) {
+      x = "-180%"; scale = 0.6; opacity = 0; zIndex = 10;
+    }
+
+    return { 
+      x, 
+      scale, 
+      opacity, 
+      zIndex, 
+      isCenter: diff === 0, 
+      isVisible: Math.abs(diff) <= 1 
+    };
+  };
 
   return (
     <>
-      <style>{styles}</style>
-
-      {/* Added id="tracks", min-h-[85vh] for mobile vertical centering, and scroll-mt-24 to stop navbar overlap */}
-      <section 
-        id="tracks" 
-        className="relative flex flex-col items-center justify-center overflow-hidden bg-transparent py-12 lg:px-10 lg:py-24 pb-0 min-h-[85vh] sm:min-h-0 scroll-mt-24"
+      <section
+        id="tracks"
+        className="relative flex min-h-[85vh] scroll-mt-24 flex-col items-center justify-center overflow-hidden bg-transparent py-12 pb-0 sm:min-h-0 lg:px-10 lg:py-24"
       >
         {/* Section Header */}
-<div className="relative z-10 mb-8 transform text-center transition-all duration-1000 hover:scale-105 md:mb-12">
-  {/* Decorative Line Above */}
-  <div className="mb-4 flex items-center justify-center md:mb-6">
-    <div className="h-px w-8 bg-gradient-to-r from-transparent via-orange-500 to-transparent md:w-12" />
-    <div className="mx-3 h-2 w-2 animate-pulse rounded-full bg-orange-500 md:mx-4" />
-    <div className="h-px w-8 bg-gradient-to-r from-transparent via-amber-500 to-transparent md:w-12" />
-  </div>
-
-  {/* Main Heading with Gradient, Glow, and Orbitron Font */}
-  <h2 className="font-orbitron animate-gradient relative mb-3 inline-block bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 bg-clip-text text-3xl font-bold tracking-widest uppercase text-transparent md:mb-4 md:text-5xl lg:text-5xl">
-      Tracks
-    <div className="absolute inset-0 -z-10 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 opacity-30 blur-2xl" />
-  </h2>
-
-  {/* Subtitle */}
-  <p className="mx-auto max-w-2xl px-4 text-sm font-light leading-relaxed text-gray-400 md:text-md">
-      Each Track is locked until reveal day.
-  </p>
-
-  {/* Decorative Line Below */}
-  <div className="mt-4 flex items-center justify-center md:mt-6">
-    <div className="h-px w-16 bg-gradient-to-r from-orange-500/50 to-transparent md:w-24" />
-    <div className="mx-2 h-1 w-1 rounded-full bg-amber-500 md:mx-3" />
-    <div className="h-px w-16 bg-gradient-to-l from-amber-500/50 to-transparent md:w-24" />
-  </div>
-</div>
-
-        {/* Cards Navigation Wrapper */}
-        <div className="relative z-10 flex w-full max-w-[100vw] items-center group">
-          
-          {/* Mobile Left Arrow */}
-          <button 
-            onClick={() => scroll('left')}
-            className="absolute left-2 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-[#111110] border border-[#f59e0b]/30 text-[#f59e0b] shadow-[0_0_10px_rgba(245,158,11,0.2)] transition-all active:scale-95 sm:hidden"
-            aria-label="Previous track"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-          </button>
-
-          {/* Scrollable Cards Container */}
-          <div 
-            ref={scrollContainerRef}
-            className="flex w-full snap-x snap-mandatory overflow-x-auto pb-8 sm:flex-wrap sm:justify-center sm:overflow-visible sm:snap-none sm:pb-0 gap-0 sm:gap-5 lg:gap-7 hide-scrollbar"
-          >
-            {cards.map((card, i) => (
-              <DomainCard
-                key={i}
-                domain={card.domain}
-                ps={card.ps}
-                variant={card.variant}
-                index={i}
-                onClick={() => setActiveCard({ ...card, index: i })}
-              />
-            ))}
+        <div className="relative z-10 mb-8 transform text-center transition-all duration-1000 hover:scale-105 md:mb-16">
+          <div className="mb-4 flex items-center justify-center md:mb-6">
+            <div className="h-px w-8 bg-gradient-to-r from-transparent via-orange-500 to-transparent md:w-12" />
+            <div className="mx-3 h-2 w-2 animate-pulse rounded-full bg-orange-500 md:mx-4" />
+            <div className="h-px w-8 bg-gradient-to-r from-transparent via-amber-500 to-transparent md:w-12" />
           </div>
 
-          {/* Mobile Right Arrow */}
-          <button 
-            onClick={() => scroll('right')}
-            className="absolute right-2 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-[#111110] border border-[#f59e0b]/30 text-[#f59e0b] shadow-[0_0_10px_rgba(245,158,11,0.2)] transition-all active:scale-95 sm:hidden"
-            aria-label="Next track"
+          <h2 className="font-orbitron animate-gradient relative mb-3 inline-block bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 bg-clip-text text-3xl font-bold tracking-widest uppercase text-transparent md:mb-4 md:text-5xl lg:text-5xl">
+            Tracks
+            <div className="absolute inset-0 -z-10 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 opacity-30 blur-2xl" />
+          </h2>
+
+          <p className="mx-auto max-w-2xl px-4 text-sm font-light leading-relaxed text-gray-400 md:text-md">
+            Choose your domain and build solutions for humanity.
+          </p>
+
+          <div className="mt-4 flex items-center justify-center md:mt-6">
+            <div className="h-px w-16 bg-gradient-to-r from-orange-500/50 to-transparent md:w-24" />
+            <div className="mx-2 h-1 w-1 rounded-full bg-amber-500 md:mx-3" />
+            <div className="h-px w-16 bg-gradient-to-l from-amber-500/50 to-transparent md:w-24" />
+          </div>
+        </div>
+
+        {/* Carousel Container */}
+        <div className="group relative z-10 flex w-full max-w-[100vw] items-center justify-center">
+          
+          {/* Left Arrow */}
+          <button
+            onClick={prevSlide}
+            className="absolute left-4 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-amber-500/30 bg-[#111110]/80 text-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.2)] backdrop-blur-sm transition-all hover:scale-110 hover:bg-amber-500/10 active:scale-95 sm:left-10 lg:left-24"
+            aria-label="Previous track"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
           </button>
 
+          {/* Cards Track */}
+          <div className="relative flex h-[260px] w-full items-center justify-center sm:h-[300px] lg:h-[400px]">
+            {cards.map((card, i) => {
+              const { x, scale, opacity, zIndex, isCenter, isVisible } = getCardStyles(i);
+
+              return (
+                <motion.div
+                  key={i}
+                  animate={{ x, scale, opacity, zIndex }}
+                  transition={{ duration: 0.6, ease: [0.32, 0.72, 0, 1] }}
+                  className={`absolute flex w-auto origin-center justify-center ${isVisible ? 'pointer-events-auto' : 'pointer-events-none'}`}
+                >
+                  <div className="group relative h-[260px] w-[200px] sm:h-[300px] sm:w-[240px] lg:h-[400px] lg:w-[300px]">
+                    <div className={`absolute -inset-[2px] z-0 overflow-hidden rounded-2xl transition-opacity duration-500 ${isCenter ? 'opacity-100' : 'opacity-0'}`}>
+                      <div className="absolute top-1/2 left-1/2 aspect-square w-[200%] -translate-x-1/2 -translate-y-1/2 animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_0_270deg,#f59e0b_360deg)] opacity-60" />
+                      <div className="absolute inset-[2px] rounded-[14px] bg-[#111110]" />
+                    </div>
+                    {/* Static fallback border for non-center cards */}
+                    <div className={`absolute -inset-[1px] z-0 rounded-2xl bg-amber-500/20 transition-opacity duration-500 ${isCenter ? 'opacity-0' : 'opacity-100'}`} />
+
+                    <SpotlightCard
+                      spotlightColor="rgba(251,191,36,0.15)"
+                      className="!h-[260px] !w-[200px] cursor-pointer !border-transparent !bg-[#111110] !p-0 sm:!h-[300px] sm:!w-[240px] lg:!h-[400px] lg:!w-[300px]"
+                    >
+                      <div
+                        onClick={() => {
+                          if (!isVisible) return; 
+                          if (isCenter) {
+                            setActiveCard({ ...card, index: i });
+                          } else {
+                            setCurrentIndex(i); 
+                          }
+                        }}
+                        className="absolute inset-0 flex select-none flex-col items-center justify-center p-4 sm:p-6"
+                      >
+                        {/* Glow Background */}
+                        <motion.div
+                          animate={{ opacity: isCenter ? [0.4, 0.7, 0.4] : 0.2, scale: isCenter ? [1, 1.08, 1] : 1 }}
+                          transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                          className="pointer-events-none absolute h-24 w-24 rounded-full lg:h-[140px] lg:w-[140px]"
+                          style={{ background: "radial-gradient(circle, rgba(234,88,12,0.2) 0%, rgba(245,158,11,0.05) 50%, transparent 70%)" }}
+                        />
+                        
+                        {/* Decorative Top Anchor */}
+                        <div className={`mb-3 flex gap-1.5 transition-opacity duration-300 lg:mb-5 ${isCenter ? 'opacity-100' : 'opacity-30'}`}>
+                          <div className="h-1.5 w-1.5 rounded-full bg-orange-500 shadow-[0_0_8px_#f97316]" />
+                          <div className="h-1.5 w-1.5 rounded-full bg-amber-400 shadow-[0_0_8px_#fbbf24]" />
+                          <div className="h-1.5 w-1.5 rounded-full bg-orange-500 shadow-[0_0_8px_#f97316]" />
+                        </div>
+
+                        {/* Track Title with Bright Amber Color */}
+                        <h3 
+                          className={`font-orbitron z-10 w-full break-words text-center text-[13px] font-bold uppercase leading-snug tracking-wider transition-all duration-300 sm:text-[15px] lg:px-2 lg:text-[20px] lg:leading-normal ${
+                            isCenter 
+                              ? 'text-amber-400 drop-shadow-[0_0_12px_rgba(251,191,36,0.5)] group-hover:-translate-y-1 group-hover:scale-[1.03]' 
+                              : 'text-amber-500/40'
+                          }`}
+                        >
+                          {card.domain}
+                        </h3>
+
+                        {/* Labels */}
+                        <div className="absolute bottom-6 flex flex-col items-center gap-1 sm:bottom-8 sm:gap-2">
+                          <span className={`font-inter text-[10px] uppercase tracking-[0.28em] transition-colors ${isCenter ? 'text-amber-500 opacity-80' : 'text-amber-500/40'}`}>
+                            Track {String(i + 1).padStart(2, "0")}
+                          </span>
+                          <span className={`font-inter translate-y-2 text-[10px] uppercase tracking-[0.24em] text-amber-400 transition-all duration-300 delay-100 ${isCenter ? 'opacity-0 group-hover:translate-y-0 group-hover:opacity-70' : 'opacity-0'}`}>
+                            Click to reveal
+                          </span>
+                        </div>
+
+                        {/* Bottom accent line */}
+                        <div
+                          className={`absolute right-[15%] bottom-0 left-[15%] h-[1px] transition-opacity ${isCenter ? 'opacity-100' : 'opacity-30'}`}
+                          style={{ background: "linear-gradient(90deg, transparent, rgba(245,158,11,0.5), rgba(234,88,12,0.5), transparent)" }}
+                        />
+
+                        {/* Watermark Number */}
+                        <span className="font-syne absolute right-4 bottom-2.5 pointer-events-none select-none text-[50px] font-extrabold leading-none text-amber-400 opacity-[0.04] lg:text-[80px]">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                      </div>
+                    </SpotlightCard>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Right Arrow */}
+          <button
+            onClick={nextSlide}
+            className="absolute right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-amber-500/30 bg-[#111110]/80 text-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.2)] backdrop-blur-sm transition-all hover:scale-110 hover:bg-amber-500/10 active:scale-95 sm:right-10 lg:right-24"
+            aria-label="Next track"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+          </button>
         </div>
       </section>
 
-      {activeCard && (
-        <Modal card={activeCard} onClose={() => setActiveCard(null)} />
-      )}
+      <AnimatePresence>
+        {activeCard && (
+          <Modal card={activeCard} onClose={() => setActiveCard(null)} />
+        )}
+      </AnimatePresence>
     </>
   );
 }
