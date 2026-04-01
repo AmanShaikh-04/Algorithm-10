@@ -117,7 +117,7 @@ function Modal({ card, onClose }) {
             </div>
             <div>
               <div className="font-mono text-sm font-semibold tracking-widest text-orange-500">
-                Track {String(card.index + 1).padStart(2, "0")}
+                PS {String(card.index + 1).padStart(2, "0")}
               </div>
               <h2 className="font-syne mt-1 text-2xl font-bold uppercase leading-tight text-white sm:text-3xl">
                 {card.domain}
@@ -228,7 +228,7 @@ export default function Tracks() {
           </div>
 
           <h2 className="font-orbitron animate-gradient relative mb-3 inline-block bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 bg-clip-text text-3xl font-bold tracking-widest uppercase text-transparent md:text-4xl lg:text-4xl">
-            Tracks
+            Domains
             <div className="absolute inset-0 -z-10 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 opacity-30 blur-2xl" />
           </h2>
 
@@ -323,7 +323,7 @@ export default function Tracks() {
                         {/* Labels */}
                         <div className="absolute bottom-6 flex flex-col items-center gap-1 sm:bottom-8 sm:gap-2">
                           <span className={`font-inter text-[10px] uppercase tracking-[0.28em] transition-colors lg:text-[11px] ${isCenter ? 'text-amber-500 opacity-80' : 'text-amber-500/40'}`}>
-                            Track {String(i + 1).padStart(2, "0")}
+                            PS {String(i + 1).padStart(2, "0")}
                           </span>
                           <span className={`font-inter translate-y-2 text-[10px] uppercase tracking-[0.24em] text-amber-400 transition-all duration-300 delay-100 lg:text-[11px] ${isCenter ? 'opacity-0 group-hover:translate-y-0 group-hover:opacity-70' : 'opacity-0'}`}>
                             Click to reveal
@@ -358,7 +358,6 @@ export default function Tracks() {
           </button>
         </div>
       </section>
-
       <AnimatePresence>
         {activeCard && (
           <Modal card={activeCard} onClose={() => setActiveCard(null)} />
